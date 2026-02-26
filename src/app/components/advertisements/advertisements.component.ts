@@ -35,7 +35,12 @@ export class AdvertisementsComponent
 
   selectedCountry = signal(this.getSavedCountry());
   showAddModal = false;
-  newAd = { title: '', highestBid: '', image: null as string | null };
+newAd = {
+  title: '',
+  highestBid: 0,
+  imageFile: null as File | null, // لتخزين الملف الفعلي
+  imagePreview: '' // للمعاينة فقط في الـ HTML
+};
   selectedFile: File | null = null;
   isMobile: boolean = false;
 
@@ -65,17 +70,15 @@ export class AdvertisementsComponent
   }
   advertisements: any[] = [];
   // ميثود جلب البيانات من السيرفر
-  loadAds() {
-    this.apiService.getAdvertisements().subscribe({
-      next: (data) => {
-        console.log(data);
-        this.advertisements = data;
-        // تحديث الـ Signal بالبيانات الحقيقية
-        // this.ads.set(data);
-      },
-      error: (err) => console.error('Error fetching ads:', err),
-    });
-  }
+loadAds() {
+  this.apiService.getAdvertisements().subscribe({
+    next: (data) => {
+      this.advertisements = data;
+      this.ads.set(data); // دي اللي بتشغل الـ filteredAds()
+    },
+    error: (err) => console.error('Error fetching ads:', err),
+  });
+}
 
   deleteAd(id: number) {
     if (confirm('هل أنت متأكد من حذف هذا الإعلان؟')) {
@@ -142,4 +145,61 @@ export class AdvertisementsComponent
   closeModal() {
     this.showAddModal = false;
   }
+
+
+  onFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.newAd.imageFile = file;
+    // للمعاينة في الصفحة
+    const reader = new FileReader();
+    reader.onload = (e: any) => this.newAd.imagePreview = e.target.result;
+    reader.readAsDataURL(file);
+  }
+}
+
+addNewAdvertisement() {
+  if (!this.newAd.title || !this.newAd.imageFile) return;
+
+  const formData = new FormData();
+
+  // الأسماء لازم تطابق الـ Backend (الـ Postman وضح إن Image مطلوبة)
+  formData.append('Title', this.newAd.title);
+  formData.append('HighestBid', this.newAd.highestBid.toString());
+  formData.append('Image', this.newAd.imageFile);
+
+  // إضافة كود الدولة عشان الإعلان يظهر في الدولة الصح
+  formData.append('CountryCode', this.selectedCountry().code);
+
+  this.apiService.addAdvertisement(formData).subscribe({
+    next: (res) => {
+      console.log('تم النشر بنجاح', res);
+
+      // 1. تحديث القائمة فوراً بدون عمل Refresh للصفحة
+      this.ads.set([...this.ads(), res]);
+      this.advertisements = [...this.advertisements, res];
+
+      // 2. تصفير البيانات لإضافة إعلان جديد لاحقاً
+      this.resetNewAdForm();
+
+      // 3. قفل المودال
+      this.closeModal();
+    },
+    error: (err) => {
+      console.error('خطأ في الإرسال:', err);
+      alert('حدث خطأ أثناء إضافة الإعلان، تأكد من البيانات.');
+    }
+  });
+}
+
+// ميثود مساعدة لتنظيف الفورم
+resetNewAdForm() {
+  this.newAd = {
+    title: '',
+    highestBid: 0,
+    imageFile: null,
+    imagePreview: ''
+  };
+}
+
 }

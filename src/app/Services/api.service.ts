@@ -50,18 +50,24 @@ export class ApiService {
 
   // --- الإعلانات (Advertisements) ---
 
-  getAdvertisements(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/Advertisements`);
-  }
+// جلب الكل (صحيحة)
+getAdvertisements(): Observable<any> {
+  return this.http.get(`${this.baseUrl}/Advertisements`);
+}
 
-  getAdvertisementById(id: number): Observable<any> {
-    return this.http.get(`${this.baseUrl}/Advertisements/${id}`);
-  }
+getAdvertisementById(id: number): Observable<any> {
+  return this.http.get(`${this.baseUrl}/Advertisements/${id}`);
+}
 
-  deleteAdvertisement(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/Advertisements/${id}`);
-  }
+// الإضافة (كانت خاطئة وتم تعديلها بحذف /api الزائدة)
+addAdvertisement(data: FormData): Observable<any> {
+  return this.http.post(`${this.baseUrl}/Advertisements`, data);
+}
 
+// الحذف (صحيحة)
+deleteAdvertisement(id: number): Observable<any> {
+  return this.http.delete(`${this.baseUrl}/Advertisements/${id}`);
+}
 
   // --- الدول (Countries) ---
 

@@ -167,15 +167,18 @@
 </div>
 
 <div class="custom-modal-overlay" *ngIf="isEditModalOpen" (click)="closeEditModal()">
-  <div class="modern-modal-content edit-mode-border" (click)="$event.stopPropagation()">
+  <div class="modern-modal-content edit-mode-gold" (click)="$event.stopPropagation()">
     <button class="close-circle-btn" (click)="closeEditModal()"><i class="bi bi-x"></i></button>
-    <div class="modal-header-center"><h3 class="modal-title">تعديل بيانات الشركة</h3></div>
+
+    <div class="modal-header-center">
+      <h3 class="modal-title gold-text">تعديل بيانات الشركة</h3>
+    </div>
 
     <div class="modal-body-custom">
-      <div class="image-upload-section mb-4 text-center">
-        <div class="upload-box-modern edit-box w-100 p-1" (click)="editFileInput.click()">
+      <div class="image-upload-section mb-4">
+        <div class="upload-box-modern edit-gold-box w-100 p-1" (click)="editFileInput.click()">
           <img [src]="imagePreview || editModel.imageUrl" class="preview-img-full">
-          <div class="edit-overlay"><i class="bi bi-pencil"></i></div>
+          <div class="edit-overlay-icon"><i class="bi bi-pencil-fill"></i></div>
           <input type="file" #editFileInput hidden (change)="onFileSelected($event)">
         </div>
       </div>
@@ -183,26 +186,28 @@
       <div class="row g-3">
         <div class="col-12">
           <label class="modern-label">تعديل الاسم</label>
-          <input type="text" class="modern-input" [(ngModel)]="editModel.Name">
+          <input type="text" class="modern-input focus-gold" [(ngModel)]="editModel.Name">
         </div>
-        <div class="col-md-6">
-          <label class="modern-label">تعديل المستوى</label>
-          <select class="modern-input text-white" [(ngModel)]="editModel.Tier">
-            <option class="text-black" [value]="1">Bronze</option>
-            <option class="text-black" [value]="2">Silver</option>
-            <option class="text-black" [value]="3">Gold</option>
-            <option class="text-black" [value]="4">Platinum</option>
-          </select>
-        </div>
+
         <div class="col-md-6">
           <label class="modern-label">تعديل نظام النقاط</label>
-          <input type="text" class="modern-input" [(ngModel)]="editModel.HowToEarnPoints">
+          <input type="text" class="modern-input focus-gold" [(ngModel)]="editModel.HowToEarnPoints">
+        </div>
+
+        <div class="col-md-6">
+          <label class="modern-label">تعديل المستوى</label>
+          <select class="modern-input focus-gold" [(ngModel)]="editModel.Tier">
+            <option [value]="1">Bronze</option>
+            <option [value]="2">Silver</option>
+            <option [value]="3">Gold</option>
+            <option [value]="4">Platinum</option>
+          </select>
         </div>
       </div>
     </div>
 
     <div class="modal-footer-modern">
-      <button class="btn-main-action btn-warning-style" (click)="updateCompany()">حفظ التعديلات</button>
+      <button class="btn-main-action btn-gold-save" (click)="updateCompany()">حفظ التعديلات</button>
       <button class="btn-cancel-action" (click)="closeEditModal()">إلغاء</button>
     </div>
   </div>

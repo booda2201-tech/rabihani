@@ -111,19 +111,19 @@ export class CompaniesComponent implements OnInit {
     });
   }
 
-  updateCompany() {
-    const formData = new FormData();
-    formData.append('Id', this.editModel.Id.toString());
-    formData.append('Name', this.editModel.Name);
-    formData.append('Description', this.editModel.Description);
-    formData.append('HowToEarnPoints', this.editModel.HowToEarnPoints);
-    formData.append('Tier', this.editModel.Tier.toString());
-    formData.append('CountryId', this.editModel.CountryId.toString());
-    if (this.selectedFile) formData.append('Image', this.selectedFile);
+updateCompany() {
+    // استخدام الدالة المساعدة التي أصلحناها لتجنب خطأ null.toString()
+    const formData = this.prepareFormData(this.editModel);
 
     this.apiService.updateCompany(this.editModel.Id, formData).subscribe({
-      next: () => { this.closeEditModal(); this.fetchCompanies(); },
-      error: (err) => console.error(err)
+      next: () => {
+        this.closeEditModal();
+        this.fetchCompanies();
+      },
+      error: (err) => {
+        console.error('Update failed', err);
+        alert("حدث خطأ أثناء التحديث، تأكد من البيانات");
+      }
     });
   }
 
@@ -143,6 +143,24 @@ export class CompaniesComponent implements OnInit {
     }
   }
 
+private prepareFormData(model: any): FormData {
+  const formData = new FormData();
+
+
+  Object.keys(model).forEach(key => {
+    const value = model[key];
+    if (value !== null && value !== undefined && key !== 'imageUrl') {
+      formData.append(key, value.toString());
+    }
+  });
+
+  if (this.selectedFile) {
+    formData.append('Image', this.selectedFile);
+  }
+
+  return formData;
+}
+
   private resetState() {
     this.addModel = {
       Name: '',
@@ -154,6 +172,7 @@ export class CompaniesComponent implements OnInit {
     this.imagePreview = null;
     this.selectedFile = null;
   }
+
 
   private toggleBodyScroll(isLocked: boolean) {
     document.body.style.overflow = isLocked ? 'hidden' : 'auto';

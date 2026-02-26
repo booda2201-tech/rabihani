@@ -332,3 +332,40 @@
   }
   .btn-cancel-action { background: transparent; color: #94a3b8; border: none; padding: 8px; }
 }
+
+
+
+
+
+// متغيرات الألوان بناءً على التصميم المرفق
+$gold-primary: #facc15;
+$bg-dark: #1a1d26;
+
+.edit-mode-gold {
+  border-top: 4px solid $gold-primary !important; // الشريط الذهبي العلوي
+  background: $bg-dark;
+}
+
+.gold-text { color: $gold-primary; }
+
+.edit-gold-box {
+  border: 2px dashed rgba($gold-primary, 0.4) !important;
+  &:hover { border-color: $gold-primary !important; }
+}
+
+.focus-gold:focus {
+  border-color: $gold-primary !important;
+  box-shadow: 0 0 8px rgba($gold-primary, 0.2);
+}
+
+.btn-gold-save {
+  background: $gold-primary !important;
+  color: #000 !important; // نص أسود فوق خلفية ذهبية
+  font-weight: bold;
+}
+
+.btn-cancel-action {
+  color: #3b82f6; // اللون الأزرق لزر إلغاء
+  background: transparent;
+  border: none;
+}

@@ -104,7 +104,9 @@
 
 
 
-<!-- <div class="modal-overlay" *ngIf="showAddModal" (click)="closeModal()">
+
+
+<div class="modal-overlay" *ngIf="showAddModal" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <header class="modal-header">
       <h2>إضافة إعلان جديد في {{ selectedCountry().name }}</h2>
@@ -114,7 +116,7 @@
     <div class="modal-body">
       <div class="form-group">
         <label>عنوان الإعلان</label>
-        <input type="text" [(ngModel)]="newAd.title" placeholder="مثلاً: MacBook Pro M3">
+        <input type="text" [(ngModel)]="newAd.title" placeholder="مثلاً: ساعة رولكس أصلية">
       </div>
 
       <div class="form-group">
@@ -124,12 +126,14 @@
 
       <div class="form-group">
         <label>صورة المنتج</label>
-        <div class="file-upload-wrapper" [class.has-image]="newAd.image">
-          <input type="file" (change)="onFileSelected($event)" accept="image/*" id="fileInput">
+        <div class="file-upload-wrapper" [class.has-image]="newAd.imagePreview">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" id="fileInput" hidden>
           <label for="fileInput" class="file-label">
-            <i class="bi bi-cloud-upload" *ngIf="!newAd.image"></i>
-            <span *ngIf="!newAd.image">اضغط لرفع صورة</span>
-            <img [src]="newAd.image" *ngIf="newAd.image" class="preview-img">
+            <ng-container *ngIf="!newAd.imagePreview">
+              <i class="bi bi-cloud-upload"></i>
+              <span>اضغط لرفع صورة المنتج</span>
+            </ng-container>
+            <img [src]="newAd.imagePreview" *ngIf="newAd.imagePreview" class="preview-img">
           </label>
         </div>
       </div>
@@ -137,7 +141,11 @@
 
     <footer class="modal-footer">
       <button class="btn-cancel" (click)="closeModal()">إلغاء</button>
-      <button class="btn-submit" (click)="addNewAdvertisement()" [disabled]="!newAd.image || !newAd.title">نشر الإعلان</button>
+      <button class="btn-submit"
+              (click)="addNewAdvertisement()"
+              [disabled]="!newAd.imageFile || !newAd.title">
+        نشر الإعلان الآن
+      </button>
     </footer>
   </div>
-</div> -->
+</div>
