@@ -1,0 +1,101 @@
+
+<div class="login-wrapper d-flex align-items-center justify-content-center">
+  <div class="login-card shadow-lg p-3 animate__animated animate__fadeIn">
+
+    <div class="text-center mb-5">
+      <div class="logo-icon mb-3">
+        <i class="bi bi-shield-lock-fill text-primary display-4"></i>
+      </div>
+      <h2 class="fw-bold text-dark">مرحباً بك مجدداً</h2>
+      <p class="text-muted">سجل دخولك للوصول للوحة التحكم</p>
+    </div>
+
+    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm.value)">
+      <div class="form-floating mb-3">
+        <input name="username" ngModel type="text" class="form-control" id="floatingUser" placeholder="" required>
+        <label for="floatingUser">اسم المستخدم</label>
+      </div>
+
+          <div class="form-floating mb-4 position-relative">
+            <input name="password"
+                    ngModel
+                    [type]="showPassword ? 'text' : 'password'"
+                    class="form-control"
+                    id="floatingPassword"
+                    placeholder=""
+                    required>
+            <label for="floatingPassword">كلمة المرور</label>
+
+            <span class="password-toggle-icon" (click)="showPassword = !showPassword">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </span>
+          </div>
+
+      <div class="d-flex justify-content-between mb-4 px-1">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="rememberMe">
+          <label class="form-check-label small text-muted" for="rememberMe">تذكرني</label>
+        </div>
+        <a href="#" class="small text-primary text-decoration-none">نسيت كلمة السر؟</a>
+      </div>
+
+      <button [disabled]="isLoading" type="submit" class="btn btn-primary btn-lg w-100 py-3 rounded-pill shadow-sm">
+        <span *ngIf="!isLoading"> تسجيل الدخول<i class="bi bi-arrow-right-short ms-2"></i></span>
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      </button>
+    </form>
+
+    <div *ngIf="loginError" class="alert alert-danger mt-4 border-0 small text-center">
+      بيانات الدخول غير صحيحة، حاول مرة أخرى.
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+<!-- <div class="login-wrapper d-flex align-items-center justify-content-center">
+  <div class="login-card p-5 animate__animated animate__fadeIn">
+
+    <div class="text-center mb-5">
+      <div class="logo-icon mb-3">
+        <i class="bi bi-shield-lock-fill display-4"></i>
+      </div>
+      <h2 class="fw-bold">مرحباً بك مجدداً</h2>
+      <p class="text-muted">سجل دخولك للوصول للوحة التحكم</p>
+    </div>
+
+    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm.value)">
+      <div class="form-floating mb-3">
+        <input name="username" ngModel type="text" class="form-control" id="floatingUser" placeholder="admin" required>
+        <label for="floatingUser">اسم المستخدم</label>
+      </div>
+
+      <div class="form-floating mb-4">
+        <input name="password" ngModel type="password" class="form-control" id="floatingPassword" placeholder="123" required>
+        <label for="floatingPassword">كلمة المرور</label>
+      </div>
+
+      <div class="d-flex justify-content-between mb-4 px-1">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="rememberMe">
+          <label class="form-check-label small" for="rememberMe">تذكرني</label>
+        </div>
+        <a href="#" class="small text-primary text-decoration-none">نسيت كلمة السر؟</a>
+      </div>
+
+      <button [disabled]="isLoading" type="submit" class="btn btn-primary btn-lg w-100 py-3 rounded-pill shadow-sm">
+        <span *ngIf="!isLoading"> تسجيل الدخول <i class="bi bi-arrow-right-short ms-2"></i></span>
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      </button>
+    </form>
+
+    <div *ngIf="loginError" class="alert alert-danger mt-4 border-0 small text-center bg-danger text-white bg-opacity-25">
+      بيانات الدخول غير صحيحة، حاول مرة أخرى.
+    </div>
+
+  </div>
+</div> -->

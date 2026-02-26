@@ -1,0 +1,928 @@
+
+
+// --- المتغيرات ---
+$side-width: 280px;
+$primary: #ffffff;
+$bg-body:  #0f172a;
+$primary-color: #4f46e5;
+$edit-color: #0ea5e9;
+$delete-color: #ef4444;
+
+.app-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: $bg-body;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.app-sidebar {
+  width: $side-width;
+  background: #19202E;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  box-shadow: -4px 0 10px rgba(0,0,0,0.02);
+  transition: 0.3s ease-in-out;
+  z-index: 1100;
+
+  .sidebar-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .close-btn {
+      border: none;
+      background: none;
+      font-size: 1.2rem;
+      color: $delete-color;
+    }
+    .logo-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .user-avatar {
+          width: 40px;
+          height: 40px;
+          background: $primary;
+          color: white;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+        h2 {
+          font-weight: 800;
+          color: #1e293b;
+          font-size: 1.4rem;
+          margin: 0;
+        }
+    }
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
+      border-radius: 12px;
+      color: #64748b;
+      text-decoration: none;
+      margin-bottom: 8px;
+      transition: 0.2s;
+      i { font-size: 1.2rem; color: #4f46e5; }
+      &:hover, &.active {
+        background: rgba($primary, 0.1);
+        color: $primary;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .sidebar-footer {
+    border-top: 1px solid #f1f5f9;
+    padding-top: 1rem;
+    .logout-link {
+      width: 100%; border: none; background: none; display: flex;
+      align-items: center; gap: 10px; color: $delete-color; cursor: pointer; padding: 10px;
+      &:hover { background: #fef2f2; border-radius: 8px; }
+    }
+  }
+}
+
+.app-main-content {
+  flex: 1;
+  padding: 2rem;
+  margin-right: $side-width;
+  width: calc(100% - #{$side-width});
+  min-height: 100vh;
+
+  .main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background:#19202E;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+
+    .user-info {
+      display: flex; align-items: center; gap: 12px;
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        background: $primary;
+        color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+      .user-text {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        line-height: 1.2;
+      }
+    }
+  }
+}
+
+
+
+// زر الموبايل العائم (Fixed Menu Button)
+.fixed-menu-btn {
+  display: none;
+  @media (max-width: 992px) {
+    display: flex;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 1200;
+    width: 55px;
+    height: 55px;
+    background:
+    $primary; color: white;
+    border: none;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    box-shadow: 0 10px 25px rgba($primary, 0.4);
+    &.v-hidden { opacity: 0; pointer-events: none; }
+  }
+}
+
+
+@media (max-width: 992px) {
+  .app-sidebar {
+    transform: translateX(100%);
+    &.is-open { transform: translateX(0); }
+  }
+  .app-main-content {
+    margin-right: 0; width: 100%; padding: 1rem;
+  }
+}
+
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+
+  .custom-modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+}
+
+
+.fixed-menu-btn {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 1002;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: 50%;
+      z-index: -1;
+      animation: pulse-ring 2s infinite;
+      opacity: 0.5;
+    }
+
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+}
+
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+
+@media (max-width: 768px) {
+  .sidebar-header{
+    flex-direction: row-reverse;
+  }
+
+
+  .app-sidebar {
+    position: fixed;
+    right: -100%;
+    left: auto;
+    top: 0;
+    height: 100vh;
+    width: 280px;
+    transition: right 0.4s ease;
+
+    &.is-open {
+      right: 0;
+    }
+  }
+}
+
+
+
+.fixed-menu-btn {
+
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+
+  &.v-hidden {
+    opacity: 0;
+    transform: scale(0.5) rotate(180deg);
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+  }
+}
+
+
+
+
+
+.country-selector {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 25px;
+  background: #919191;
+  border: 1px solid#919191;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background: #a5a5a5;
+    // border-color: $primary;
+  }
+
+  .country-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    .flag-icon { font-size: 1.2rem; }
+    .country-name { font-weight: 600; color: #334155; font-size: 0.9rem; }
+  }
+
+  i { font-size: 0.8rem; color: #64748b; }
+}
+
+
+.country-modal {
+  max-width: 600px !important;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    h3 { font-size: 1.2rem; font-weight: 700; margin: 0; }
+    .close-x { border: none; background: none; font-size: 1.5rem; cursor: pointer; }
+  }
+
+  .country-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+  }
+
+  .country-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: #8d9094;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover { background: #f1f5f9; transform: translateY(-3px); }
+
+    &.active {
+      border-color: $primary;
+      background: rgba($primary, 0.05);
+      .country-label { color: $primary; font-weight: 700; }
+    }
+
+    .country-flag { font-size: 2.5rem; margin-bottom: 10px; }
+    .country-label { font-size: 1rem; color: #475569; }
+
+    .check-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: $primary;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.country-selector {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+
+    i {
+      transform: translateY(2px);
+    }
+  }
+
+  i {
+    transition: transform 0.2s ease;
+  }
+}
+.custom-modal-content.country-modal {
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh; // لضمان عدم خروج الموديل عن الشاشة طولياً
+  overflow-y: auto; // إضافة سكرول داخلي إذا كانت الدول كثيرة
+  padding: 1.5rem;
+
+  @media (max-width: 576px) {
+    width: 100%;
+    margin: 0;
+    position: fixed;
+    bottom: 0; // يظهر من الأسفل في الموبايل
+    border-radius: 24px 24px 0 0; // زوايا دائرية من الأعلى فقط
+    padding-bottom: 2rem;
+
+    // إضافة خط صغير في الأعلى (Handle) لإعطاء شكل الـ Drawer
+    &::before {
+      content: '';
+      width: 40px;
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+}
+
+.country-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // في الموبايل نعرض دولتين في الصف
+  gap: 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr); // في الشاشات الأكبر 3 دول
+  }
+}
+
+.country-card {
+  padding: 12px !important; // تقليل المسافات في الموبايل
+
+  .country-flag {
+    font-size: 1.8rem !important; // تصغير العلم قليلاً
+  }
+
+  .country-label {
+    font-size: 0.85rem !important;
+  }
+}
+.mobile-sheet {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  // --- تصميم شاشات الكمبيوتر (Desktop) ---
+  @media (min-width: 769px) {
+    width: 450px !important;
+    border-radius: 24px !important;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+
+    .grab-handle { display: none; } // إخفاء علامة السحب في الكمبيوتر
+  }
+
+  // --- تصميم شاشات الموبايل (Application Style) ---
+  @media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 30px 30px 0 0 !important; // زوايا دائرية من فوق بس
+    padding: 1rem 1.5rem 2.5rem 1.5rem;
+    margin: 0;
+
+    .grab-handle {
+      display: block;
+      width: 45px;
+      height: 5px;
+      background: #cbd5e1;
+      border-radius: 10px;
+      margin: 0 auto 1rem auto;
+    }
+  }
+}
+
+// قائمة الدول (تنسيق موحد وجميل)
+.app-country-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  margin-bottom: 8px;
+  background: #f8fafc;
+  border-radius: 16px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.2s all ease;
+
+  &:hover { background: #f1f5f9; }
+
+  &.selected {
+    border-color: #4f46e5;
+    background: rgba(79, 70, 229, 0.05);
+    .app-name { color: #4f46e5; font-weight: 700; }
+  }
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+
+  .header-text {
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #1e293b;
+      margin: 0;
+    }
+    small {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+  }
+
+  // تصميم زر الـ X الجديد
+  .close-app-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f5f9; // لون خلفية هادئ
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #475569;
+
+    i {
+      font-size: 0.9rem; // حجم الأيقونة
+      -webkit-text-stroke: 1px; // لجعل الأيقونة أوضح قليلاً
+    }
+
+    &:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      transform: rotate(90deg); // تأثير دوران بسيط عند التفاعل
+    }
+
+    &:active {
+      transform: scale(0.9) rotate(90deg); // تأثير الضغط
+    }
+
+    // في الموبايل نجعل الزر أكبر قليلاً لسهولة اللمس
+    @media (max-width: 768px) {
+      width: 40px;
+      height: 40px;
+      i { font-size: 1.1rem; }
+    }
+  }
+}
+
+
+
+
+// --- لوحة ألوان فيجما (Dark Mode Only) ---
+$figma-bg: #0a0e17;           // الخلفية العميقة
+$figma-card: #1a2130;         // لون الكروت والمودال
+$figma-primary: #3b82f6;       // الأزرق الصريح
+$figma-border: rgba(255, 255, 255, 0.08); // الحدود الشفافة
+$figma-text: #ffffff;
+$figma-text-muted: #94a3b8;
+
+// --- زر اختيار الدولة في الهيدر ---
+.country-selector {
+  background: $figma-card !important; // بدلاً من الرمادي القديم
+  border: 1px solid $figma-border !important;
+  color: $figma-text !important;
+
+  &:hover {
+    background: rgba($figma-primary, 0.15) !important;
+    border-color: rgba($figma-primary, 0.4) !important;
+  }
+
+  .country-info {
+    .country-name { color: $figma-text !important; }
+  }
+  i { color: $figma-text-muted !important; }
+}
+
+// --- المودال (الخلفية والجسم) ---
+.custom-modal-overlay {
+  background: rgba(0, 0, 0, 0.8) !important; // تعتيم قوي زي فيجما
+  backdrop-filter: blur(12px) !important;
+}
+
+.custom-modal-content {
+  background: $figma-card !important; // اللون الداكن الفخم
+  border: 1px solid $figma-border !important;
+  color: $figma-text !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+
+  .grab-handle {
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .modal-header {
+    .header-text {
+      h3 { color: $figma-text !important; }
+      small { color: $figma-text-muted !important; }
+    }
+    .close-app-btn {
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: $figma-text-muted !important;
+      &:hover { background: rgba(239, 68, 68, 0.2) !important; color: #ff7e7e !important; }
+    }
+  }
+}
+
+// --- كروت الدول (Grid Style) ---
+.country-card {
+  background: rgba(255, 255, 255, 0.03) !important; // شفافية خفيفة
+  border: 2px solid transparent !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.07) !important;
+  }
+
+  &.active {
+    background: rgba($figma-primary, 0.15) !important;
+    border-color: $figma-primary !important;
+    .country-label { color: $figma-primary !important; font-weight: 700 !important; }
+  }
+
+  .country-label { color: $figma-text !important; }
+}
+
+// --- قائمة الدول (List Style) ---
+.app-country-item {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 2px solid transparent !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  &.selected {
+    background: rgba($figma-primary, 0.15) !important;
+    border-color: $figma-primary !important;
+    .app-name { color: $figma-primary !important; font-weight: 700 !important; }
+    i { color: $figma-primary !important; }
+  }
+
+  .app-name { color: $figma-text !important; }
+}
+
+
+
+
+
+// مودال الدول (اجعله أقل في الترتيب)
+.country-modal-overlay {
+  z-index: 1000;
+}
+
+// مودال التعديل (اجعله أعلى)
+.custom-modal-overlay {
+  z-index: 9999 !important;
+  position: fixed;
+  inset: 0;
+  display: flex; // تأكد من وجود flex هنا
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+
+
+/* تنسيق عام للهيدر */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #1a1d2d; /* نفس لون الخلفية عندك */
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* تعديلات الموبايل الشديدة */
+@media (max-width: 480px) {
+    .main-header {
+        padding: 8px 10px; /* تقليل الحواف */
+    }
+
+    /* تصغير كلمة لوحة التحكم */
+    .main-header h1 {
+        font-size: 1.1rem !important;
+        white-space: nowrap; /* عشان ميفصلش الكلمة على سطرين */
+    }
+
+    /* ضبط منطقة المستخدم والدولة */
+    .header-left {
+        gap: 8px !important; /* تقليل المسافة المحشورة (بدل gap-4) */
+    }
+
+    .user-text {
+        text-align: left; /* أو right حسب الاتجاه */
+        line-height: 1.2;
+    }
+
+    .user-text small {
+        display: none; /* إخفاء "مرحباً بك" في الموبايل لتوفير مساحة */
+    }
+
+    .user-text strong {
+        font-size: 0.85rem; /* تصغير اسم المدير */
+        display: block;
+    }
+
+    /* تصغير زر اختيار الدولة */
+    .country-selector {
+        padding: 4px 6px !important;
+        font-size: 0.8rem;
+    }
+
+    .country-name {
+        max-width: 40px; /* قص اسم الدولة لو طويل */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.country-modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .custom-modal-content {
+    max-width: 420px;
+    width: 100%;
+    background: #141824;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .btn-close-custom {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #8e94a9;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    font-size: 0.9rem;
+    z-index: 10;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+  }
+
+  .country-list {
+    max-height: 50vh;
+    overflow-y: auto;
+
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .app-country-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border-radius: 14px;
+      background: #1a1f2c; // لون الكارد الداخلي
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:hover {
+        background: #1e2433;
+      }
+
+      // ** تصميم الحالة المختارة (Selected State) **
+      &.selected {
+        background: rgba(59, 130, 246, 0.08); // خلفية زرقاء خفيفة جداً
+        border-color: #3b82f6; // إطار أزرق
+
+        .check-icon i {
+          color: #3b82f6; // لون علامة الصح
+        }
+      }
+
+      .check-icon {
+        width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+
+      .country-info-text {
+        .app-name {
+          color: white;
+          font-size: 0.95rem;
+        }
+        .currency-text {
+          color: #3b82f6; // العملة بلون أزرق لتعطي تباين (أو يمكنك جعلها رمادية)
+          font-size: 0.85rem;
+        }
+      }
+    }
+  }
+}
+
+
+.country-modal-overlay {
+  position: fixed;
+  inset: 0; // تغطي الشاشة كلها
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  display: flex;
+  align-items: center; // في الشاشات الكبيرة هيكون في النص
+  justify-content: center;
+
+  .custom-modal-content {
+    background: #141824;
+    width: 90%;
+    max-width: 420px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 📱 تصميم الموبايل (Bottom Sheet) 📱 */
+  @media (max-width: 768px) {
+    align-items: flex-end; // بينزل المودال لأسفل الشاشة
+
+    .custom-modal-content {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 24px 24px 0 0; // الحواف الدائرية من فوق بس
+      border-bottom: none;
+      padding-bottom: 25px; // مساحة إضافية تحت عشان الـ Swipe bar في الآيفون
+      animation: slideUp 0.3s ease-out forwards; // أنيميشن الطلوع من تحت
+    }
+
+    // تصميم مقبض السحب (الشرطة اللي فوق)
+    .drag-handle {
+      width: 45px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      margin: 12px auto 0; // توسيط المقبض
+    }
+  }
+
+  // أنيميشن للموبايل (لو مش بتستخدم GSAP للـ Slide)
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  /* 🎨 تنسيق عناصر القائمة الداخلية 🎨 */
+  .btn-close-custom {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: #8e94a9;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    z-index: 10;
+
+    &:hover { background: rgba(255, 255, 255, 0.1); color: white; }
+  }
+
+  .country-list {
+    max-height: 50vh; // عشان متطولش أوي في الموبايل
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
+    .app-country-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; // الصح يسار والاسم يمين
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      border-radius: 14px;
+      background: #1a1f2c;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover { background: #1e2433; }
+
+      &.selected {
+        background: rgba(59, 130, 246, 0.08);
+        border-color: #3b82f6;
+
+        .check-icon i { color: #3b82f6; font-size: 1.2rem; }
+      }
+
+      .app-name { color: white; }
+    }
+  }
+}

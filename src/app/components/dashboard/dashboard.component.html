@@ -1,0 +1,130 @@
+
+<div class="app-dashboard" dir="rtl">
+  <button class="fixed-menu-btn d-md-none" [class.v-hidden]="isSidebarOpen()" (click)="toggleSidebar()">
+    <i class="bi bi-list"></i>
+  </button>
+
+  <aside class="app-sidebar" [class.is-open]="isSidebarOpen()">
+    <div class="sidebar-header">
+      <button class="close-btn d-md-none" (click)="toggleSidebar()"><i class="bi bi-x-lg"></i></button>
+      <div class="logo-area">
+        <h2 class="text-primary d-flex align-items-center m-0">ربحني</h2>
+        <div class="user-avatar bg-primary">RA</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+        <i class="bi bi-grid-1x2-fill"></i> <span>الرئيسية</span>
+      </a>
+      <a routerLink="/dashboard/products" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-bag-heart-fill"></i> <span>المنتجات</span>
+      </a>
+      <a routerLink="/dashboard/auctions" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-cash-coin"></i> <span>المزادات</span>
+      </a>
+      <a routerLink="/dashboard/ads" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-bullseye"></i> <span>الاعلانات</span>
+      </a>
+      <a routerLink="/dashboard/comp" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-building-fill"></i> <span>الشركات</span>
+      </a>
+      <a routerLink="/dashboard/count" routerLinkActive="active" class="nav-link">
+        <i class="bi bi-globe"></i> <span> البلاد</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-link" routerLink="/login">
+        <span>تسجيل الخروج</span> <i class="bi bi-box-arrow-left"></i>
+      </button>
+    </div>
+  </aside>
+
+  <main class="app-main-content">
+    <!-- <header class="main-header">
+      <div class="header-right">
+        <h1 class="m-0">لوحة التحكم</h1>
+      </div>
+
+      <div class="header-left d-flex align-items-center gap-4">
+        <div class="user-info">
+          <div class="user-text">
+            <small>مرحباً بك،</small>
+            <strong>المدير المسؤول</strong>
+          </div>
+        </div>
+
+        <div class="country-selector" (click)="openCountryModal()">
+          <div class="country-info">
+            <span class="flag-icon">{{ selectedCountry().flag }}</span>
+            <span class="country-name text-white">{{ selectedCountry().name }}</span>
+          </div>
+          <i class="bi bi-chevron-down"></i>
+        </div>
+      </div>
+    </header> -->
+
+      <header class="main-header">
+        <div class="header-right">
+          <h1 class="m-0 fs-5 fs-md-3">لوحة التحكم</h1>
+        </div>
+
+        <div class="header-left d-flex align-items-center gap-1 gap-md-4">
+          <div class="user-info">
+            <div class="user-text text-end">
+              <small class="d-none d-sm-inline">مرحباً بك،</small>
+              <strong class="d-block">المدير المسؤول</strong>
+            </div>
+          </div>
+
+            <div class="country-selector" (click)="openCountryModal()">
+              <div class="country-info d-flex align-items-center gap-2">
+                <i class="bi bi-globe-americas text-primary"></i>
+                <span class="country-name text-white">{{ selectedCountry()?.name || 'تحميل...' }}</span>
+              </div>
+              <i class="bi bi-chevron-down ms-1" style="font-size: 0.7rem;"></i>
+            </div>
+        </div>
+      </header>
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
+
+
+<div class="sidebar-overlay" *ngIf="isSidebarOpen()" (click)="toggleSidebar()"></div>
+
+
+<div class="custom-modal-overlay country-modal-overlay" *ngIf="isCountryModalOpen()" (click)="closeCountryModal()" dir="ltr">
+  <div class="custom-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header-custom position-relative text-center pb-3">
+      <button class="btn-close-custom position-absolute top-0 start-0 m-3" (click)="closeCountryModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <div class="header-text w-100 mt-2">
+        <h3 class="mb-2 text-white fw-bold fs-5">اختر الدولة</h3>
+        <small class="text-muted" style="font-size: 0.8rem;">اختر الدولة لتصفح المزادات المتاحة في {{ selectedCountry()?.name || '...' }}</small>
+      </div>
+    </div>
+    <div class="country-list p-2">
+      <div class="app-country-item"
+           *ngFor="let country of countries()"
+            [class.selected]="selectedCountry()?.id === country.id"
+            (click)="selectCountry(country)">
+        <div class="check-icon">
+          <i class="bi bi-check-circle-fill" *ngIf="selectedCountry()?.id === country.id"></i>
+        </div>
+        <div class="country-info-text d-flex gap-2 align-items-center justify-content-between">
+          <span class="currency-text">{{ country.currency }}</span>
+          <span class="app-name fw-bold">{{ country.name }}</span>
+        </div>
+      </div>
+      <div *ngIf="countries().length === 0" class="text-center p-4">
+          <div class="spinner-border text-primary" role="status"></div>
+      </div>
+    </div>
+
+  </div>
+</div>

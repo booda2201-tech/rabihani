@@ -1,0 +1,334 @@
+  $bg-dark: #0a0e17;
+  $bg-dark: #0a0e17;
+  $primary-blue: #3b82f6;
+  $primary: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  $card-bg-dark: #1a1f2b;
+  $accent-gold: #c5a059;
+  $text-muted: #8e94a9;
+  $white: #ffffff;
+  $modal-bg: #1c222d;
+  $input-bg: #111721;
+  $accent-blue: #3b82f6;
+  $text-light: #ffffff;
+  $text-muted: #8e94a9;
+  $border-color: rgba(255, 255, 255, 0.05);
+
+
+
+.companies-wrapper {
+  background: transparent;
+
+  .title-side{
+    h2 {
+      color: $white;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      position: relative;
+      padding-right: 15px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 5px;
+        height: 35px;
+        background-color: #3b82f6;
+        border-radius: 2px;
+      }
+    }
+    .text-mauted{
+      color: $text-muted;
+      font-size: 0.9rem;
+    }
+  }
+
+
+
+  .text-muted{
+    color: $text-muted !important;
+    font-size: 0.9rem;
+  }
+
+  .btn-add-company {
+    background: linear-gradient(45deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    &:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
+  }
+
+  .company-card-premium {
+    background: #1a1f2c;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 28px;
+    position: relative;
+    padding: 20px;
+    transition: all 0.4s ease;
+    height: 100%;
+    overflow: hidden;
+
+    &:hover {
+      border-color: #3b82f6;
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      .logo-area img { transform: scale(1.05); }
+    }
+
+
+    .tier-tag {
+      position: absolute;
+      top: 35px; // لتكون داخل منطقة الصورة
+      left: 35px;
+      z-index: 10;
+      padding: 6px 16px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px);
+
+      &[data-tier="Platinum"] {
+        background: linear-gradient(135deg, #ffffff 0%, #a1a1a1 100%);
+        color: #1a1f2c;
+      }
+      &[data-tier="Gold"] {
+        background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+        color: #1a1f2c;
+      }
+      &[data-tier="Silver"] {
+        background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
+        color: white;
+      }
+      &[data-tier="Bronze"] {
+        background: linear-gradient(135deg, #cd7f32 0%, #8b4513 100%);
+        color: white;
+        box-shadow: 0 4px 10px rgba(139, 69, 19, 0.3);
+      }
+    }
+
+    .logo-area {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: #141824;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+
+      img {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+      }
+    }
+
+    .info-area {
+      padding: 20px 5px 0;
+
+      .company-name {
+        font-size: 1.25rem;
+        letter-spacing: 0.5px;
+      }
+
+    .points-badge {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+
+    }
+
+
+    .actions-area {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+
+      .btn-action {
+        height: 45px;
+        border-radius: 14px;
+        border: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: 0.3s;
+
+        &.edit {
+          background: rgba(59, 130, 246, 0.1);
+          color: #3b82f6;
+          &:hover { background: #3b82f6; color: white; }
+        }
+
+        &.delete {
+          background: rgba(239, 68, 68, 0.1);
+          color: #ef4444;
+          &:hover { background: #ef4444; color: white; }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+.btn-add-company-responsive {
+  /* التنسيق الأساسي (Desktop) */
+  background: linear-gradient(45deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    color: white;
+  }
+
+  /* 📱 الشاشات الصغيرة (Mobile Fix) 📱 */
+  @media (max-width: 576px) {
+    position: fixed;
+    bottom: 30px;
+    left: 30px; // جهة اليسار لأن الاتجاه RTL
+    z-index: 999;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    padding: 0;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+
+    // إخفاء النص وإظهار الأيقونة فقط
+    .btn-text {
+      display: none;
+    }
+
+    i {
+      margin: 0 !important;
+      font-size: 1.8rem;
+    }
+
+    // إضافة أنيميشن النبض لإعطاء مظهر التطبيقات الاحترافية
+    animation: pulse-blue 2s infinite;
+  }
+}
+
+
+@media (max-width: 576px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+    text-align: right;
+
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+
+@keyframes pulse-blue {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}
+
+
+
+
+
+.custom-modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+  display: flex; justify-content: center; align-items: center; z-index: 9999;
+}
+
+.modal-title{
+  color: $white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &::before {
+    content: "";
+    width: 4px;
+    height: 20px;
+    background: #3b82f6;
+    border-radius: 10px;
+  }
+
+}
+
+.modern-modal-content {
+  background: #1a1d26; width: 95%; max-width: 480px;
+  border-radius: 24px; padding: 25px; position: relative;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.05);
+
+  &.edit-mode-border { border-top: 4px solid #facc15; }
+}
+
+.close-circle-btn {
+  position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.05);
+  border: none; border-radius: 50%; width: 32px; height: 32px; color: #fff;
+}
+
+.upload-box-modern {
+  width: 150px; height: 150px; margin: 0 auto;
+  border: 2px dashed rgba(59, 130, 246, 0.3); border-radius: 20px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  overflow: hidden; background: rgba(255,255,255,0.02);
+
+  .preview-img-full { width: 100%; height: 100%; object-fit: contain; }
+  .upload-placeholder { text-align: center; color: #64748b; i { font-size: 2rem; color: #3b82f6; } }
+}
+
+.modern-input {
+  width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 12px; color: white;
+  &:focus { border-color: #3b82f6; outline: none; }
+}
+
+.modern-label { color: #94a3b8; font-size: 0.85rem; margin-bottom: 6px; display: block; }
+
+.modal-footer-modern {
+  margin-top: 25px; display: flex; flex-direction: column; gap: 10px;
+  .btn-main-action {
+    background: #3b82f6; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 600;
+    &.btn-warning-style { background: #facc15; color: #000; }
+  }
+  .btn-cancel-action { background: transparent; color: #94a3b8; border: none; padding: 8px; }
+}

@@ -1,0 +1,197 @@
+
+// .login-wrapper {
+//   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+//   min-height: 100vh;
+//   font-family: 'Inter', sans-serif;
+
+//   .login-card {
+//     background: rgba(255, 255, 255, 0.95);
+//     border-radius: 24px;
+//     width: 100%;
+//     max-width: 450px;
+//     border: 1px solid rgba(255, 255, 255, 0.3);
+//     backdrop-filter: blur(10px);
+
+//     .form-control {
+//       border: 1.5px solid #eee;
+//       border-radius: 12px;
+//       padding: 1rem;
+//       transition: all 0.3s ease;
+
+//       &:focus {
+//         border-color: #4e73df;
+//         box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.1);
+//       }
+//     }
+
+//     .btn-primary {
+//       background: linear-gradient(to right, #4e73df, #224abe);
+//       border: none;
+//       font-weight: 600;
+//       letter-spacing: 0.5px;
+//       transition: transform 0.2s ease;
+
+//       &:hover:not(:disabled) {
+//         transform: translateY(-2px);
+//         box-shadow: 0 10px 20px rgba(78, 115, 223, 0.2);
+//       }
+//     }
+//   }
+// }
+
+
+
+
+/* الخلفية العامة للصفحة - تدرج داكن جداً */
+.login-wrapper {
+    background: radial-gradient(circle at center, #1e293b, #0f172a 80%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e2e8f0;
+    padding: 20px;
+}
+
+
+.login-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(59, 131, 246, 0.39);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 10px 10px 25px rgba(59, 130, 246, 0.4),
+                0 0 50px rgba(59, 130, 246, 0.2),
+                inset 0 0 15px rgba(59, 130, 246, 0.1);
+    padding: 1.5rem !important;
+}
+
+/* العناوين والنصوص */
+.login-card h2 {
+    color: #ffffff !important;
+    letter-spacing: -0.5px;
+    font-weight: 700;
+}
+
+.login-card .text-muted {
+    color: #94a3b8 !important;
+}
+
+/* الأيقونة العلوية - توهج أزرق */
+.logo-icon i {
+    color: #60a5fa !important;
+    filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.6));
+    font-size: 3.5rem;
+}
+
+/* استايل حقول الإدخال (Inputs) - داكنة جداً */
+.form-control {
+    background-color: #111827 !important; /* لون خلفية داكن جداً */
+    border: 1px solid rgba(75, 85, 99, 0.404) !important;
+    color: #f1f5f9 !important;
+    border-radius: 12px !important;
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+}
+
+/* لون الـ Placeholder */
+.form-control::placeholder {
+    color: #64748b;
+    opacity: 1;
+}
+
+/* تأثير التركيز (Focus) على الحقول */
+.form-control:focus {
+    background-color: #1f2937 !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* الـ Floating Labels */
+.form-floating > label {
+    color: #94a3b8;
+    padding-top: 0.625rem;
+}
+
+.form-control:focus ~ label,
+.form-control:not(:placeholder-shown) ~ label {
+    color: #60a5fa !important;
+    opacity: 1;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+/* الزرار الأزرق الساطع والمتوهج */
+.btn-primary {
+    /* تدرج أزرق فاتح وساطع */
+    background: linear-gradient(to right, #60a5fa, #3b82f6) !important;
+    border: none !important;
+    font-weight: 600 !important;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    /* توهج الزرار */
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5) !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to right, #3b82f6, #2563eb) !important;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.7) !important;
+    transform: translateY(-2px);
+}
+
+/* الروابط و الـ Checkbox */
+.text-primary, a.text-primary {
+    color: #60a5fa !important;
+    transition: color 0.2s;
+}
+a.text-primary:hover {
+    color: #93c5fd !important;
+}
+
+.form-check-input {
+    background-color: #1f2937;
+    border-color: #4b5563;
+}
+
+.form-check-input:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
+.form-check-label {
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+/* رسالة الخطأ */
+.alert-danger {
+    background-color: rgba(220, 38, 38, 0.2) !important;
+    color: #fca5a5 !important;
+    border: 1px solid rgba(220, 38, 38, 0.3) !important;
+}
+
+
+
+
+/* تحديد مكان الأيقونة داخل الحقل */
+.password-toggle-icon {
+    position: absolute;
+    right: 15px; /* لأن التصميم عربي فالعين هتكون ع الشمال */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 10;
+    color: #94a3b8; /* نفس لون الـ Label */
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle-icon:hover {
+    color: #60a5fa; /* توهج أزرق عند الوقوف عليها */
+}
+
+/* تعديل الـ Padding بتاع الـ input عشان الكلام مبيجيش تحت الأيقونة */
+#floatingPassword {
+    padding-left: 10px !important;
+}

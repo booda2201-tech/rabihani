@@ -1,0 +1,636 @@
+
+<div class="home-wrapper" dir="rtl">
+
+  <!-- <div class="stats-grid mb-4">
+    <header class="points-summary-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>مزادات نشطة في {{ dashboard.selectedCountry().name }}</span>
+          <h2>{{ filteredAuctions().length }} <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-lightning-fill"></i></div>
+      </div>
+      <div class="card-footer"><small>محدث الآن</small></div>
+    </header>
+
+    <header class="points-summary-card success-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>إجمالي المزادات المنتهية</span>
+          <h2>120 <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-check2-all"></i></div>
+      </div>
+      <div class="card-footer"><small>خلال الأسبوع الحالي</small></div>
+    </header>
+
+    <header class="points-summary-card warning-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>مزادات قادمة ({{ dashboard.selectedCountry().code }})</span>
+          <h2>{{ filteredUpcoming().length }} <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-calendar-event"></i></div>
+      </div>
+      <div class="card-footer"><small>استعد للبدء</small></div>
+    </header>
+  </div> -->
+
+<div class="swiper stats-swiper-mobile mb-4">
+  <div class="swiper-wrapper">
+
+    <div class="swiper-slide points-summary-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>مزادات نشطة في {{ dashboard.selectedCountry().name }}</span>
+          <h2>{{ filteredAuctions().length }} <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-lightning-fill"></i></div>
+      </div>
+      <div class="card-footer"><small>محدث الآن</small></div>
+    </div>
+
+    <div class="swiper-slide points-summary-card success-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>إجمالي المزادات المنتهية</span>
+          <h2>120 <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-check2-all"></i></div>
+      </div>
+      <div class="card-footer"><small>خلال الأسبوع الحالي</small></div>
+    </div>
+
+    <div class="swiper-slide points-summary-card warning-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>مزادات قادمة ({{ dashboard.selectedCountry().code }})</span>
+          <h2>{{ filteredUpcoming().length }} <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-calendar-event"></i></div>
+      </div>
+      <div class="card-footer"><small>استعد للبدء</small></div>
+    </div>
+
+  </div>
+</div>
+
+
+  <div class="header d-flex align-items-center justify-content-between mb-4">
+    <h4 class="section-title">المزادات النشطة حالياً</h4>
+    <button id="moreBtnActive" class="btn-admin-view show-more-mobile" routerLink="/dashboard/auctions">
+      عرض المزيد <i class="bi bi-arrow-left"></i>
+    </button>
+  </div>
+
+  <div class="swiper-container auctions-swiper mb-5">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" *ngFor="let item of filteredAuctions()">
+        <div class="auction-mini-card">
+          <div class="card-top">
+              <div class="modern-timer">
+                <div class="time-block">
+                  <strong>{{ getTimeParts(item.timeLeft).h }}</strong>
+                  <span>{{ item.timeLeft > 86400 ? 'Days' : 'Hours' }}</span>
+                </div>
+                <div class="time-block">
+                  <strong>{{ getTimeParts(item.timeLeft).m }}</strong>
+                  <span>Mins</span>
+                </div>
+                <div class="time-block">
+                  <strong>{{ getTimeParts(item.timeLeft).s }}</strong>
+                  <span>Secs</span>
+                </div>
+              </div>
+            <div class="target-price">
+              <small>المستهدف</small>
+              <span>{{item.targetPrice | number}}</span>
+            </div>
+          </div>
+
+          <div class="img-wrapper">
+            <div class="live-tag">
+              <span class="pulse-dot"></span> مباشر
+            </div>
+            <img [src]="item.img" alt="Product">
+          </div>
+
+          <div class="card-main">
+            <h5 class="product-name">{{item.name}}</h5>
+              <div class="official-price-tag">
+              <small>السعر الرسمي: </small>
+              <span>{{item.officialPrice | number}} {{ selectedCountry().currency }}</span>
+            </div>
+            <div class="data-specs-grid">
+              <div class="spec-item">
+                <small>نقطة البداية</small>
+                <strong>{{item.startPrice}}</strong>
+              </div>
+              <div class="spec-item">
+                <small>إجمالي النقاط</small>
+                <strong style="color: #10b981;">{{item.totalPoints}}</strong>
+              </div>
+            </div>
+
+            <div class="top-bidder-highlight" [class.is-ai]="item.lastBidder.isAi">
+              <div class="header-row">
+                <small>أعلى مزايد حالياً</small>
+                <span class="bid-val">{{item.currentBid | number}} <small>نقطة</small></span>
+              </div>
+              <div class="bidder-details">
+                <div class="avatar">{{ item.lastBidder.isAi ? 'AI' : item.lastBidder.name[0] }}</div>
+                <div class="info">
+                  <strong>{{item.lastBidder.name}}</strong>
+                  <small>{{item.lastBidder.isAi ? 'نظام الذكاء الاصطناعي' : 'مستخدم حقيقي'}}</small>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-admin-view w-100" [routerLink]="['/dashboard/product-details', item.id]">
+              عرض التفاصيل والتحكم
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="header d-flex align-items-center justify-content-between mb-4">
+    <h4 class="section-title">مزادات ستبدأ قريباً</h4>
+    <button id="moreBtnUpcoming" class="btn-admin-view show-more-mobile" routerLink="/dashboard/auctions">
+      عرض المزيد <i class="bi bi-arrow-left"></i>
+    </button>
+  </div>
+
+  <div class="swiper-container upcoming-swiper mb-5">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" *ngFor="let up of filteredUpcoming()">
+        <div class="auction-mini-card">
+          <div class="card-top">
+            <span class="timer upcoming-timer">
+              <i class="bi bi-calendar3"></i> يبدأ قريباً
+            </span>
+            <div class="target-price">
+              <small>المستهدف</small>
+              <span style="color: #6366f1;">{{up.targetPrice | number}}</span>
+            </div>
+          </div>
+
+          <div class="img-wrapper">
+            <img [src]="up.img" alt="Product">
+          </div>
+
+          <div class="card-main">
+            <h5 class="product-name">{{up.name}}</h5>
+            <div class="official-price-tag">
+              <small>السعر الرسمي: </small>
+              <span>{{up.officialPrice | number}} {{ selectedCountry().currency }}</span>
+            </div>
+            <div class="data-specs-grid">
+              <div class="spec-item">
+                <small>سعر البداية</small>
+                <strong>{{up.startPrice}}</strong>
+              </div>
+              <div class="spec-item">
+                <small>وقت البداية</small>
+                <strong style="color: #4f46e5;">{{up.startTime}}</strong>
+              </div>
+            </div>
+
+            <div class="top-bidder-highlight upcoming-info-box">
+              <div class="header-row" style="border: none; margin-bottom: 0;">
+                <small>تاريخ البداية المقرر</small>
+                <span class="bid-val" style="font-size: 0.9rem; color: #475569;">{{up.startDate}}</span>
+              </div>
+            </div>
+                <button type="button"
+                        class="btn-admin-view w-100 mt-3"
+                        (click)="openEditModal(up, $event)">
+                        تعديل البيانات
+                    <i class="bi bi-pencil-square me-2"></i>
+                </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <hr class="section-divider">
+
+
+<div class="header d-flex align-items-center justify-content-between mb-4">
+  <h4 class="section-title">مزادات منتهية</h4>
+  <button id="moreBtnFinished" class="btn-admin-view show-more-mobile" routerLink="/dashboard/auctions">
+    عرض المزيد <i class="bi bi-arrow-left"></i>
+  </button>
+</div>
+
+<div class="swiper-container finished-swiper mb-5">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide" *ngFor="let item of filteredFinished()">
+      <div class="auction-mini-card finished-card">
+        <div class="card-top">
+          <span class="timer finished-tag">
+            <i class="bi bi-check-circle-fill"></i> منتهي
+          </span>
+          <div class="target-price">
+            <small>السعر النهائي</small>
+            <span style="color: #10b981;">{{item.finalPrice | number}}</span>
+          </div>
+        </div>
+
+        <div class="img-wrapper gray-scale">
+          <img [src]="item.img" alt="Product">
+        </div>
+
+        <div class="card-main">
+          <h5 class="product-name">{{item.name}}</h5>
+            <div class="official-price-tag">
+              <small>السعر الرسمي: </small>
+              <span>{{item.officialPrice | number}} {{ selectedCountry().currency }}</span>
+            </div>
+
+          <div class="winner-highlight">
+            <div class="winner-info">
+              <div class="winner-avatar">{{ item.winner.avatar }}</div>
+              <div class="winner-text">
+                <small>الفائز بالمزاد</small>
+                <strong>{{ item.winner.name }}</strong>
+              </div>
+            </div>
+            <i class="bi bi-trophy-fill trophy-icon"></i>
+          </div>
+
+          <div class="data-specs-grid mt-2">
+            <div class="spec-item">
+              <small>سعر البداية</small>
+              <strong>{{item.startPrice}}</strong>
+            </div>
+            <div class="spec-item">
+              <small>المستهدف</small>
+              <strong>{{item.targetPrice}}</strong>
+            </div>
+          </div>
+
+          <button class="btn-admin-view w-100 outline-btn"
+                  style="margin-top: 15px;"
+                  [routerLink]="['/dashboard/order-details', item.id]">
+            تفاصيل الطلب والشحن <i class="bi bi-truck"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+
+<!-- <div class="home-wrapper" dir="rtl">
+
+  <div class="stats-grid mb-4">
+    <header class="points-summary-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>مزادات نشطة في {{ dashboard.selectedCountry().name }}</span>
+          <h2>{{ filteredAuctions().length }} <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-lightning-fill"></i></div>
+      </div>
+      <div class="card-footer"><small>محدث الآن</small></div>
+    </header>
+
+    <header class="points-summary-card success-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>إجمالي المزادات المنتهية</span>
+          <h2>120 <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-check2-all"></i></div>
+      </div>
+      <div class="card-footer"><small>خلال الأسبوع الحالي</small></div>
+    </header>
+
+    <header class="points-summary-card warning-card">
+      <div class="card-content">
+        <div class="text-side">
+          <span>مزادات قادمة ({{ dashboard.selectedCountry().code }})</span>
+          <h2>{{ filteredUpcoming().length }} <small>منتج</small></h2>
+        </div>
+        <div class="pulse-circle"><i class="bi bi-calendar-event"></i></div>
+      </div>
+      <div class="card-footer"><small>استعد للبدء</small></div>
+    </header>
+  </div>
+
+  <div class="header d-flex align-items-center justify-content-between mb-4">
+    <h4 class="section-title">المزادات النشطة حالياً</h4>
+    <button id="moreBtnActive" class="btn-admin-view show-more-mobile">
+      عرض المزيد <i class="bi bi-arrow-left"></i>
+    </button>
+  </div>
+
+  <div class="swiper-container auctions-swiper mb-5">
+    <swiper [config]="swiperConfig">
+      <ng-template swiperSlide *ngFor="let item of filteredAuctions()">
+        <div class="auction-mini-card">
+          <div class="card-top">
+            <div class="modern-timer">
+              <div class="time-block">
+                <strong>{{ getTimeParts(item.timeLeft).h }}</strong>
+                <span>{{ item.timeLeft > 86400 ? 'Days' : 'Hours' }}</span>
+              </div>
+              <div class="time-block">
+                <strong>{{ getTimeParts(item.timeLeft).m }}</strong>
+                <span>Mins</span>
+              </div>
+              <div class="time-block">
+                <strong>{{ getTimeParts(item.timeLeft).s }}</strong>
+                <span>Secs</span>
+              </div>
+            </div>
+            <div class="target-price">
+              <small>المستهدف</small>
+              <span>{{item.targetPrice | number}}</span>
+            </div>
+          </div>
+
+          <div class="img-wrapper">
+            <div class="live-tag">
+              <span class="pulse-dot"></span> مباشر
+            </div>
+            <img [src]="item.img" alt="Product">
+          </div>
+
+          <div class="card-main">
+            <h5 class="product-name">{{item.name}}</h5>
+            <div class="official-price-tag">
+              <small>السعر الرسمي: </small>
+              <span>{{item.officialPrice | number}} {{ selectedCountry().currency }}</span>
+            </div>
+            <div class="data-specs-grid">
+              <div class="spec-item">
+                <small>نقطة البداية</small>
+                <strong>{{item.startPrice}}</strong>
+              </div>
+              <div class="spec-item">
+                <small>إجمالي النقاط</small>
+                <strong style="color: #10b981;">{{item.totalPoints}}</strong>
+              </div>
+            </div>
+
+            <div class="top-bidder-highlight" [class.is-ai]="item.lastBidder.isAi">
+              <div class="header-row">
+                <small>أعلى مزايد حالياً</small>
+                <span class="bid-val">{{item.currentBid | number}} <small>نقطة</small></span>
+              </div>
+              <div class="bidder-details">
+                <div class="avatar">{{ item.lastBidder.isAi ? 'AI' : item.lastBidder.name[0] }}</div>
+                <div class="info">
+                  <strong>{{item.lastBidder.name}}</strong>
+                  <small>{{item.lastBidder.isAi ? 'نظام ذكاء اصطناعي' : 'مستخدم حقيقي'}}</small>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-admin-view w-100" [routerLink]="['/dashboard/product-details', item.id]">
+              عرض التفاصيل والتحكم
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </swiper>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="header d-flex align-items-center justify-content-between mb-4">
+    <h4 class="section-title">مزادات ستبدأ قريباً</h4>
+    <button id="moreBtnUpcoming" class="btn-admin-view show-more-mobile">
+      عرض المزيد <i class="bi bi-arrow-left"></i>
+    </button>
+  </div>
+
+  <div class="swiper-container upcoming-swiper mb-5">
+    <swiper [config]="swiperConfig">
+      <ng-template swiperSlide *ngFor="let up of filteredUpcoming()">
+        <div class="auction-mini-card">
+          <div class="card-top">
+            <span class="timer upcoming-timer">
+              <i class="bi bi-calendar3"></i> يبدأ قريباً
+            </span>
+            <div class="target-price">
+              <small>المستهدف</small>
+              <span style="color: #6366f1;">{{up.targetPrice | number}}</span>
+            </div>
+          </div>
+
+          <div class="img-wrapper">
+            <img [src]="up.img" alt="Product">
+          </div>
+
+          <div class="card-main">
+            <h5 class="product-name">{{up.name}}</h5>
+            <div class="official-price-tag">
+              <small>السعر الرسمي: </small>
+              <span>{{up.officialPrice | number}} {{ selectedCountry().currency }}</span>
+            </div>
+            <div class="data-specs-grid">
+              <div class="spec-item">
+                <small>سعر البداية</small>
+                <strong>{{up.startPrice}}</strong>
+              </div>
+              <div class="spec-item">
+                <small>وقت البداية</small>
+                <strong style="color: #4f46e5;">{{up.startTime}}</strong>
+              </div>
+            </div>
+
+            <div class="top-bidder-highlight upcoming-info-box">
+              <div class="header-row" style="border: none; margin-bottom: 0;">
+                <small>تاريخ البداية المقرر</small>
+                <span class="bid-val" style="font-size: 0.9rem; color: #475569;">{{up.startDate}}</span>
+              </div>
+            </div>
+            <button type="button" class="btn-admin-view w-100 mt-3" (click)="openEditModal(up, $event)">
+              <i class="bi bi-pencil-square me-2"></i> تعديل البيانات
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </swiper>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="header d-flex align-items-center justify-content-between mb-4">
+    <h4 class="section-title">مزادات منتهية</h4>
+    <button id="moreBtnFinished" class="btn-admin-view show-more-mobile">
+      عرض المزيد <i class="bi bi-arrow-left"></i>
+    </button>
+  </div>
+
+  <div class="swiper-container finished-swiper mb-5">
+    <swiper [config]="swiperConfig">
+      <ng-template swiperSlide *ngFor="let item of filteredFinished()">
+        <div class="auction-mini-card finished-card">
+          <div class="card-top">
+            <span class="timer finished-tag">
+              <i class="bi bi-check-circle-fill"></i> منتهي
+            </span>
+            <div class="target-price">
+              <small>السعر النهائي</small>
+              <span style="color: #10b981;">{{item.finalPrice | number}}</span>
+            </div>
+          </div>
+
+          <div class="img-wrapper gray-scale">
+            <img [src]="item.img" alt="Product">
+          </div>
+
+          <div class="card-main">
+            <h5 class="product-name">{{item.name}}</h5>
+            <div class="official-price-tag">
+              <small>السعر الرسمي: </small>
+              <span>{{item.officialPrice | number}} {{ selectedCountry().currency }}</span>
+            </div>
+
+            <div class="winner-highlight">
+              <div class="winner-info">
+                <div class="winner-avatar">{{ item.winner.avatar }}</div>
+                <div class="winner-text">
+                  <small>الفائز بالمزاد</small>
+                  <strong>{{ item.winner.name }}</strong>
+                </div>
+              </div>
+              <i class="bi bi-trophy-fill trophy-icon"></i>
+            </div>
+
+            <div class="data-specs-grid mt-2">
+              <div class="spec-item">
+                <small>سعر البداية</small>
+                <strong>{{item.startPrice}}</strong>
+              </div>
+              <div class="spec-item">
+                <small>المستهدف</small>
+                <strong>{{item.targetPrice}}</strong>
+              </div>
+            </div>
+
+            <button class="btn-admin-view w-100 outline-btn" style="margin-top: 15px;" [routerLink]="['/dashboard/order-details', item.id]">
+              تفاصيل الطلب <i class="bi bi-truck"></i>
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </swiper>
+  </div>
+</div>
+ -->
+
+
+
+<div class="custom-modal-overlay" *ngIf="isModalOpen()" (click)="closeModal()">
+  <div class="custom-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="header-title">
+        <i class="bi bi-pencil-square"></i>
+        <span>تعديل المزاد</span>
+      </div>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <form class="modal-form" (ngSubmit)="saveChanges()" *ngIf="selectedAuction">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>اسم المنتج</label>
+          <input type="text" [(ngModel)]="selectedAuction.name" name="name" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>السعر الرسمي</label>
+          <input type="number" [(ngModel)]="selectedAuction.officialPrice" name="price" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>تاريخ البدء</label>
+          <input type="text" [(ngModel)]="selectedAuction.startDate" name="startDate" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>المدة بالساعات</label>
+          <input type="number" [(ngModel)]="selectedAuction.hours" name="hours" class="form-control">
+        </div>
+        <div class="form-group full-width">
+          <label>النقاط المستهدفة</label>
+          <input type="number" [(ngModel)]="selectedAuction.targetPrice" name="target" class="form-control">
+        </div>
+      </div>
+
+      <div class="image-update-section">
+        <label>تحديث الصورة</label>
+        <div class="upload-box" (click)="fileInputEdit.click()">
+          <input type="file" #fileInputEdit (change)="onFileSelected($event)" hidden>
+          <img [src]="imagePreview || selectedAuction.img" class="img-preview">
+          <div class="upload-overlay">
+              <i class="bi bi-camera"></i>
+              <span>تغيير الصورة</span>
+          </div>
+          <button type="button" class="remove-img-btn" (click)="$event.stopPropagation(); removeImage()" *ngIf="imagePreview">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="closeModal()">إلغاء</button>
+        <button type="submit" class="btn-save">حفظ التغييرات</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="home-modal-portal" *ngIf="isModalOpen()" (click)="closeModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <span>تعديل المزاد: {{selectedAuction?.name}}</span>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+
+    <form (ngSubmit)="saveChanges()" class="modal-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>اسم المنتج</label>
+          <input type="text" [(ngModel)]="selectedAuction.name" name="name">
+        </div>
+        <div class="form-group">
+          <label>السعر المستهدف</label>
+          <input type="number" [(ngModel)]="selectedAuction.targetPrice" name="targetPrice">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="closeModal()">إلغاء</button>
+        <button type="submit" class="btn-save">حفظ التغييرات</button>
+      </div>
+    </form>
+  </div>
+</div> -->

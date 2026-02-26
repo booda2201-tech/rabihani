@@ -1,0 +1,316 @@
+
+<div class="home-wrapper" dir="rtl">
+  <header class="points-summary-card">
+    <div class="card-content">
+      <div class="text-side">
+        <span>مزادات دولة {{ selectedCountry().name }}</span>
+        <h2>{{ filteredList().length }} <small>مزاد متاح</small></h2>
+      </div>
+      <button class="btn-add-auction" (click)="openAddModal()">
+        <i class="bi bi-plus-circle"></i> إضافة لمزاد
+      </button>
+    </div>
+  </header>
+
+  <div class="filter-section">
+    <div class="filter-tabs">
+      <button [class.active]="currentFilter() === 'active'" (click)="setFilter('active')"> النشطة </button>
+      <button [class.active]="currentFilter() === 'upcoming'" (click)="setFilter('upcoming')"> القادمة </button>
+      <button [class.active]="currentFilter() === 'completed'" (click)="setFilter('completed')"> المنتهية </button>
+    </div>
+  </div>
+
+  <div class="auctions-grid">
+    <ng-container *ngFor="let item of filteredList() | slice:0:itemsToShow()">
+            <div class="auction-mini-card" [class.completed-card]="item.status === 'completed'">
+              <div class="card-top">
+                <div class="modern-timer" *ngIf="item.status === 'active'">
+                  <div class="time-block" *ngIf="getTimeParts(item.timeLeft).d > 0">
+                    <strong>{{ getTimeParts(item.timeLeft).d }}</strong><span> يوم </span>
+                  </div>
+                  <div class="time-block"><strong>{{ getTimeParts(item.timeLeft).h }}</strong><span> ساعة </span></div>
+                  <div class="time-block"><strong>{{ getTimeParts(item.timeLeft).m }}</strong><span> دقيقة </span></div>
+                  <div class="time-block seconds" [class.danger]="item.timeLeft < 60">
+                    <strong>{{ getTimeParts(item.timeLeft).s }}</strong><span> ث </span>
+                  </div>
+                </div>
+
+                <div class="status-badge upcoming" *ngIf="item.status === 'upcoming'">
+                  <i class="bi bi-clock"></i> يبدأ: {{ item.startDate }}
+                </div>
+
+                <div class="status-badge completed" *ngIf="item.status === 'completed'">
+                  <i class="bi bi-check-circle"></i> مزاد منتهي
+                </div>
+
+                <div class="target-price">
+                  <small>المستهدف</small>
+                  <span>{{item.targetPrice | number}} نقطة </span>
+                </div>
+              </div>
+
+              <div class="img-wrapper">
+                <div class="live-tag" *ngIf="item.status === 'active'">
+                  <span class="pulse-dot"></span> مباشر
+                </div>
+                <img [src]="item.img" [alt]="item.name" [style.filter]="item.status === 'completed' ? 'grayscale(0.5)' : ''">
+              </div>
+
+              <div class="card-main">
+                <h5 class="product-name">{{item.name}}</h5>
+
+                <div class="official-price-tag">
+                  <small>  السعرالرسمي:  </small>
+                  <span>{{item.officialPrice | number}} {{ selectedCountry().currency }}</span>
+                </div>
+
+                <div class="data-specs-grid" *ngIf="item.status === 'active'">
+                  <div class="spec-item">
+                    <small> نقطة البداية </small>
+                    <strong>{{item.startPrice}}</strong>
+                  </div>
+                  <div class="spec-item">
+                    <small> إجمالي النقاط </small>
+                    <strong style="color: #10b981;">{{item.totalPoints}}</strong>
+                  </div>
+                </div>
+
+                <div class="top-bidder-highlight" *ngIf="item.status !== 'upcoming'" [class.is-ai]="item.lastBidder.isAi">
+                  <div class="header-row">
+                    <small>{{ item.status === 'completed' ? 'الفائز بالمزاد' : 'أعلى مزايد' }}</small>
+                    <span class="bid-val">{{item.currentBid | number}} <small> نقطة </small></span>
+                  </div>
+                  <div class="bidder-details">
+                    <div class="avatar">{{ item.lastBidder.isAi ? 'AI' : (item.lastBidder.name ? item.lastBidder.name[0] : '?') }}</div>
+                    <div class="info">
+                        <strong>{{item.lastBidder.name}}</strong>
+                        <small *ngIf="item.lastBidder.time" class="bid-time">{{ item.lastBidder.time }}</small>
+                    </div>
+                  </div>
+                </div>
+
+                <button *ngIf="item.status === 'active'"
+                        class="btn-admin-view w-100 mt-3"
+                        [routerLink]="['/dashboard/product-details', item.id]">
+                  عرض التفاصيل <i class="bi bi-arrow-left"></i>
+                </button>
+
+                <button *ngIf="item.status === 'upcoming'"
+                        class="btn-edit-auction w-100 mt-3"
+                        (click)="openEditModal(item)">
+                  تعديل المزاد <i class="bi bi-pencil-square"></i>
+                </button>
+              </div>
+            </div>
+      </ng-container>
+  </div>
+
+  <div class="load-more-container" *ngIf="itemsToShow() < filteredList().length">
+    <button class="btn-load-more" (click)="loadMore()">عرض المزيد</button>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="custom-modal-overlay" [class.show]="showAddModal" (click)="closeModal()">
+  <div class="custom-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-handle-bar"></div>
+    <div class="modal-header">
+      <h3><i class="bi bi-plus-circle-fill"></i> مزاد جديد</h3>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+
+    <form class="modal-form" (ngSubmit)="submitNewAuction()">
+      <div class="form-row split">
+        <div class="form-group">
+        <label>اسم المنتج</label>
+        <input type="text" [(ngModel)]="newAuctionObj.name" name="name" placeholder="مثلاً: iPhone 16 Pro">
+        </div>
+        <div class="form-group">
+            <label>السعر الرسمي للسلعة</label>
+            <input type="number" [(ngModel)]="newAuctionObj.officialPrice" name="officialPrice" placeholder="مثلاً: 15000">
+        </div>
+      </div>
+      <div class="form-row split">
+        <div class="form-group">
+          <label>تاريخ البداية</label>
+          <input type="date" [(ngModel)]="newAuctionObj.date" name="date">
+        </div>
+        <div class="form-group">
+          <label>المدة (ساعات)</label>
+          <input type="number" [(ngModel)]="newAuctionObj.hours" name="hours" placeholder="24">
+        </div>
+      </div>
+
+      <div class="form-row split">
+        <div class="form-group">
+          <label>نقاط البداية</label>
+          <input type="number" [(ngModel)]="newAuctionObj.startPoints" name="start" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>المستهدف</label>
+          <input type="number" [(ngModel)]="newAuctionObj.targetPoints" name="target" placeholder="5000">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>صورة المنتج</label>
+          <div class="file-upload-wrapper">
+            <input type="file" #fileInputAdd (change)="onFileSelected($event)" accept="image/*" hidden>
+            <div class="upload-area" (click)="fileInputAdd.click()" [class.has-image]="imagePreview">
+              <div *ngIf="!imagePreview" class="upload-placeholder">
+                <i class="bi bi-cloud-arrow-up"></i>
+                <span>اضغط لاختيار صورة</span>
+              </div>
+              <img *ngIf="imagePreview" [src]="imagePreview" class="preview-img">
+              <button type="button" *ngIf="imagePreview" class="btn-remove-img" (click)="$event.stopPropagation(); removeImage()">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" (click)="closeModal()">إلغاء</button>
+        <button type="submit" class="btn-save">نشر المزاد</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="custom-modal-overlay" [class.show]="isEditMode" (click)="closeModal()">
+  <div class="custom-modal-content" (click)="$event.stopPropagation()">
+    <!-- <div class="modal-handle-bar"></div> -->
+    <div class="modal-header">
+      <h3><i class="bi bi-pencil-square"></i> تعديل المزاد</h3>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+
+    <form class="modal-form" (ngSubmit)="saveChanges()">
+      <div class="form-row split">
+        <div class="form-group">
+          <label>اسم المنتج</label>
+          <input type="text" [(ngModel)]="newAuctionObj.name" name="editName">
+        </div>
+          <div class="form-group">
+              <label>السعر الرسمي</label>
+              <input type="number" [(ngModel)]="newAuctionObj.officialPrice" name="editOfficialPrice">
+          </div>
+        </div>
+        <div class="form-row split">
+          <div class="form-group">
+            <label>تاريخ البدء</label>
+            <input type="date" [(ngModel)]="newAuctionObj.date" name="editDate">
+          </div>
+          <div class="form-group">
+            <label>المدة بالساعات (للمزادات القادمة)</label>
+            <input type="number" [(ngModel)]="newAuctionObj.hours" name="editHours" placeholder="مثلاً: 24">
+          </div>
+        </div>
+      <div class="form-row split">
+        <div class="form-group">
+          <label>النقاط المستهدفه</label>
+          <input type="number" [(ngModel)]="newAuctionObj.targetPoints" name="editTarget">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>تحديث الصورة</label>
+          <div class="file-upload-wrapper">
+            <input type="file" #fileInputEdit (change)="onFileSelected($event)" accept="image/*" hidden>
+            <div class="upload-area" (click)="fileInputEdit.click()" [class.has-image]="imagePreview || newAuctionObj.img">
+              <img *ngIf="imagePreview || newAuctionObj.img" [src]="imagePreview || newAuctionObj.img" class="preview-img">
+
+              <div *ngIf="!imagePreview && !newAuctionObj.img" class="upload-placeholder">
+                <i class="bi bi-image"></i>
+                <span>تغيير الصورة</span>
+              </div>
+
+              <button type="button" *ngIf="imagePreview" class="btn-remove-img" (click)="$event.stopPropagation(); removeImage()">
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" (click)="closeModal()">إلغاء</button>
+        <button type="submit" class="btn-save">حفظ التغييرات</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+      <!-- <div class="auction-mini-card" [class.completed-card]="item.status === 'completed'">
+
+        <div class="card-top">
+          <div class="modern-timer" *ngIf="item.status === 'active'">
+            <div class="time-block" *ngIf="getTimeParts(item.timeLeft).d > 0">
+              <strong>{{ getTimeParts(item.timeLeft).d }}</strong><span>يوم</span>
+            </div>
+            <div class="time-block"><strong>{{ getTimeParts(item.timeLeft).h }}</strong><span>ساعة</span></div>
+            <div class="time-block"><strong>{{ getTimeParts(item.timeLeft).m }}</strong><span>دقيقة</span></div>
+            <div class="time-block seconds" [class.danger]="item.timeLeft < 60">
+              <strong>{{ getTimeParts(item.timeLeft).s }}</strong><span>ث</span>
+            </div>
+          </div>
+
+          <div class="status-badge upcoming" *ngIf="item.status === 'upcoming'">
+            <i class="bi bi-clock"></i> يبدأ: {{ item.startDate }}
+          </div>
+
+            <div class="target-price">
+              <small>المستهدف</small>
+              <span>{{item.targetPrice | number}} نقطة </span>
+            </div>
+        </div>
+
+        <div class="img-wrapper">
+          <div class="live-tag" *ngIf="item.status === 'active'">
+            <span class="pulse-dot"></span> مباشر
+          </div>
+          <img [src]="item.img" alt="Product">
+        </div>
+
+        <div class="card-main">
+          <h5 class="product-name">{{item.name}}</h5>
+          <div class="official-price-tag">
+              <small>السعر الرسمي: </small>
+              <span>{{item.officialPrice | number}} {{ selectedCountry().currency }}</span>
+            </div>
+
+          <div class="top-bidder-highlight" *ngIf="item.status !== 'upcoming'">
+            <div class="header-row">
+                <small>{{ item.status === 'completed' ? 'الفائز بالمزاد' : 'أعلى مزايد' }}</small>
+                  <span class="bid-val">{{item.currentBid | number}} <small>نقطة</small></span>
+            </div>
+            <div class="bidder-details">
+              <div class="avatar">{{ item.lastBidder.name[0] }}</div>
+              <strong>{{item.lastBidder.name}}</strong>
+            </div>
+          </div>
+
+          <button *ngIf="item.status === 'active'"
+          class="btn-admin-view w-100 mt-3"
+          [routerLink]="['/dashboard/product-details', item.id]">
+          عرض التفاصيل
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <button *ngIf="item.status === 'upcoming'"
+                  class="btn-edit-auction w-100 mt-3"
+                  (click)="openEditModal(item)">
+            تعديل المزاد <i class="bi bi-pencil-square"></i>
+          </button>
+        </div>
+      </div> -->

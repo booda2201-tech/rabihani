@@ -1,0 +1,143 @@
+
+
+      <!-- <div class="luxury-page-container rtl" dir="rtl">
+  <div class="content-wrapper">
+    <header class="glass-header">
+      <div class="header-info">
+        <span class="label">تصفح مزادات {{ selectedCountry().name }}</span>
+        <h1>الإعلانات النشطة</h1>
+      </div>
+      <button class="btn-add" (click)="openModal()">
+        <i class="bi bi-plus"></i> إضافة إعلان جديد
+      </button>
+    </header>
+    <div class="ads-hero-list">
+      <section class="hero-slider static-hero" *ngFor="let ad of filteredAds()">
+        <div class="slider-container">
+          <div class="slide-bg-image">
+            <img [src]="ad.image" [alt]="ad.title">
+            <div class="slide-overlay"></div>
+          </div>
+          <div class="slider-inner">
+          <div class="slide-content">
+              <span class="promo-badge"
+                    [ngStyle]="{'background-color': ad.color ? ad.color + '22' : 'rgba(59, 130, 246, 0.2)',
+                                'color': ad.color || '#3b82f6',
+                                'border': '1px solid ' + (ad.color || '#3b82f6')}">
+                {{ ad.subtitle || 'مزاد جديد' }}
+              </span>
+              <h2 class="slide-title">
+                امتلك الآن <br>
+                <span class="highlight" [ngStyle]="{'color': ad.color || '#fff'}">
+                  {{ ad.title }}
+                </span>
+              </h2>
+              <p class="ad-full-desc" *ngIf="ad.desc">
+                {{ ad.desc }}
+              </p>
+              <div class="slider-actions">
+                <button class="btn-delete-glass" (click)="deleteAd(ad.id)">
+                  <i class="bi bi-trash"></i> حذف الإعلان
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="no-ads-placeholder" *ngIf="filteredAds().length === 0">
+        <i class="bi bi-megaphone"></i>
+        <p>لا توجد إعلانات متاحة حالياً في {{ selectedCountry().name }}</p>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div class="luxury-page-container rtl" dir="rtl">
+  <div class="content-wrapper">
+    <header class="glass-header">
+      <div class="header-info">
+        <span class="label">تصفح مزادات {{ selectedCountry().name }}</span>
+        <h1>الإعلانات النشطة</h1>
+      </div>
+      <button class="btn-add" (click)="openModal()">
+        <i class="bi bi-plus"></i> إضافة إعلان جديد
+      </button>
+    </header>
+
+    <div class="ads-hero-list">
+      <section class="hero-slider static-hero" *ngFor="let ad of advertisements">
+        <div class="slider-container">
+          <div class="slide-bg-image">
+            <img [src]="ad.imageUrl" [alt]="ad.title">
+            <div class="slide-overlay"></div>
+          </div>
+          <div class="slider-inner">
+            <div class="slide-content">
+              <span class="promo-badge">{{ ad.subtitle || 'مزاد جديد' }}</span>
+              <h2 class="slide-title">
+                امتلك الآن <br>
+                <span class="highlight">{{ ad.title }}</span>
+              </h2>
+              <p class="ad-full-desc" *ngIf="ad.description">{{ ad.description }}</p>
+              <div class="slider-actions">
+                <button class="btn-delete-glass" (click)="deleteAd(ad.id)">
+                  <i class="bi bi-trash"></i> حذف الإعلان
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="no-ads-placeholder" *ngIf="filteredAds().length === 0">
+        <i class="bi bi-megaphone"></i>
+        <p>لا توجد إعلانات متاحة حالياً في {{ selectedCountry().name }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<!-- <div class="modal-overlay" *ngIf="showAddModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2>إضافة إعلان جديد في {{ selectedCountry().name }}</h2>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </header>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>عنوان الإعلان</label>
+        <input type="text" [(ngModel)]="newAd.title" placeholder="مثلاً: MacBook Pro M3">
+      </div>
+
+      <div class="form-group">
+        <label>السعر الابتدائي ({{ selectedCountry().currency }})</label>
+        <input type="number" [(ngModel)]="newAd.highestBid" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
+        <label>صورة المنتج</label>
+        <div class="file-upload-wrapper" [class.has-image]="newAd.image">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" id="fileInput">
+          <label for="fileInput" class="file-label">
+            <i class="bi bi-cloud-upload" *ngIf="!newAd.image"></i>
+            <span *ngIf="!newAd.image">اضغط لرفع صورة</span>
+            <img [src]="newAd.image" *ngIf="newAd.image" class="preview-img">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <footer class="modal-footer">
+      <button class="btn-cancel" (click)="closeModal()">إلغاء</button>
+      <button class="btn-submit" (click)="addNewAdvertisement()" [disabled]="!newAd.image || !newAd.title">نشر الإعلان</button>
+    </footer>
+  </div>
+</div> -->
