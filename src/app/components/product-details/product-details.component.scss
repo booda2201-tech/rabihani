@@ -31,34 +31,27 @@ $success: #10b981;
 }
 
 // الكارت الأيمن
-.product-info-card {
-  background: white; border-radius: 24px; padding: 30px; border: 1px solid #edf2f7;
-  .img-container {
-    height: 350px; background: #fafafa; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px;
-    img { max-height: 80%; object-fit: contain; }
-  }
-  h1 { font-size: 1.8rem; color: $ai-color; margin-bottom: 15px; }
-  .description { color: #64748b; line-height: 1.6; margin-bottom: 25px; }
+// .product-info-card {
+//   background: white; border-radius: 24px; padding: 30px; border: 1px solid #edf2f7;
+//   .img-container {
+//     height: 350px; background: #fafafa; border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px;
+//     img { max-height: 80%; object-fit: contain; }
+//   }
+//   h1 { font-size: 1.8rem; color: $ai-color; margin-bottom: 15px; }
+//   .description { color: #64748b; line-height: 1.6; margin-bottom: 25px; }
 
-  .stats-row {
-    display: flex; gap: 20px;
-    .stat-item {
-      background: $bg-light; padding: 10px 15px; border-radius: 12px; color: #475569; font-size: 0.9rem;
-      i { color: $primary; margin-left: 5px; }
-    }
-  }
-}
+//   .stats-row {
+//     display: flex; gap: 20px;
+//     .stat-item {
+//       background: $bg-light; padding: 10px 15px; border-radius: 12px; color: #475569; font-size: 0.9rem;
+//       i { color: $primary; margin-left: 5px; }
+//     }
+//   }
+// }
 
 // الكارت الأيسر
 .admin-controls-card {
   display: flex; flex-direction: column; gap: 20px;
-
-  .current-status-box {
-    background: linear-gradient(135deg, $ai-color, #334155); color: white; padding: 25px; border-radius: 24px;
-    display: flex; justify-content: space-between; align-items: center;
-    h2 { font-size: 2rem; margin: 0; color: #38bdf8; }
-    .target { color: $success; font-weight: bold; }
-  }
 
   .history-section {
     background:  #1a2130;
@@ -338,16 +331,15 @@ $success: #10b981;
 
 // شبكة الأزرار المتجاوبة
 .action-buttons-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 12px;
   margin-top: 20px;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; // تحت بعض في الموبايل
     position: sticky;
-    bottom: 10px; // تجربة تشبه تطبيقات الموبايل
-    background: rgba(255,255,255,0.8);
+    bottom: 10px;
     backdrop-filter: blur(10px);
     padding: 10px;
     border-radius: 20px;
@@ -698,7 +690,10 @@ $blue-verified: #3b82f6;
 
   // 1. Current Status Box (Enhanced)
   .current-status-box {
-    background: linear-gradient(145deg, $ai-color, #0f172a); color: white; padding: 25px; border-radius: 24px;
+    background: linear-gradient(145deg, $ai-color,  #222735);
+    color: white;
+    padding: 25px;
+    border-radius: 24px;
     box-shadow: 0 10px 30px -10px rgba($ai-color, 0.4);
 
     .price-header {
@@ -897,18 +892,18 @@ $blue-verified: #3b82f6;
   }
 
   // Buttons Grid
-  .action-buttons-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-    button {
-      height: 50px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
-      &.btn-pause-toggle {
-          background: #fee2e2; color: $danger;
-          &.paused { background: #dcfce7; color: $success; }
-      }
-      &.btn-edit-details { background: $ai-color; color: white; &:hover { background: lighten($ai-color, 10%); } }
-      &:active { transform: scale(0.97); }
-    }
-  }
+  // .action-buttons-grid {
+  //   display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  //   button {
+  //     height: 50px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+  //     &.btn-pause-toggle {
+  //         background: #fee2e2; color: $danger;
+  //         &.paused { background: #dcfce7; color: $success; }
+  //     }
+  //     &.btn-edit-details { background: $ai-color; color: white; &:hover { background: lighten($ai-color, 10%); } }
+  //     &:active { transform: scale(0.97); }
+  //   }
+  // }
 }
 
 // Modal Styles (Same as before but refined)
@@ -1425,6 +1420,7 @@ $color-blue: #1e293b;
   }
 
   .digital-timer-container {
+    direction: ltr;
     background: rgba(255, 255, 255, 0.05);
     padding: 10px 15px;
     border-radius: 15px;
@@ -1449,60 +1445,60 @@ $color-blue: #1e293b;
 // ==========================================
 // 3. كارت معلومات المنتج (Product Info Card)
 // ==========================================
-.product-info-card {
-  height: 82%;
-  background: $bg-card;
-  border-radius: 24px;
-  padding: 20px;
+// .product-info-card {
+//   height: 82%;
+//   background: $bg-card;
+//   border-radius: 24px;
+//   padding: 20px;
 
-  @media (max-width: 780px) {
-    height: auto !important;
-    padding: 15px; // تقليل الـ Padding الداخلي
+//   @media (max-width: 780px) {
+//     height: auto !important;
+//     padding: 15px; // تقليل الـ Padding الداخلي
 
-    .header-row {
-      flex-direction: row; // التارقت فوق البادج
-      gap: 15px;
-      align-items: flex-start !important;
-    }
-  }
+//     .header-row {
+//       flex-direction: row; // التارقت فوق البادج
+//       gap: 15px;
+//       align-items: flex-start !important;
+//     }
+//   }
 
-  .img-container {
-    width: 100%;
-    margin: 20px 0;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #fff;
+//   .img-container {
+//     width: 100%;
+//     margin: 20px 0;
+//     border-radius: 20px;
+//     overflow: hidden;
+//     background: #fff;
 
-    img {
-      width: 100%;
-      height: auto; // الحفاظ على النسبة في الموبايل
-      max-height: 350px;
-      object-fit: contain;
-    }
-  }
+//     img {
+//       width: 100%;
+//       height: auto; // الحفاظ على النسبة في الموبايل
+//       max-height: 350px;
+//       object-fit: contain;
+//     }
+//   }
 
-  .text-content {
-    h1 {
-      font-size: 1.5rem; // تصغير العنوان في الموبايل
-      margin-bottom: 10px;
-    }
+//   .text-content {
+//     h1 {
+//       font-size: 1.5rem; // تصغير العنوان في الموبايل
+//       margin-bottom: 10px;
+//     }
 
-    .stats-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap; // لو الموبايل صغير جداً ينزلوا تحت بعض
+//     .stats-row {
+//       display: flex;
+//       gap: 10px;
+//       flex-wrap: wrap; // لو الموبايل صغير جداً ينزلوا تحت بعض
 
-      .stat-item {
-        flex: 1;
-        min-width: 120px;
-        background: rgb(255, 255, 255);
-        padding: 10px;
-        border-radius: 12px;
-        justify-content: center;
-      }
-    }
-  }
-}
+//       .stat-item {
+//         flex: 1;
+//         min-width: 120px;
+//         background: rgb(255, 255, 255);
+//         padding: 10px;
+//         border-radius: 12px;
+//         justify-content: center;
+//       }
+//     }
+//   }
+// }
 
 // ==========================================
 // 4. قسم التحكم والمزايدات (Admin Controls)
@@ -1522,22 +1518,22 @@ $color-blue: #1e293b;
   }
 
   // تظبيط الأزرار في الأسفل
-  .action-buttons-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 20px;
+  // .action-buttons-grid {
+  //   display: grid;
+  //   grid-template-columns: 1fr 1fr;
+  //   gap: 10px;
+  //   margin-top: 20px;
 
-    @media (max-width: 400px) {
-      grid-template-columns: 1fr; // الأزرار تحت بعض في الشاشات المتناهية الصغر
-    }
+  //   @media (max-width: 400px) {
+  //     grid-template-columns: 1fr; // الأزرار تحت بعض في الشاشات المتناهية الصغر
+  //   }
 
-    button {
-      padding: 12px;
-      font-size: 0.9rem;
-      border-radius: 12px;
-    }
-  }
+  //   button {
+  //     padding: 12px;
+  //     font-size: 0.9rem;
+  //     border-radius: 12px;
+  //   }
+  // }
 }
 
 // ==========================================
@@ -1687,4 +1683,14 @@ $text-dim: #94a3b8;                      // لون النص الباهت
       }
     }
   }
+}
+
+
+
+.product-subname{
+  color: $text-dim;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  display: block;
+
 }

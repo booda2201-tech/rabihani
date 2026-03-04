@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-
   baseUrl: string = 'http://alhendalcompany-001-site7.stempurl.com/api';
 
   constructor(private http: HttpClient) { }
@@ -50,24 +49,18 @@ export class ApiService {
 
   // --- الإعلانات (Advertisements) ---
 
-// جلب الكل (صحيحة)
-getAdvertisements(): Observable<any> {
-  return this.http.get(`${this.baseUrl}/Advertisements`);
-}
-
-getAdvertisementById(id: number): Observable<any> {
-  return this.http.get(`${this.baseUrl}/Advertisements/${id}`);
-}
-
-// الإضافة (كانت خاطئة وتم تعديلها بحذف /api الزائدة)
-addAdvertisement(data: FormData): Observable<any> {
-  return this.http.post(`${this.baseUrl}/Advertisements`, data);
-}
-
-// الحذف (صحيحة)
-deleteAdvertisement(id: number): Observable<any> {
-  return this.http.delete(`${this.baseUrl}/Advertisements/${id}`);
-}
+  getAdvertisements(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/Advertisements`);
+  }
+  getAdvertisementById(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/Advertisements/${id}`);
+  }
+  addAdvertisement(data: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/Advertisements`, data);
+  }
+  deleteAdvertisement(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/Advertisements/${id}`);
+  }
 
   // --- الدول (Countries) ---
 
@@ -86,7 +79,6 @@ deleteAdvertisement(id: number): Observable<any> {
   deleteCountry(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/Countries/${id}`);
   }
-
 
   // --- الشركات (Companies) ---
 
@@ -110,6 +102,49 @@ deleteAdvertisement(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/Companies/${id}`);
   }
 
+  // --- غرف المزاد (Auction Rooms) ---
+
+  getActiveAuctionRooms(countryId?: number, categoryId?: number): Observable<any> {
+    let params = new HttpParams();
+
+    if (countryId) {
+      params = params.set('countryId', countryId.toString());
+    }
+    if (categoryId) {
+      params = params.set('categoryId', categoryId.toString());
+    }
+
+    return this.http.get(`${this.baseUrl}/AuctionRooms/active`, { params });
+  }
+
+  postAuction(data: any) {
+    return this.http.post(`${this.baseUrl}/AuctionRooms`, data);
+  }
+
+  updateAuctionRoom(id: any, data: any) {
+    return this.http.put(`${this.baseUrl}/AuctionRooms/${id}`, data);
+  }
+
+  // ---  كل غرف المزاد مع الفلترة ---
+
+  getAuctionRooms(countryId?: number, categoryId?: number): Observable<any> {
+    let params = new HttpParams();
+
+    if (countryId) {
+      params = params.set('countryId', countryId.toString());
+    }
+    if (categoryId) {
+      params = params.set('categoryId', categoryId.toString());
+    }
+
+
+    return this.http.get(`${this.baseUrl}/AuctionRooms`, { params });
+  }
+
+    // --- غرف المزاد (Auction id) ---
+    getAuctionRoomById(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/AuctionRooms/${id}`);
+  }
 
 }
 

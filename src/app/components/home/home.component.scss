@@ -1,1177 +1,1708 @@
-// // --- المتغيرات ---
-$primary: #4f46e5;
-$bg-light: #f8fafc;
-$ai-color: #1e293b;
-$success: #10b981;
-$warning-bg: #fffbeb;
-$warning-text: #b45309;
-$bg-card: #141b2d;
-$bg-main: #0b1120; // لون الخلفية الأساسي العميق
-$bg-card: #141b2d; // لون كروت المزادات والمودال
-$bg-card-hover: #1e293b;
-
-$color-orange: #fbbf24;
-$color-green: #10b981;
-$color-purple: #8b5cf6;
-$color-blue: #3b82f6;
-$color-red: #ef4444;
-
-$text-white: #ffffff;
-$text-muted: #94a3b8;
-$border-light: rgba(255, 255, 255, 0.05);
-
-.home-wrapper {
-  max-width: 1500px; margin: 0 auto;
-  padding: 20px;
-}
-
-
-.points-summary-card {
-  background: linear-gradient(135deg, $primary, #818cf8);
-  border-radius: 20px; padding: 25px; color: white; margin-bottom: 30px;
-  display: flex; flex-direction: column; gap: 15px;
-  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2); // ظل خفيف
-
-  .card-content { display: flex; justify-content: space-between; align-items: center; }
-  h2 { font-size: 2.2rem; margin: 0; font-weight: 800; }
-
-  .pulse-circle {
-    width: 55px; height: 55px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem;
-    backdrop-filter: blur(5px);
-  }
-
-  .card-footer {
-    border-top: 1px solid rgba(255,255,255,0.2);
-    padding-top: 12px; font-size: 0.85rem; opacity: 0.9;
-  }
-}
-
-
-.auctions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
-}
-
-
-// ==========================================
-// 2. تصميم كارت المزاد (Auction Card)
-// ==========================================
-.auction-mini-card {
-  background-color: #1a2235; // لون الخلفية الداكن من الصورة
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  width: 100%;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-    background-color: #1e293b;
-  }
-
-  // --- الهيدر (المستهدف والتايمر) ---
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-
-    .target-price {
-      background: rgba(59, 130, 246, 0.15);
-      padding: 6px 12px;
-      border-radius: 10px;
-      text-align: center;
-      min-width: 70px;
-      small { color: #94a3b8; font-size: 0.65rem; display: block; margin-bottom: 2px; }
-      span { color: #3b82f6; font-weight: 800; font-size: 0.9rem; }
-    }
-
-    .modern-timer {
-      display: flex;
-      gap: 5px;
-      direction: ltr;
-      .time-block {
-        background: #2d3748;
-        padding: 10px 8px;
-        border-radius: 8px;
-        min-width: 40px;
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.05);
-        strong { display: block; color: #fff; font-size: 0.85rem; line-height: 1.2; }
-        span { display: block; color: #718096; font-size: 0.55rem; text-transform: uppercase; }
-      }
-    }
-  }
-
-  // --- منطقة الصورة ---
-  .img-wrapper {
-    position: relative;
-    background-color: #ffffff;
-    border-radius: 15px;
-    height: 160px;
-    width: 90%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
-    padding: 5px;
-
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-
-    .live-tag {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: bold;
-      color: #1a202c;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-
-      .pulse-dot {
-        width: 7px;
-        height: 7px;
-        background-color: #ef4444;
-        border-radius: 50%;
-        animation: pulse-red 1.5s infinite;
-      }
-    }
-  }
-
-  // --- بيانات المنتج ---
-  .card-main {
-    .product-name {
-      color: #ffffff;
-      font-size: 1.05rem;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .official-price-tag {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      padding: 6px;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 15px;
-      small { color: #94a3b8; font-size: 0.75rem; }
-      span { color: #10b981; font-weight: 700; margin-right: 5px; }
-    }
-
-    // شبكة الخصائص (نقطة البداية / إجمالي النقاط)
-    .data-specs-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 15px;
-
-      .spec-item {
-        background: rgba(255, 255, 255, 0.03);
-        padding: 10px;
-        border-radius: 12px;
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.05);
-        small { color: #718096; font-size: 0.7rem; display: block; margin-bottom: 4px; }
-        strong { color: #fff; font-size: 0.95rem; display: block; }
-      }
-    }
-
-    // أعلى مزايد (تصميم مسطح وأنيق)
-    .top-bidder-highlight {
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 12px;
-      padding: 10px;
-      margin-bottom: 15px;
-
-      .header-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        small { color: #94a3b8; font-size: 0.7rem; }
-        .bid-val { color: #10b981; font-weight: 800; font-size: 0.9rem; }
-      }
-
-      .bidder-details {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        .avatar {
-          width: 32px;
-          height: 32px;
-          background: #3b82f6;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          font-size: 0.75rem;
-          color: white;
-        }
-        .info {
-          strong { display: block; color: #fff; font-size: 0.8rem; line-height: 1; margin-bottom: 3px; }
-          small { color: #64748b; font-size: 0.65rem; }
-        }
-      }
-      &.is-ai .avatar { background: #8b5cf6; } // تمييز لون الـ AI
-    }
-
-    // الزر الرئيسي
-    .btn-admin-view {
-      background: #3b82f6;
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      width: 100%;
-      cursor: pointer;
-      transition: background 0.2s;
-
-      &:hover {
-        background: #2563eb;
-      }
-    }
-  }
-}
-
-// أنيميشن النقطة الحمراء
-@keyframes pulse-red {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(239, 68, 68, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-}
-
-
-
-
-
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-}
-
-.section-title {
-  font-weight: 800; color: #1e293b; margin: 25px 0;
-  border-right: 5px solid #4f46e5; padding-right: 15px;
-}
-
-
-.data-specs-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;
-  .spec-item {
-    background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #edf2f7;
-    small { display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 2px; }
-    strong { font-size: 0.9rem; color: #1e293b; }
-  }
-}
-
-
-.btn-stop-ai {
-  border: 1px solid #ef4444; color: #ef4444; background: white;
-  font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 10px;
-  transition: 0.3s;
-  &:hover { background: #fee2e2; transform: translateY(-1px); }
-}
-
-
-.upcoming-style {
-  &:hover { border-color: #4f46e5; }
-}
-
-
-.btn-admin-view{
-  width: 10%; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px;
-  background: white; color: #475569; font-weight: 700; font-size: 0.9rem;
-  display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s;
-
-  &:hover {
-    background: $bg-light; color: $primary; border-color: $primary;
-    transform: translateY(-2px);
-  }
-
-  i { transition: 0.3s; }
-  &:hover i { transform: translateX(-10px); }
-}
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  background: #f8fafc;
-  border: 2px dashed #e2e8f0;
-  border-radius: 20px;
-  color: #64748b;
-  grid-column: 1 / -1; // ليأخذ العرض كاملاً
-
-  i { font-size: 2.5rem; margin-bottom: 10px; color: #cbd5e1; }
-  p { font-weight: 600; margin: 0; }
-}
-
-
-.finished-card {
-  opacity: 0.95;
-  .img-wrapper.gray-scale img {
-    filter: grayscale(0.4); // تمويه بسيط للصور المنتهية
-  }
-}
-
-.finished-tag {
-  background: #f1f5f9 !important;
-  color: #64748b !important;
-  border: 1px solid #e2e8f0;
-}
-
-.winner-highlight {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(45deg, #fff9db, #fff);
-  border: 1px dashed #fcc419;
-  padding: 10px;
-  border-radius: 12px;
-  margin-top: 10px;
-
-  .winner-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    .winner-avatar {
-      width: 35px;
-      height: 35px;
-      background: #fcc419;
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .winner-text {
-      display: flex;
-      flex-direction: column;
-      small { color: #868e96; font-size: 0.7rem; }
-      strong { color: #495057; font-size: 0.85rem; }
-    }
-  }
-
-  .trophy-icon {
-    color: #fcc419;
-    font-size: 1.2rem;
-  }
-}
-
-.outline-btn {
-  background: transparent !important;
-  border: 1px solid #6366f1 !important;
-  color: #6366f1 !important;
-  &:hover {
-    background: #6366f1 !important;
-    color: #fff !important;
-  }
-}
-
-
-
-
-@media (max-width: 768px) {
-  .home-wrapper {
-    padding: 12px; // تقليل الفراغات الجانبية لتوفير مساحة
-
-
-    .stats-grid {
-      grid-template-columns: 1fr; // كارت واحد في الصف
-      gap: 12px;
-    }
-    .points-summary-card {
-      padding: 15px;
-      h2 { font-size: 1.6rem; }
-      .pulse-circle { width: 45px; height: 45px; font-size: 1.3rem; }
-    }
-
-
-    .header {
-      flex-direction: row; // الحفاظ على الترتيب الأفقي لكن بحجم أصغر
-      align-items: center;
-      margin-bottom: 20px !important;
-
-      .section-title {
-        font-size: 1.1rem;
-        margin: 0;
-        padding-right: 10px;
-      }
-
-      .btn-admin-view {
-        width: auto !important;
-        padding: 6px 12px;
-        font-size: 0.8rem;
-        min-width: 100px;
-      }
-    }
-
-
-    .auctions-grid {
-      grid-template-columns: 1fr;
-      gap: 15px;
-    }
-
-
-    .auction-mini-card {
-      .card-top {
-        padding: 10px 15px;
-        .timer { font-size: 0.75rem; padding: 4px 10px; }
-      }
-
-      .card-main {
-        padding: 12px;
-        .product-name { font-size: 1rem; margin-bottom: 12px; }
-
-
-        .data-specs-grid {
-          gap: 8px;
-          .spec-item {
-            padding: 8px;
-            small { font-size: 0.65rem; }
-            strong { font-size: 0.8rem; }
-          }
-        }
-
-
-        .top-bidder-highlight {
-          padding: 10px;
-          .header-row {
-            margin-bottom: 8px;
-            .bid-val { font-size: 1rem; }
-          }
-          .bidder-details {
-            .avatar { width: 30px; height: 30px; font-size: 0.75rem; }
-            .info strong { font-size: 0.85rem; }
-          }
-        }
-
-        // الأزرار السفلية
-        .btn-admin-view {
-          padding: 10px;
-          font-size: 0.85rem;
-        }
-      }
-    }
-  }
-}
-
-
-
-
-
-/* الوضع الافتراضي (الشاشات الكبيرة Desktop) */
-.swiper-container {
-  overflow: visible; /* عشان الظلال متبقاش مقصوصة */
-}
-
-.swiper-wrapper {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); // توزيع 4 كروت بالتساوي
-  gap: 25px;
-  width: 100%;
-}
-
-/* تحسينات الشاشات الصغيرة (الجوال والتابلت) */
-@media (max-width: 1023px) {
-  .swiper-container {
-    overflow: hidden;
-    padding-bottom: 30px;
-    margin: 0 -15px; // توسيع السلايدر للحواف
-  }
-
-  .swiper-wrapper {
-    display: flex !important; // تحويله لـ Flex ليعمل السلايدر
-    grid-template-columns: none !important;
-    gap: 0 !important;
-  }
-
-  .swiper-slide {
-    /* هنا السحر: الكارت ياخد عرض الشاشة تقريباً */
-    width: 100% !important;
-    display: flex;
-    justify-content: center;
-    padding: 0 10px;
-  }
-
-  .auction-mini-card {
-    margin-top: 5px !important;
-    width: 100%;
-    max-width: 350px; // الحفاظ على تناسق الكارت في الموبايل
-    margin: 0 auto;
-
-    .img-wrapper {
-      height: 180px; // تكبير الصورة قليلاً للموبايل
-    }
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-}
-
-/* تأكد من عدم وجود رموز تائهة قبل هذا الجزء */
-
-@media (max-width: 1023px) {
-  .swiper-container {
-    overflow: hidden;
-    padding-bottom: 30px;
-  }
-
-  .swiper-wrapper {
-    display: flex !important;
-  }
-
-  .swiper-slide {
-    width: 100% !important;
-    display: flex;
-    justify-content: center;
-    padding: 0 10px;
-  }
-}
-
-.show-more-mobile {
-  @media (max-width: 1023px) {
-    opacity: 0;
-    visibility: hidden;
-    display: none;
-    margin-right: auto;
-    margin-left: 0;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-.home-wrapper {
-  max-width: 1500px; margin: 0 auto; padding: 20px;
-}
-
-// كروت الإحصائيات
-.stats-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;
-}
-
-.points-summary-card {
-  width: 650px !important;
-  background: linear-gradient(135deg, $primary, #818cf8);
-  border-radius: 20px;
-  padding: 25px;
-  color: white;
-  &.success-card { background: linear-gradient(135deg, #10b981, #34d399); }
-  &.warning-card { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-
-  .card-content { display: flex; justify-content: space-between; align-items: center; }
-  h2 { font-size: 2.2rem; font-weight: 800; margin: 0; }
-  .pulse-circle { width: 55px; height: 55px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
-  .card-footer { border-top: 1px solid rgba(255,255,255,0.2); margin-top: 15px; padding-top: 10px; font-size: 0.8rem; }
-}
-
-.section-title { font-weight: 800; border-right: 5px solid $primary; padding-right: 15px; }
-
-// --- إعدادات العرض المختلطة (Desktop vs Mobile) ---
-
-/* الشاشات الكبيرة (Desktop) */
-@media (min-width: 1024px) {
-  .swiper-container { overflow: visible !important; }
-  .swiper-wrapper {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important; // 4 كروت ثابتة
-    gap: 25px !important;
-    transform: none !important; // إيقاف حركة السلايدر
-  }
-  .swiper-slide { width: auto !important; margin: 0 !important; }
-}
-
-/* الشاشات الصغيرة (Mobile) */
-@media (max-width: 1023px) {
-  .home-wrapper { padding: 10px; }
-  .swiper-container { overflow: hidden; padding-bottom: 30px; }
-  .swiper-wrapper { display: flex !important; transform: translate3d(0,0,0); }
-  .swiper-slide {
-    width: 100% !important; // كارت واحد فقط
-    display: flex; justify-content: center; padding: 0 10px;
-  }
-  .auction-mini-card { width: 100%; max-width: 380px; }
-  .stats-grid { grid-template-columns: 1fr; }
-}
-
-// تنسيق كارت المزاد
-.auction-mini-card {
-  background: white; border-radius: 20px; border: 1px solid #edf2f7; overflow: hidden;
-  transition: 0.3s; height: 100%;
-  &:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-
-  .card-top {
-    padding: 15px; display: flex; justify-content: space-between;
-    .timer { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 8px;
-      &.warning { color: $warning-text; background: $warning-bg; }
-      &.upcoming-timer { color: #4338ca; background: #e0e7ff; }
-    }
-  }
-  .img-wrapper { height: 160px; display: flex; align-items: center; justify-content: center; img { max-height: 90%; object-fit: contain; } }
-  .card-main { padding: 15px;
-    .product-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; }
-  }
-}
-
-.data-specs-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;
-  .spec-item { background: $bg-light; padding: 8px; border-radius: 10px; text-align: center;
-    small { display: block; font-size: 0.65rem; color: #94a3b8; }
-    strong { font-size: 0.85rem; }
-  }
-}
-
-.top-bidder-highlight {
-  background: $bg-light;
-  border-radius: 12px;
-  padding: 10px;
-  margin-bottom: 15px;
-  &.is-ai { border: 1px dashed #cbd5e1; }
-  .header-row {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 5px;
-    margin-bottom: 8px;
-  }
-  .bidder-details {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: $primary;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-    }
-    .info strong {
-      font-size: 0.85rem;
-      display: block;
-    }
-    .info small {
-      font-size: 0.7rem;
-      color: #64748b;
-    }
-  }
-}
-
-.btn-admin-view {
-  border: 1px solid #e2e8f0;
-  background: white;
-  padding: 10px;
-  border-radius: 12px;
-  font-weight: 700;
-  transition: 0.3s;
-  &:hover {
-    background: $primary;
-    color: white;
-    border-color: $primary;
-  }
-}
-
-.show-more-mobile {
-  @media (max-width: 1023px) {
-    opacity: 0;           // مخفي شفافية
-    visibility: hidden;    // مخفي من التفاعل
-    transform: scale(0.5); // مصغر للبدء بتأثير تكبير
-  }
-}
-
-// في الشاشات الكبيرة يظل ظاهراً دائماً
-@media (min-width: 1024px) {
-  .show-more-mobile {
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-  }
-}
-
-
-// تعريف حركة النبض
-@keyframes live-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(2.5);
-    opacity: 0;
-  }
-}
-
-/* --- حركات الأنيميشن --- */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(30px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-
-
-@keyframes slideUpMobile { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-
-// --- Palette ألوان فيجما الأساسية ---
-$figma-bg-card: #1a2130;      // لون الكروت الداكن
-$figma-primary: #3b82f6;      // الأزرق الرئيسي للزراير
-$figma-text-white: #ffffff;    // العناوين
-$figma-border-glass: rgba(255, 255, 255, 0.08);
-
-// 1. العناوين (المزادات النشطة، قريباً، منتهية)
-.section-title {
-  color: $figma-text-white !important;
-  font-weight: 800 !important;
-  font-size: 1.25rem;
-  position: relative;
-  &::after {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 3px;
-    background: $figma-primary;
-    margin-top: 8px;
-    border-radius: 10px;
-  }
-}
-
-// 2. زر "عرض المزيد" (Buttons)
-.btn-admin-view.show-more-mobile,
-#moreBtnActive,
-#moreBtnUpcoming,
-#moreBtnFinished {
-  background: rgba($figma-primary, 0.1) !important;
-  color: $figma-primary !important;
-  border: 1px solid rgba($figma-primary, 0.3) !important;
-  border-radius: 10px !important;
-  padding: 6px 15px !important;
-  font-weight: 700 !important;
-  font-size: 0.85rem !important;
-  transition: 0.3s all ease;
-
-  i { color: $figma-primary !important; }
-
-  &:hover {
-    background: $figma-primary !important;
-    color: white !important;
-    transform: translateX(-5px);
-    i { color: white !important; }
-  }
-}
-
-// 3. كروت المزادات (Auction Cards)
-.auction-mini-card {
-  background: $figma-bg-card !important; // لون فيجما الداكن
-  border: 1px solid $figma-border-glass !important;
-  border-radius: 24px !important; // زوايا دائرية ناعمة
-  color: $figma-text-white !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
-
-  // العناوين جوه الكارت
-  .product-name {
-    color: $figma-text-white !important;
-  }
-
-  // أزرار التحكم داخل الكارت
-  .btn-admin-view.w-100 {
-    background: $figma-primary !important;
-    color: white !important;
-    border-radius: 12px !important;
-    border: none !important;
-    &:hover {
-      background: saturate($figma-primary, 20%) !important;
-      box-shadow: 0 5px 15px rgba($figma-primary, 0.4);
-    }
-
-    &.outline-btn {
-      background: transparent !important;
-      border: 1px solid $figma-primary !important;
-      color: $figma-primary !important;
-      &:hover {
-        background: $figma-primary !important;
-        color: white !important;
-      }
-    }
-  }
-
-  // تفاصيل المزايد (Highlight box)
-  .top-bidder-highlight {
-    background: rgba(0, 0, 0, 0.2) !important;
-    border-color: $figma-border-glass !important;
-    .bid-val { color: #10b981 !important; }
-    .avatar {
-      border-color: #10b981 !important; } // أخضر للمبالغ
-    small { color: #bbbec2 !important; }
-    strong { color: #3b81eb!important; }
-  }
-}
-
-// حالة الكارت المنتهي
-.finished-card {
-  border-color: rgba(255, 255, 255, 0.05) !important;
-  .winner-highlight {
-    background: rgba(16, 185, 129, 0.08) !important;
-    border: 1px solid rgba(16, 185, 129, 0.2) !important;
-  }
-}
-
-
-
-
-
-
-// --- لوحة ألوان فيجما الموحدة ---
-$figma-card: #1a2130;
-$figma-primary: #3b82f6;
-$figma-text-white: #ffffff;
-$figma-text-muted: #cfcfdb;
-$figma-border: rgba(255, 255, 255, 0.08);
-
-
-
-    .modern-timer {
-      display: flex;
-      gap: 4px;
-      direction: ltr;
-      .time-block {
-        background: #2d3748;
-        padding: 4px 6px;
-        border-radius: 8px;
-        min-width: 38px;
-        text-align: center;
-        border: 1px solid rgba(255,255,255,0.05);
-        strong { display: block; color: #fff; font-size: 0.85rem; line-height: 1.2; }
-        span { display: block; color: #718096; font-size: 0.55rem; text-transform: uppercase; }
-      }
-    }
-
-// أنيميشن تنبيه للثواني الأخيرة
-@keyframes pulse-red {
-  from { transform: scale(1); }
-  to { transform: scale(1.05); }
-}
-
-
-.official-price-tag {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      padding: 6px;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 15px;
-      small { color: #94a3b8; font-size: 0.75rem; }
-      span { color: #10b981; font-weight: 700; margin-right: 5px; }
-    }
-
-
-
-// 3. كروت سعر البداية وإجمالي النقاط (Data Specs Grid)
-.data-specs-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin: 15px 0;
-
-  .spec-item {
-    background: rgba(255, 255, 255, 0.03) !important; // كارت داخلي بسيط
-    padding: 10px !important;
-    border-radius: 12px !important;
-    border: 1px solid $figma-border !important;
-    text-align: center;
-
-    small {
-      color: $figma-text-muted !important; // "سعر البداية" أو "إجمالي النقاط"
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.75rem !important;
-    }
-
-    strong {
-      color: $figma-text-white !important; // القيم الرقمية
-      font-size: 0.95rem !important;
-    }
-
-    // تمييز خاص لإجمالي النقاط باللون الأخضر كما في طلبك
-    &:last-child strong {
-      color: #10b981 !important;
-    }
-  }
-}
-
-// 4. كارت السعر المستهدف (Target Price)
-.target-price {
-  background: rgba($figma-primary, 0.1) !important;
-  padding: 5px 12px !important;
-  border-radius: 8px !important;
-  border: 1px solid rgba($figma-primary, 0.2) !important;
-
-  small {
-    color: $figma-text-muted !important;
-  }
-
-  span {
-    color: $figma-primary !important; // لون مميز للمستهدف
-    font-weight: 800 !important;
-  }
-}
-
-// 5. تعديل حالة "يبدأ قريباً" و "منتهي"
-.upcoming-timer {
-  background: rgba($figma-primary, 0.15) !important;
-  color: $figma-primary !important;
-  border: 1px solid $figma-primary !important;
-}
-
-.finished-tag {
-  background: rgba(16, 185, 129, 0.15) !important;
-  color: #10b981 !important;
-  border: 1px solid #10b981 !important;
-}
+// // // --- المتغيرات ---
+// $primary: #4f46e5;
+// $bg-light: #f8fafc;
+// $ai-color: #1e293b;
+// $success: #10b981;
+// $warning-bg: #fffbeb;
+// $warning-text: #b45309;
+// $bg-card: #141b2d;
+// $bg-main: #0b1120; // لون الخلفية الأساسي العميق
+// $bg-card: #141b2d; // لون كروت المزادات والمودال
+// $bg-card-hover: #1e293b;
+
+// $color-orange: #fbbf24;
+// $color-green: #10b981;
+// $color-purple: #8b5cf6;
+// $color-blue: #3b82f6;
+// $color-red: #ef4444;
+
+// $text-white: #ffffff;
+// $text-muted: #94a3b8;
+// $border-light: rgba(255, 255, 255, 0.05);
+
+// .home-wrapper {
+//   max-width: 1500px; margin: 0 auto;
+//   padding: 20px;
+// }
+
+
+// .points-summary-card {
+//   background: linear-gradient(135deg, $primary, #818cf8);
+//   border-radius: 20px; padding: 25px; color: white; margin-bottom: 30px;
+//   display: flex; flex-direction: column; gap: 15px;
+//   box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2); // ظل خفيف
+
+//   .card-content { display: flex; justify-content: space-between; align-items: center; }
+//   h2 { font-size: 2.2rem; margin: 0; font-weight: 800; }
+
+//   .pulse-circle {
+//     width: 55px; height: 55px;
+//     background: rgba(255,255,255,0.2);
+//     border-radius: 50%;
+//     display: flex; align-items: center; justify-content: center;
+//     font-size: 1.6rem;
+//     backdrop-filter: blur(5px);
+//   }
+
+//   .card-footer {
+//     border-top: 1px solid rgba(255,255,255,0.2);
+//     padding-top: 12px; font-size: 0.85rem; opacity: 0.9;
+//   }
+// }
+
+
+// .auctions-grid {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+//   gap: 25px;
+// }
 
 
 // // ==========================================
-// // 6. النافذة المنبثقة (Modal Edit)
+// // 2. تصميم كارت المزاد (Auction Card)
 // // ==========================================
+// .auction-mini-card {
+//   background-color: #1a2235; // لون الخلفية الداكن من الصورة
+//   border-radius: 20px;
+//   border: 1px solid rgba(255, 255, 255, 0.08);
+//   width: 100%;
+//   max-width: 350px;
+//   display: flex;
+//   flex-direction: column;
+//   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-.custom-modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-  display: flex; justify-content: center; align-items: center; z-index: 1000;
+//   &:hover {
+//     transform: translateY(-8px);
+//     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+//     background-color: #1e293b;
+//   }
 
-  .custom-modal-content {
-    background: $bg-card; border-radius: 20px; border: 1px solid $border-light;
-    width: 90%; max-width: 600px; padding: 25px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); color: $text-white; direction: rtl;
+//   // --- الهيدر (المستهدف والتايمر) ---
+//   .card-top {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: flex-start;
+//     margin-bottom: 12px;
 
-    .modal-header {
-      display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid $border-light; padding-bottom: 15px; margin-bottom: 20px;
-      .header-title { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: bold; color: $color-blue; }
-      .close-btn { background: transparent; border: none; color: $text-muted; font-size: 1.2rem; cursor: pointer; &:hover { color: $color-red; } }
-    }
+//     .target-price {
+//       background: rgba(59, 130, 246, 0.15);
+//       padding: 6px 12px;
+//       border-radius: 10px;
+//       text-align: center;
+//       min-width: 70px;
+//       small { color: #94a3b8; font-size: 0.65rem; display: block; margin-bottom: 2px; }
+//       span { color: #3b82f6; font-weight: 800; font-size: 0.9rem; }
+//     }
 
-    .modal-form {
-      .form-grid {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-        @media (max-width: 500px) { grid-template-columns: 1fr; }
+//     .modern-timer {
+//       display: flex;
+//       gap: 5px;
+//       direction: ltr;
+//       .time-block {
+//         background: #2d3748;
+//         padding: 10px 8px;
+//         border-radius: 8px;
+//         min-width: 40px;
+//         text-align: center;
+//         border: 1px solid rgba(255,255,255,0.05);
+//         strong { display: block; color: #fff; font-size: 0.85rem; line-height: 1.2; }
+//         span { display: block; color: #718096; font-size: 0.55rem; text-transform: uppercase; }
+//       }
+//     }
+//   }
 
-        .full-width { grid-column: 1 / -1; }
+//   // --- منطقة الصورة ---
+//   .img-wrapper {
+//     position: relative;
+//     background-color: #ffffff;
+//     border-radius: 15px;
+//     height: 160px;
+//     width: 90%;
+//     margin: 0 auto;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     margin-bottom: 15px;
+//     padding: 5px;
 
-        .form-group {
-          display: flex; flex-direction: column; gap: 5px; text-align: right;
-          label { font-size: 0.85rem; color: $text-muted; }
-          .form-control { background: rgba(255,255,255,0.03); border: 1px solid $border-light; padding: 10px; border-radius: 8px; color: white; outline: none; transition: 0.3s; &:focus { border-color: $color-blue; background: rgba(255,255,255,0.06); } }
-        }
-      }
+//     img {
+//       max-width: 100%;
+//       max-height: 100%;
+//       object-fit: contain;
+//     }
 
-      .image-update-section {
-        margin-top: 20px; text-align: right;
-        label { font-size: 0.85rem; color: $text-muted; display: block; margin-bottom: 8px; }
-        .upload-box {
-          position: relative; height: 150px; border: 2px dashed $border-light; border-radius: 12px; display: flex; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; background: #ffffff;
-          .img-preview { width: 100%; height: 100%; object-fit: contain; }
-          .upload-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; opacity: 0; transition: 0.3s; }
-          &:hover .upload-overlay { opacity: 1; }
-          .remove-img-btn { position: absolute; top: 10px; right: 10px; background: $color-red; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 3;}
-        }
-      }
+//     .live-tag {
+//       position: absolute;
+//       top: 10px;
+//       left: 10px;
+//       background: rgba(255, 255, 255, 0.95);
+//       padding: 3px 10px;
+//       border-radius: 20px;
+//       font-size: 0.75rem;
+//       font-weight: bold;
+//       color: #1a202c;
+//       display: flex;
+//       align-items: center;
+//       gap: 5px;
+//       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 
-      .modal-actions {
-        display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid $border-light; padding-top: 20px;
-        button { padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-cancel { background: transparent; border: 1px solid $border-light; color: $text-white; &:hover { background: rgba(255,255,255,0.05); } }
-        .btn-save { background: $color-blue; border: none; color: white; &:hover { background: darken($color-blue, 10%); } }
-      }
-    }
-  }
-}
+//       .pulse-dot {
+//         width: 7px;
+//         height: 7px;
+//         background-color: #ef4444;
+//         border-radius: 50%;
+//         animation: pulse-red 1.5s infinite;
+//       }
+//     }
+//   }
 
-// ==========================================
-// 7. تأثيرات الحركة (Animations)
-// ==========================================
-@keyframes pulseRed {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-}
+//   // --- بيانات المنتج ---
+//   .card-main {
+//     .product-name {
+//       color: #ffffff;
+//       font-size: 1.05rem;
+//       font-weight: 700;
+//       text-align: center;
+//       margin-bottom: 12px;
+//       white-space: nowrap;
+//       overflow: hidden;
+//       text-overflow: ellipsis;
+//     }
 
-.custom-modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-  display: flex; justify-content: center; align-items: center; // الوضع الافتراضي للديسكتوب
-  z-index: 1000;
+//     .official-price-tag {
+//       background: rgba(16, 185, 129, 0.1);
+//       border: 1px solid rgba(16, 185, 129, 0.2);
+//       padding: 6px;
+//       border-radius: 10px;
+//       text-align: center;
+//       margin-bottom: 15px;
+//       small { color: #94a3b8; font-size: 0.75rem; }
+//       span { color: #10b981; font-weight: 700; margin-right: 5px; }
+//     }
 
-  .custom-modal-content {
-    background: $bg-card; border-radius: 20px; border: 1px solid $border-light;
-    width: 95%; max-width: 550px; padding: 20px; color: $text-white; direction: rtl;
-    transition: all 0.3s ease-out;
+//     // شبكة الخصائص (نقطة البداية / إجمالي النقاط)
+//     .data-specs-grid {
+//       display: grid;
+//       grid-template-columns: 1fr 1fr;
+//       gap: 12px;
+//       margin-bottom: 15px;
 
-    // --- التعديل الخاص بالموبايل (App-like Feel) ---
-    @media (max-width: 768px) {
-      position: absolute;
-      bottom: 0; // تطلع من تحت
-      width: 100%;
-      max-width: none;
-      border-radius: 25px 25px 0 0; // دائرية من فوق بس زي الموبايل
-      padding: 15px;
-      padding-bottom: 30px; // مساحة أمان للتحريك تحت
-      animation: slideUp 0.4s ease-out; // حركة ظهور من تحت
+//       .spec-item {
+//         background: rgba(255, 255, 255, 0.03);
+//         padding: 10px;
+//         border-radius: 12px;
+//         text-align: center;
+//         border: 1px solid rgba(255,255,255,0.05);
+//         small { color: #718096; font-size: 0.7rem; display: block; margin-bottom: 4px; }
+//         strong { color: #fff; font-size: 0.95rem; display: block; }
+//       }
+//     }
 
-      // العلامة اللي بتبقى فوق في برامج الموبايل عشان تسحب منها
-      &::before {
-        content: "";
-        width: 40px; height: 5px; background: $border-light;
-        border-radius: 10px; margin: 0 auto 15px; display: block;
-      }
-    }
+//     // أعلى مزايد (تصميم مسطح وأنيق)
+//     .top-bidder-highlight {
+//       background: rgba(255, 255, 255, 0.02);
+//       border-radius: 12px;
+//       padding: 10px;
+//       margin-bottom: 15px;
 
-    .modal-header {
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid $border-light; padding-bottom: 10px; margin-bottom: 15px;
-      .header-title { font-size: 1.1rem; gap: 8px; }
-    }
+//       .header-row {
+//         display: flex;
+//         justify-content: space-between;
+//         margin-bottom: 8px;
+//         small { color: #94a3b8; font-size: 0.7rem; }
+//         .bid-val { color: #10b981; font-weight: 800; font-size: 0.9rem; }
+//       }
 
-    .modal-form {
-      .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr; // اتنين في كل سطر دايماً
-        gap: 12px;
+//       .bidder-details {
+//         display: flex;
+//         align-items: center;
+//         gap: 10px;
+//         .avatar {
+//           width: 32px;
+//           height: 32px;
+//           background: #3b82f6;
+//           border-radius: 50%;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           font-weight: bold;
+//           font-size: 0.75rem;
+//           color: white;
+//         }
+//         .info {
+//           strong { display: block; color: #fff; font-size: 0.8rem; line-height: 1; margin-bottom: 3px; }
+//           small { color: #64748b; font-size: 0.65rem; }
+//         }
+//       }
+//       &.is-ai .avatar { background: #8b5cf6; } // تمييز لون الـ AI
+//     }
 
-        .full-width { grid-column: 1 / -1; }
+//     // الزر الرئيسي
+//     .btn-admin-view {
+//       background: #3b82f6;
+//       color: white;
+//       border: none;
+//       padding: 12px;
+//       border-radius: 12px;
+//       font-weight: 700;
+//       font-size: 0.9rem;
+//       width: 100%;
+//       cursor: pointer;
+//       transition: background 0.2s;
 
-        .form-group {
-          label { font-size: 0.75rem; margin-bottom: 3px; }
-          .form-control {
-            padding: 8px; border-radius: 10px; font-size: 0.9rem;
-            background: rgba(255,255,255,0.05);
-          }
-        }
-      }
+//       &:hover {
+//         background: #2563eb;
+//       }
+//     }
+//   }
+// }
 
-      .image-update-section {
-        margin-top: 15px;
-        .upload-box {
-          height: 100px; // صغرنا الحجم عشان مياخدش حيز كبير
-          border-radius: 12px;
-          .img-preview { height: 100%; }
-        }
-      }
-
-      .modal-actions {
-        margin-top: 20px; padding-top: 15px;
-        button { flex: 1; padding: 12px; font-size: 0.9rem; } // الأزرار تاخد العرض كله في الموبايل
-      }
-    }
-  }
-}
-
-// أنيميشن الطلع من تحت للموبايل
-@keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-
-
-
-
-
-@media (max-width: 1023px) {
-  .stats-swiper-mobile {
-    /* الشاشات من 800 لحد قبل الـ Desktop */
-    @media (min-width: 800px) {
-      .swiper-slide {
-        padding: 15px;
-        width: calc(50% - 10px) !important; /* عشان ياخدوا نص الشاشة بالظبط */
-      }
-    }
-  }
-}
-
-/* إعدادات الموبايل والتابلت */
-@media (max-width: 1023px) {
-  .stats-swiper-mobile {
-    width: 100%;
-    overflow: hidden;
-    padding: 10px 15px 30px 15px;
-
-    .swiper-slide {
-      /* الموبايل الصغير: كارت ونصف تقريباً */
-      width: 280px;
-      height: auto;
-    }
-
-    /* شاشات التابلت (800px وأكبر) */
-    @media (min-width: 800px) {
-      .swiper-slide {
-        /* عرض كارتين جنب بعض */
-        width: calc(50% - 15px) !important;
-      }
-    }
-  }
-}
-
-/* الشاشات الكبيرة (Desktop) - العودة للوضع الأصلي */
-@media (min-width: 1024px) {
-  .stats-swiper-mobile {
-    padding: 0;
-
-    .swiper-wrapper {
-      display: grid !important; /* تحويله لشبكة */
-      grid-template-columns: repeat(3, 1fr) !important; /* 3 أعمدة متساوية */
-      gap: 20px !important;
-      transform: none !important; /* إلغاء أي حركة من Swiper */
-      width: 100% !important;
-    }
-
-    .swiper-slide {
-      width: 100% !important; /* الكارت يملأ العمود الخاص به */
-      margin: 0 !important;
-    }
-  }
-}
+// // أنيميشن النقطة الحمراء
+// @keyframes pulse-red {
+//   0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+//   70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(239, 68, 68, 0); }
+//   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+// }
 
 
 
+
+
+
+// .stats-grid {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+//   gap: 20px;
+// }
+
+// .section-title {
+//   font-weight: 800; color: #1e293b; margin: 25px 0;
+//   border-right: 5px solid #4f46e5; padding-right: 15px;
+// }
+
+
+// .data-specs-grid {
+//   display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;
+//   .spec-item {
+//     background: #f8fafc; padding: 10px; border-radius: 12px; border: 1px solid #edf2f7;
+//     small { display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 2px; }
+//     strong { font-size: 0.9rem; color: #1e293b; }
+//   }
+// }
+
+
+// .btn-stop-ai {
+//   border: 1px solid #ef4444; color: #ef4444; background: white;
+//   font-size: 0.75rem; font-weight: 700; padding: 5px 12px; border-radius: 10px;
+//   transition: 0.3s;
+//   &:hover { background: #fee2e2; transform: translateY(-1px); }
+// }
+
+
+// .upcoming-style {
+//   &:hover { border-color: #4f46e5; }
+// }
+
+
+// .btn-admin-view{
+//   width: 10%; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px;
+//   background: white; color: #475569; font-weight: 700; font-size: 0.9rem;
+//   display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.3s;
+
+//   &:hover {
+//     background: $bg-light; color: $primary; border-color: $primary;
+//     transform: translateY(-2px);
+//   }
+
+//   i { transition: 0.3s; }
+//   &:hover i { transform: translateX(-10px); }
+// }
+// .empty-state {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 40px;
+//   background: #f8fafc;
+//   border: 2px dashed #e2e8f0;
+//   border-radius: 20px;
+//   color: #64748b;
+//   grid-column: 1 / -1; // ليأخذ العرض كاملاً
+
+//   i { font-size: 2.5rem; margin-bottom: 10px; color: #cbd5e1; }
+//   p { font-weight: 600; margin: 0; }
+// }
+
+
+// .finished-card {
+//   opacity: 0.95;
+//   .img-wrapper.gray-scale img {
+//     filter: grayscale(0.4); // تمويه بسيط للصور المنتهية
+//   }
+// }
+
+// .finished-tag {
+//   background: #f1f5f9 !important;
+//   color: #64748b !important;
+//   border: 1px solid #e2e8f0;
+// }
+
+// .winner-highlight {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   background: linear-gradient(45deg, #fff9db, #fff);
+//   border: 1px dashed #fcc419;
+//   padding: 10px;
+//   border-radius: 12px;
+//   margin-top: 10px;
+
+//   .winner-info {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+
+//     .winner-avatar {
+//       width: 35px;
+//       height: 35px;
+//       background: #fcc419;
+//       color: #fff;
+//       border-radius: 50%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       font-weight: bold;
+//     }
+
+//     .winner-text {
+//       display: flex;
+//       flex-direction: column;
+//       small { color: #868e96; font-size: 0.7rem; }
+//       strong { color: #495057; font-size: 0.85rem; }
+//     }
+//   }
+
+//   .trophy-icon {
+//     color: #fcc419;
+//     font-size: 1.2rem;
+//   }
+// }
+
+// .outline-btn {
+//   background: transparent !important;
+//   border: 1px solid #6366f1 !important;
+//   color: #6366f1 !important;
+//   &:hover {
+//     background: #6366f1 !important;
+//     color: #fff !important;
+//   }
+// }
+
+
+
+
+// @media (max-width: 768px) {
+//   .home-wrapper {
+//     padding: 12px; // تقليل الفراغات الجانبية لتوفير مساحة
+
+
+//     .stats-grid {
+//       grid-template-columns: 1fr; // كارت واحد في الصف
+//       gap: 12px;
+//     }
+//     .points-summary-card {
+//       padding: 15px;
+//       h2 { font-size: 1.6rem; }
+//       .pulse-circle { width: 45px; height: 45px; font-size: 1.3rem; }
+//     }
+
+
+//     .header {
+//       flex-direction: row; // الحفاظ على الترتيب الأفقي لكن بحجم أصغر
+//       align-items: center;
+//       margin-bottom: 20px !important;
+
+//       .section-title {
+//         font-size: 1.1rem;
+//         margin: 0;
+//         padding-right: 10px;
+//       }
+
+//       .btn-admin-view {
+//         width: auto !important;
+//         padding: 6px 12px;
+//         font-size: 0.8rem;
+//         min-width: 100px;
+//       }
+//     }
+
+
+//     .auctions-grid {
+//       grid-template-columns: 1fr;
+//       gap: 15px;
+//     }
+
+
+//     .auction-mini-card {
+//       .card-top {
+//         padding: 10px 15px;
+//         .timer { font-size: 0.75rem; padding: 4px 10px; }
+//       }
+
+//       .card-main {
+//         padding: 12px;
+//         .product-name { font-size: 1rem; margin-bottom: 12px; }
+
+
+//         .data-specs-grid {
+//           gap: 8px;
+//           .spec-item {
+//             padding: 8px;
+//             small { font-size: 0.65rem; }
+//             strong { font-size: 0.8rem; }
+//           }
+//         }
+
+
+//         .top-bidder-highlight {
+//           padding: 10px;
+//           .header-row {
+//             margin-bottom: 8px;
+//             .bid-val { font-size: 1rem; }
+//           }
+//           .bidder-details {
+//             .avatar { width: 30px; height: 30px; font-size: 0.75rem; }
+//             .info strong { font-size: 0.85rem; }
+//           }
+//         }
+
+//         // الأزرار السفلية
+//         .btn-admin-view {
+//           padding: 10px;
+//           font-size: 0.85rem;
+//         }
+//       }
+//     }
+//   }
+// }
+
+
+
+
+
+// /* الوضع الافتراضي (الشاشات الكبيرة Desktop) */
+// .swiper-container {
+//   overflow: visible; /* عشان الظلال متبقاش مقصوصة */
+// }
+
+// .swiper-wrapper {
+//   display: grid;
+//   grid-template-columns: repeat(4, 1fr); // توزيع 4 كروت بالتساوي
+//   gap: 25px;
+//   width: 100%;
+// }
+
+// /* تحسينات الشاشات الصغيرة (الجوال والتابلت) */
+// @media (max-width: 1023px) {
+//   .swiper-container {
+//     overflow: hidden;
+//     padding-bottom: 30px;
+//     margin: 0 -15px; // توسيع السلايدر للحواف
+//   }
+
+//   .swiper-wrapper {
+//     display: flex !important; // تحويله لـ Flex ليعمل السلايدر
+//     grid-template-columns: none !important;
+//     gap: 0 !important;
+//   }
+
+//   .swiper-slide {
+//     /* هنا السحر: الكارت ياخد عرض الشاشة تقريباً */
+//     width: 100% !important;
+//     display: flex;
+//     justify-content: center;
+//     padding: 0 10px;
+//   }
+
+//   .auction-mini-card {
+//     margin-top: 5px !important;
+//     width: 100%;
+//     max-width: 350px; // الحفاظ على تناسق الكارت في الموبايل
+//     margin: 0 auto;
+
+//     .img-wrapper {
+//       height: 180px; // تكبير الصورة قليلاً للموبايل
+//     }
+//   }
+
+//   .stats-grid {
+//     display: grid;
+//     grid-template-columns: 1fr;
+//     gap: 15px;
+//   }
+// }
+
+// /* تأكد من عدم وجود رموز تائهة قبل هذا الجزء */
+
+// @media (max-width: 1023px) {
+//   .swiper-container {
+//     overflow: hidden;
+//     padding-bottom: 30px;
+//   }
+
+//   .swiper-wrapper {
+//     display: flex !important;
+//   }
+
+//   .swiper-slide {
+//     width: 100% !important;
+//     display: flex;
+//     justify-content: center;
+//     padding: 0 10px;
+//   }
+// }
+
+// .show-more-mobile {
+//   @media (max-width: 1023px) {
+//     opacity: 0;
+//     visibility: hidden;
+//     display: none;
+//     margin-right: auto;
+//     margin-left: 0;
+//     margin-top: 20px;
+//     margin-bottom: 20px;
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+// .home-wrapper {
+//   max-width: 1500px; margin: 0 auto; padding: 20px;
+// }
+
+// // كروت الإحصائيات
+// .stats-grid {
+//   display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;
+// }
+
+// .points-summary-card {
+//   width: 650px !important;
+//   background: linear-gradient(135deg, $primary, #818cf8);
+//   border-radius: 20px;
+//   padding: 25px;
+//   color: white;
+//   &.success-card { background: linear-gradient(135deg, #10b981, #34d399); }
+//   &.warning-card { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+
+//   .card-content { display: flex; justify-content: space-between; align-items: center; }
+//   h2 { font-size: 2.2rem; font-weight: 800; margin: 0; }
+//   .pulse-circle { width: 55px; height: 55px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+//   .card-footer { border-top: 1px solid rgba(255,255,255,0.2); margin-top: 15px; padding-top: 10px; font-size: 0.8rem; }
+// }
+
+// .section-title { font-weight: 800; border-right: 5px solid $primary; padding-right: 15px; }
+
+// // --- إعدادات العرض المختلطة (Desktop vs Mobile) ---
+
+// /* الشاشات الكبيرة (Desktop) */
+// @media (min-width: 1024px) {
+//   .swiper-container { overflow: visible !important; }
+//   .swiper-wrapper {
+//     display: grid !important;
+//     grid-template-columns: repeat(4, 1fr) !important; // 4 كروت ثابتة
+//     gap: 25px !important;
+//     transform: none !important; // إيقاف حركة السلايدر
+//   }
+//   .swiper-slide { width: auto !important; margin: 0 !important; }
+// }
+
+// /* الشاشات الصغيرة (Mobile) */
+// @media (max-width: 1023px) {
+//   .home-wrapper { padding: 10px; }
+//   .swiper-container { overflow: hidden; padding-bottom: 30px; }
+//   .swiper-wrapper { display: flex !important; transform: translate3d(0,0,0); }
+//   .swiper-slide {
+//     width: 100% !important; // كارت واحد فقط
+//     display: flex; justify-content: center; padding: 0 10px;
+//   }
+//   .auction-mini-card { width: 100%; max-width: 380px; }
+//   .stats-grid { grid-template-columns: 1fr; }
+// }
+
+// // تنسيق كارت المزاد
+// .auction-mini-card {
+//   background: white; border-radius: 20px; border: 1px solid #edf2f7; overflow: hidden;
+//   transition: 0.3s; height: 100%;
+//   &:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+//   .card-top {
+//     padding: 15px; display: flex; justify-content: space-between;
+//     .timer { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 8px;
+//       &.warning { color: $warning-text; background: $warning-bg; }
+//       &.upcoming-timer { color: #4338ca; background: #e0e7ff; }
+//     }
+//   }
+//   .img-wrapper { height: 160px; display: flex; align-items: center; justify-content: center; img { max-height: 90%; object-fit: contain; } }
+//   .card-main { padding: 15px;
+//     .product-name { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; }
+//   }
+// }
+
+// .data-specs-grid {
+//   display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;
+//   .spec-item { background: $bg-light; padding: 8px; border-radius: 10px; text-align: center;
+//     small { display: block; font-size: 0.65rem; color: #94a3b8; }
+//     strong { font-size: 0.85rem; }
+//   }
+// }
+
+// .top-bidder-highlight {
+//   background: $bg-light;
+//   border-radius: 12px;
+//   padding: 10px;
+//   margin-bottom: 15px;
+//   &.is-ai { border: 1px dashed #cbd5e1; }
+//   .header-row {
+//     display: flex;
+//     justify-content: space-between;
+//     padding-bottom: 5px;
+//     margin-bottom: 8px;
+//   }
+//   .bidder-details {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     .avatar {
+//       width: 32px;
+//       height: 32px;
+//       border-radius: 50%;
+//       background: $primary;
+//       color: white;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       font-size: 0.7rem;
+//     }
+//     .info strong {
+//       font-size: 0.85rem;
+//       display: block;
+//     }
+//     .info small {
+//       font-size: 0.7rem;
+//       color: #64748b;
+//     }
+//   }
+// }
+
+// .btn-admin-view {
+//   border: 1px solid #e2e8f0;
+//   background: white;
+//   padding: 10px;
+//   border-radius: 12px;
+//   font-weight: 700;
+//   transition: 0.3s;
+//   &:hover {
+//     background: $primary;
+//     color: white;
+//     border-color: $primary;
+//   }
+// }
+
+// .show-more-mobile {
+//   @media (max-width: 1023px) {
+//     opacity: 0;           // مخفي شفافية
+//     visibility: hidden;    // مخفي من التفاعل
+//     transform: scale(0.5); // مصغر للبدء بتأثير تكبير
+//   }
+// }
+
+// // في الشاشات الكبيرة يظل ظاهراً دائماً
+// @media (min-width: 1024px) {
+//   .show-more-mobile {
+//     opacity: 1 !important;
+//     visibility: visible !important;
+//     transform: none !important;
+//   }
+// }
+
+
+// // تعريف حركة النبض
+// @keyframes live-pulse {
+//   0% {
+//     transform: scale(1);
+//     opacity: 0.8;
+//   }
+//   100% {
+//     transform: scale(2.5);
+//     opacity: 0;
+//   }
+// }
+
+// /* --- حركات الأنيميشن --- */
+// @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+// @keyframes slideUp { from { transform: translateY(30px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
+
+// @keyframes slideUpMobile { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+
+// // --- Palette ألوان فيجما الأساسية ---
+// $figma-bg-card: #1a2130;      // لون الكروت الداكن
+// $figma-primary: #3b82f6;      // الأزرق الرئيسي للزراير
+// $figma-text-white: #ffffff;    // العناوين
+// $figma-border-glass: rgba(255, 255, 255, 0.08);
+
+// // 1. العناوين (المزادات النشطة، قريباً، منتهية)
+// .section-title {
+//   color: $figma-text-white !important;
+//   font-weight: 800 !important;
+//   font-size: 1.25rem;
+//   position: relative;
+//   &::after {
+//     content: "";
+//     display: block;
+//     width: 40px;
+//     height: 3px;
+//     background: $figma-primary;
+//     margin-top: 8px;
+//     border-radius: 10px;
+//   }
+// }
+
+// // 2. زر "عرض المزيد" (Buttons)
+// .btn-admin-view.show-more-mobile,
+// #moreBtnActive,
+// #moreBtnUpcoming,
+// #moreBtnFinished {
+//   background: rgba($figma-primary, 0.1) !important;
+//   color: $figma-primary !important;
+//   border: 1px solid rgba($figma-primary, 0.3) !important;
+//   border-radius: 10px !important;
+//   padding: 6px 15px !important;
+//   font-weight: 700 !important;
+//   font-size: 0.85rem !important;
+//   transition: 0.3s all ease;
+
+//   i { color: $figma-primary !important; }
+
+//   &:hover {
+//     background: $figma-primary !important;
+//     color: white !important;
+//     transform: translateX(-5px);
+//     i { color: white !important; }
+//   }
+// }
+
+// // 3. كروت المزادات (Auction Cards)
+// .auction-mini-card {
+//   background: $figma-bg-card !important; // لون فيجما الداكن
+//   border: 1px solid $figma-border-glass !important;
+//   border-radius: 24px !important; // زوايا دائرية ناعمة
+//   color: $figma-text-white !important;
+//   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+
+//   // العناوين جوه الكارت
+//   .product-name {
+//     color: $figma-text-white !important;
+//   }
+
+//   // أزرار التحكم داخل الكارت
+//   .btn-admin-view.w-100 {
+//     background: $figma-primary !important;
+//     color: white !important;
+//     border-radius: 12px !important;
+//     border: none !important;
+//     &:hover {
+//       background: saturate($figma-primary, 20%) !important;
+//       box-shadow: 0 5px 15px rgba($figma-primary, 0.4);
+//     }
+
+//     &.outline-btn {
+//       background: transparent !important;
+//       border: 1px solid $figma-primary !important;
+//       color: $figma-primary !important;
+//       &:hover {
+//         background: $figma-primary !important;
+//         color: white !important;
+//       }
+//     }
+//   }
+
+//   // تفاصيل المزايد (Highlight box)
+//   .top-bidder-highlight {
+//     background: rgba(0, 0, 0, 0.2) !important;
+//     border-color: $figma-border-glass !important;
+//     .bid-val { color: #10b981 !important; }
+//     .avatar {
+//       border-color: #10b981 !important; } // أخضر للمبالغ
+//     small { color: #bbbec2 !important; }
+//     strong { color: #3b81eb!important; }
+//   }
+// }
+
+// // حالة الكارت المنتهي
+// .finished-card {
+//   border-color: rgba(255, 255, 255, 0.05) !important;
+//   .winner-highlight {
+//     background: rgba(16, 185, 129, 0.08) !important;
+//     border: 1px solid rgba(16, 185, 129, 0.2) !important;
+//   }
+// }
+
+
+
+
+
+
+// // --- لوحة ألوان فيجما الموحدة ---
+// $figma-card: #1a2130;
+// $figma-primary: #3b82f6;
+// $figma-text-white: #ffffff;
+// $figma-text-muted: #cfcfdb;
+// $figma-border: rgba(255, 255, 255, 0.08);
+
+
+
+//     .modern-timer {
+//       display: flex;
+//       gap: 4px;
+//       direction: ltr;
+//       .time-block {
+//         background: #2d3748;
+//         padding: 4px 6px;
+//         border-radius: 8px;
+//         min-width: 38px;
+//         text-align: center;
+//         border: 1px solid rgba(255,255,255,0.05);
+//         strong { display: block; color: #fff; font-size: 0.85rem; line-height: 1.2; }
+//         span { display: block; color: #718096; font-size: 0.55rem; text-transform: uppercase; }
+//       }
+//     }
+
+// // أنيميشن تنبيه للثواني الأخيرة
+// @keyframes pulse-red {
+//   from { transform: scale(1); }
+//   to { transform: scale(1.05); }
+// }
+
+
+// .official-price-tag {
+//       background: rgba(16, 185, 129, 0.1);
+//       border: 1px solid rgba(16, 185, 129, 0.2);
+//       padding: 6px;
+//       border-radius: 10px;
+//       text-align: center;
+//       margin-bottom: 15px;
+//       small { color: #94a3b8; font-size: 0.75rem; }
+//       span { color: #10b981; font-weight: 700; margin-right: 5px; }
+//     }
+
+
+
+// // 3. كروت سعر البداية وإجمالي النقاط (Data Specs Grid)
+// .data-specs-grid {
+//   display: grid;
+//   grid-template-columns: repeat(2, 1fr);
+//   gap: 10px;
+//   margin: 15px 0;
+
+//   .spec-item {
+//     background: rgba(255, 255, 255, 0.03) !important; // كارت داخلي بسيط
+//     padding: 10px !important;
+//     border-radius: 12px !important;
+//     border: 1px solid $figma-border !important;
+//     text-align: center;
+
+//     small {
+//       color: $figma-text-muted !important; // "سعر البداية" أو "إجمالي النقاط"
+//       display: block;
+//       margin-bottom: 4px;
+//       font-size: 0.75rem !important;
+//     }
+
+//     strong {
+//       color: $figma-text-white !important; // القيم الرقمية
+//       font-size: 0.95rem !important;
+//     }
+
+//     // تمييز خاص لإجمالي النقاط باللون الأخضر كما في طلبك
+//     &:last-child strong {
+//       color: #10b981 !important;
+//     }
+//   }
+// }
+
+// // 4. كارت السعر المستهدف (Target Price)
+// .target-price {
+//   background: rgba($figma-primary, 0.1) !important;
+//   padding: 5px 12px !important;
+//   border-radius: 8px !important;
+//   border: 1px solid rgba($figma-primary, 0.2) !important;
+
+//   small {
+//     color: $figma-text-muted !important;
+//   }
+
+//   span {
+//     color: $figma-primary !important; // لون مميز للمستهدف
+//     font-weight: 800 !important;
+//   }
+// }
+
+// // 5. تعديل حالة "يبدأ قريباً" و "منتهي"
+// .upcoming-timer {
+//   background: rgba($figma-primary, 0.15) !important;
+//   color: $figma-primary !important;
+//   border: 1px solid $figma-primary !important;
+// }
+
+// .finished-tag {
+//   background: rgba(16, 185, 129, 0.15) !important;
+//   color: #10b981 !important;
+//   border: 1px solid #10b981 !important;
+// }
+
+
+// // // ==========================================
+// // // 6. النافذة المنبثقة (Modal Edit)
+// // // ==========================================
+
+// .custom-modal-overlay {
+//   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+//   background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+//   display: flex; justify-content: center; align-items: center; z-index: 1000;
+
+//   .custom-modal-content {
+//     background: $bg-card; border-radius: 20px; border: 1px solid $border-light;
+//     width: 90%; max-width: 600px; padding: 25px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); color: $text-white; direction: rtl;
+
+//     .modal-header {
+//       display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid $border-light; padding-bottom: 15px; margin-bottom: 20px;
+//       .header-title { display: flex; align-items: center; gap: 10px; font-size: 1.25rem; font-weight: bold; color: $color-blue; }
+//       .close-btn { background: transparent; border: none; color: $text-muted; font-size: 1.2rem; cursor: pointer; &:hover { color: $color-red; } }
+//     }
+
+//     .modal-form {
+//       .form-grid {
+//         display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+//         @media (max-width: 500px) { grid-template-columns: 1fr; }
+
+//         .full-width { grid-column: 1 / -1; }
+
+//         .form-group {
+//           display: flex; flex-direction: column; gap: 5px; text-align: right;
+//           label { font-size: 0.85rem; color: $text-muted; }
+//           .form-control { background: rgba(255,255,255,0.03); border: 1px solid $border-light; padding: 10px; border-radius: 8px; color: white; outline: none; transition: 0.3s; &:focus { border-color: $color-blue; background: rgba(255,255,255,0.06); } }
+//         }
+//       }
+
+//       .image-update-section {
+//         margin-top: 20px; text-align: right;
+//         label { font-size: 0.85rem; color: $text-muted; display: block; margin-bottom: 8px; }
+//         .upload-box {
+//           position: relative; height: 150px; border: 2px dashed $border-light; border-radius: 12px; display: flex; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; background: #ffffff;
+//           .img-preview { width: 100%; height: 100%; object-fit: contain; }
+//           .upload-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; opacity: 0; transition: 0.3s; }
+//           &:hover .upload-overlay { opacity: 1; }
+//           .remove-img-btn { position: absolute; top: 10px; right: 10px; background: $color-red; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 3;}
+//         }
+//       }
+
+//       .modal-actions {
+//         display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; border-top: 1px solid $border-light; padding-top: 20px;
+//         button { padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+//         .btn-cancel { background: transparent; border: 1px solid $border-light; color: $text-white; &:hover { background: rgba(255,255,255,0.05); } }
+//         .btn-save { background: $color-blue; border: none; color: white; &:hover { background: darken($color-blue, 10%); } }
+//       }
+//     }
+//   }
+// }
+
+// // ==========================================
+// // 7. تأثيرات الحركة (Animations)
+// // ==========================================
+// @keyframes pulseRed {
+//   0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+//   70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+//   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+// }
+
+// .custom-modal-overlay {
+//   position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+//   background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+//   display: flex; justify-content: center; align-items: center; // الوضع الافتراضي للديسكتوب
+//   z-index: 1000;
+
+//   .custom-modal-content {
+//     background: $bg-card; border-radius: 20px; border: 1px solid $border-light;
+//     width: 95%; max-width: 550px; padding: 20px; color: $text-white; direction: rtl;
+//     transition: all 0.3s ease-out;
+
+//     // --- التعديل الخاص بالموبايل (App-like Feel) ---
+//     @media (max-width: 768px) {
+//       position: absolute;
+//       bottom: 0; // تطلع من تحت
+//       width: 100%;
+//       max-width: none;
+//       border-radius: 25px 25px 0 0; // دائرية من فوق بس زي الموبايل
+//       padding: 15px;
+//       padding-bottom: 30px; // مساحة أمان للتحريك تحت
+//       animation: slideUp 0.4s ease-out; // حركة ظهور من تحت
+
+//       // العلامة اللي بتبقى فوق في برامج الموبايل عشان تسحب منها
+//       &::before {
+//         content: "";
+//         width: 40px; height: 5px; background: $border-light;
+//         border-radius: 10px; margin: 0 auto 15px; display: block;
+//       }
+//     }
+
+//     .modal-header {
+//       display: flex; justify-content: space-between; align-items: center;
+//       border-bottom: 1px solid $border-light; padding-bottom: 10px; margin-bottom: 15px;
+//       .header-title { font-size: 1.1rem; gap: 8px; }
+//     }
+
+//     .modal-form {
+//       .form-grid {
+//         display: grid;
+//         grid-template-columns: 1fr 1fr; // اتنين في كل سطر دايماً
+//         gap: 12px;
+
+//         .full-width { grid-column: 1 / -1; }
+
+//         .form-group {
+//           label { font-size: 0.75rem; margin-bottom: 3px; }
+//           .form-control {
+//             padding: 8px; border-radius: 10px; font-size: 0.9rem;
+//             background: rgba(255,255,255,0.05);
+//           }
+//         }
+//       }
+
+//       .image-update-section {
+//         margin-top: 15px;
+//         .upload-box {
+//           height: 100px; // صغرنا الحجم عشان مياخدش حيز كبير
+//           border-radius: 12px;
+//           .img-preview { height: 100%; }
+//         }
+//       }
+
+//       .modal-actions {
+//         margin-top: 20px; padding-top: 15px;
+//         button { flex: 1; padding: 12px; font-size: 0.9rem; } // الأزرار تاخد العرض كله في الموبايل
+//       }
+//     }
+//   }
+// }
+
+// // أنيميشن الطلع من تحت للموبايل
+// @keyframes slideUp {
+//   from { transform: translateY(100%); }
+//   to { transform: translateY(0); }
+// }
+
+
+
+
+
+
+// @media (max-width: 1023px) {
+//   .stats-swiper-mobile {
+//     /* الشاشات من 800 لحد قبل الـ Desktop */
+//     @media (min-width: 800px) {
+//       .swiper-slide {
+//         padding: 15px;
+//         width: calc(50% - 10px) !important; /* عشان ياخدوا نص الشاشة بالظبط */
+//       }
+//     }
+//   }
+// }
+
+// /* إعدادات الموبايل والتابلت */
+// @media (max-width: 1023px) {
+//   .stats-swiper-mobile {
+//     width: 100%;
+//     overflow: hidden;
+//     padding: 10px 15px 30px 15px;
+
+//     .swiper-slide {
+//       /* الموبايل الصغير: كارت ونصف تقريباً */
+//       width: 280px;
+//       height: auto;
+//     }
+
+//     /* شاشات التابلت (800px وأكبر) */
+//     @media (min-width: 800px) {
+//       .swiper-slide {
+//         /* عرض كارتين جنب بعض */
+//         width: calc(50% - 15px) !important;
+//       }
+//     }
+//   }
+// }
+
+// /* الشاشات الكبيرة (Desktop) - العودة للوضع الأصلي */
+// @media (min-width: 1024px) {
+//   .stats-swiper-mobile {
+//     padding: 0;
+
+//     .swiper-wrapper {
+//       display: grid !important; /* تحويله لشبكة */
+//       grid-template-columns: repeat(3, 1fr) !important; /* 3 أعمدة متساوية */
+//       gap: 20px !important;
+//       transform: none !important; /* إلغاء أي حركة من Swiper */
+//       width: 100% !important;
+//     }
+
+//     .swiper-slide {
+//       width: 100% !important; /* الكارت يملأ العمود الخاص به */
+//       margin: 0 !important;
+//     }
+//   }
+// }
+
+
+
+// .btn-edit-full {
+//   width: 100%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 8px;
+//   padding: 12px;
+//   margin-top: 15px;
+
+//   // الألوان المتوافقة مع السايت
+//   background: rgba(99, 102, 241, 0.1); // بنفسجي شفاف خفيف
+//   color: #818cf8; // لون نص فاتح وواضح
+//   border: 1px solid rgba(99, 102, 241, 0.3);
+//   border-radius: 10px;
+
+//   font-weight: 600;
+//   font-size: 0.9rem;
+//   cursor: pointer;
+//   transition: all 0.3s ease;
+
+//   i {
+//     font-size: 1.1rem;
+//   }
+
+//   &:hover {
+//     // تأثير عند الوقوف بالماوس ليكون بارزاً
+//     background: #6366f1; // اللون البنفسجي الكامل
+//     color: #ffffff;
+//     box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+//     transform: translateY(-2px);
+//   }
+
+//   &:active {
+//     transform: translateY(0);
+//   }
+// }
+
+
+
+
+// .finished-card {
+//   .img-wrapper {
+//     border-radius: 12px;
+//     margin: 10px;
+
+//     .image-container-fixed {
+//       // padding: 10px;
+//       height: 160px; // توحيد الارتفاع لجميع الصور
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       overflow: hidden;
+//       position: relative;
+//     }
+
+//     .image-fixed {
+//       max-height: 100%;
+//       max-width: 100%;
+//       object-fit: contain; // يحافظ على أبعاد الصورة دون قصها
+//       filter: grayscale(0.8) opacity(0.7); // تأثير المزاد المنتهي
+//       transition: all 0.4s ease;
+//     }
+//   }
+
+//   // عند تمرير الماوس، تظهر الصورة بوضوح أكثر قليلاً
+//   &:hover .image-fixed {
+//     filter: grayscale(0.4) opacity(0.9);
+//     transform: scale(1.05);
+//   }
+// }
+
+// /* في حالة الصور القادمة من الروابط مثل placeholder */
+// .image-container-fixed {
+//   background-color: #1e293b; /* نفس لون الكارت الداخلي لتبدو مدمجة */
+//   border-radius: 8px;
+// }
+
+
+
+
+// .upcoming-card {
+//   background: linear-gradient(145deg, #1e293b, #111827) !important;
+//   border: 1px solid rgba(56, 189, 248, 0.2) !important; // تحديد باللون السماوي الخفيف
+
+//   .upcoming-badge {
+//     background: rgba(56, 189, 248, 0.1);
+//     color: #38bdf8;
+//     padding: 6px 12px;
+//     border-radius: 8px;
+//     font-size: 0.8rem;
+//     border: 1px solid rgba(56, 189, 248, 0.2);
+//   }
+
+//   .status-icon-upcoming {
+//     color: #94a3b8;
+//     font-size: 1.2rem;
+//   }
+
+//   .image-placeholder-bg {
+//     background: rgba(255, 255, 255, 0.03);
+//     border-radius: 12px;
+//     height: 150px;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     overflow: hidden;
+
+//     .image-contain {
+//       max-height: 130px;
+//       object-fit: contain;
+//       opacity: 0.85;
+//       transition: 0.3s;
+//     }
+//   }
+
+//   .date-info-box {
+//     background: rgba(99, 102, 241, 0.08);
+//     border: 1px solid rgba(99, 102, 241, 0.15);
+
+//     .highlight-date {
+//       color: #818cf8;
+//       font-weight: 700;
+//       font-size: 0.95rem;
+//     }
+//   }
+
+//   .btn-edit-full.outline-upcoming {
+//     background: transparent;
+//     border: 1px solid rgba(99, 102, 241, 0.4);
+//     color: #818cf8;
+//     padding: 10px;
+//     border-radius: 10px;
+//     font-weight: 600;
+
+//     &:hover {
+//       background: #6366f1;
+//       color: white;
+//       box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+//     }
+//   }
+
+//   &:hover .image-contain {
+//     transform: scale(1.05);
+//     opacity: 1;
+//   }
+// }
+
+// .pulse-dot-small {
+//   width: 6px;
+//   height: 6px;
+//   background-color: #10b981;
+//   border-radius: 50%;
+//   box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+//   animation: pulse-green 2s infinite;
+// }
+
+// @keyframes pulse-green {
+//   0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+//   70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+//   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+// }
+
+
+
+
+//     .info {
+//       display: flex;
+//       flex-direction: column;
+
+//       strong {
+//         color: #f8fafc;
+//         font-size: 0.9rem;
+//         max-width: 130px;
+//         white-space: nowrap;
+//         overflow: hidden;
+//         text-overflow: ellipsis;
+//       }
+
+//       .bid-status {
+//         font-size: 0.7rem;
+//         color: #10b981;
+//         display: flex;
+//         align-items: center;
+//         gap: 5px;
+//         margin-top: 2px;
+
+//         &.no-bids { color: #94a3b8; font-style: italic; }
+//       }
+//     }
+
+
+
+//   .btn-admin-view {
+//   background: rgba(255, 255, 255, 0.05); /* خلفية خفيفة جداً */
+//   color: #94a3b8; /* لون رمادي فاتح هادئ */
+//   border: 1px solid rgba(255, 255, 255, 0.1);
+//   padding: 6px 16px;
+//   border-radius: 8px;
+//   font-size: 0.85rem;
+//   font-weight: 500;
+//   display: flex;
+//   align-items: center;
+//   transition: all 0.3s ease;
+//   cursor: pointer;
+
+//   i {
+//     font-size: 0.9rem;
+//     transition: transform 0.3s ease;
+//   }
+
+//   &:hover {
+//     background: rgba(99, 102, 241, 0.15); /* لون الهوية الأساسي بـ Opacity قليل */
+//     color: #818cf8; /* تفتيح لون النص */
+//     border-color: rgba(99, 102, 241, 0.4);
+
+//     i {
+//       transform: translateX(-5px); /* تحريك السهم قليلاً جهة اليسار */
+//     }
+//   }
+
+//   &:active {
+//     transform: scale(0.95); /* تأثير الضغطة */
+//   }
+// }
+
+
+
+
+// /* الألوان المتوافقة مع خلفية السايت الداكنة */
+// $dark-card-bg: #1e293b;         /* لون خلفية الكارت الداكن */
+// $accent-purple: #6366f1;       /* لون الهوية الأساسي */
+// $border-glass: rgba(255, 255, 255, 0.1);
+
+// .auction-mini-card {
+//   background: $dark-card-bg !important;
+//   border: 1px solid $border-glass !important;
+//   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+//   color: #ffffff;
+
+//   // كارت المنتهي في المود الداكن
+//   &.finished-card {
+//     background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+//     border: 1px solid rgba($accent-purple, 0.2) !important;
+
+//     .card-top {
+//       background: rgba(255, 255, 255, 0.03) !important;
+//       border-bottom: 1px solid $border-glass;
+//     }
+
+//     .finished-tag {
+//       background: rgba(239, 68, 68, 0.2); /* أحمر شفاف خفيف للمنتهي */
+//       color: #f87171;
+//       border: 1px solid rgba(239, 68, 68, 0.3);
+//     }
+
+//     .target-price span {
+//       color: #38bdf8 !important; /* لون لبني سماوي واضح */
+//     }
+
+//     .official-price-tag {
+//       background: rgba(255, 255, 255, 0.05);
+//       color: #94a3b8;
+//       span { color: #10b981; } /* السعر الرسمي بالأخضر */
+//     }
+
+//     // صندوق الفائز (ليكون بارزاً في الخلفية الغامقة)
+//     .winner-highlight-box {
+//       background: rgba($accent-purple, 0.1) !important;
+//       border: 1px solid rgba($accent-purple, 0.3) !important;
+//       border-radius: 10px !important;
+//       padding: 10px !important;
+
+//       .winner-avatar {
+//         background: $accent-purple;
+//         color: white;
+//       }
+
+//       .winner-info strong {
+//         color: #ffffff;
+//       }
+
+//       .trophy-badge {
+//         color: #fbbf24;
+//         filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.4));
+//       }
+//     }
+
+//     // زر تفاصيل الطلب
+//     .btn-order-details {
+//       background: $accent-purple;
+//       color: white;
+//       border: none;
+//       border-radius: 10px;
+//       &:hover {
+//         background: darken($accent-purple, 10%);
+//         box-shadow: 0 0 15px rgba($accent-purple, 0.4);
+//       }
+//     }
+//   }
+// }
+
+
+
+
+
+// /* المتغيرات الأساسية للهوية البصرية */
+// $dark-card-bg: #1e293b;         /* لون خلفية الكارت الأساسي */
+// $dark-bg-body: #0f172a;         /* لون خلفية الصفحة */
+// $accent-purple: #6366f1;        /* اللون البنفسجي (الهوية) */
+// $accent-blue: #38bdf8;          /* اللون السماوي (للقادم والأسعار) */
+// $success-green: #10b981;        /* الأخضر للمزايدات والنجاح */
+// $danger-red: #ef4444;           /* الأحمر للمنتهي والتنبيه */
+// $text-muted: #94a3b8;           /* الرمادي للنصوص الثانوية */
+// $border-glass: rgba(255, 255, 255, 0.1);
+
+// /* 1. التنسيق العام للكارت (Base Card) */
+// .auction-mini-card {
+//   background: $dark-card-bg !important;
+//   border: 1px solid $border-glass !important;
+//   border-radius: 16px;
+//   overflow: hidden;
+//   color: #ffffff;
+//   transition: transform 0.3s ease, box-shadow 0.3s ease;
+//   height: 100%;
+//   display: flex;
+//   flex-direction: column;
+
+//   &:hover {
+//     transform: translateY(-5px);
+//     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+//   }
+
+//   .product-name {
+//     font-size: 1rem;
+//     font-weight: 600;
+//     margin-bottom: 12px;
+//     color: #f8fafc;
+//   }
+// }
+
+// /* 2. تنسيق المزادات النشطة (Active Auctions) */
+// .modern-timer {
+//   display: flex;
+//   gap: 8px;
+//   .time-block {
+//     background: rgba(255, 255, 255, 0.05);
+//     padding: 4px 8px;
+//     border-radius: 6px;
+//     text-align: center;
+//     strong { display: block; font-size: 0.9rem; }
+//     span { font-size: 0.65rem; color: $text-muted; }
+
+//     &.seconds.danger {
+//       color: $danger-red;
+//       background: rgba($danger-red, 0.1);
+//       border: 1px solid rgba($danger-red, 0.2);
+//     }
+//   }
+// }
+
+// .top-bidder-highlight {
+//   background: rgba(0, 0, 0, 0.2);
+//   border-radius: 12px;
+//   padding: 12px;
+//   margin: 15px 0;
+
+//   .header-row {
+//     display: flex;
+//     justify-content: space-between;
+//     margin-bottom: 8px;
+//     small { color: $text-muted; }
+//     .bid-val { color: $success-green; font-weight: bold; }
+//   }
+
+//   .bidder-details {
+//     display: flex;
+//     align-items: center;
+//     gap: 10px;
+//     .avatar {
+//       width: 32px; height: 32px;
+//       background: $accent-purple;
+//       border-radius: 50%;
+//       display: flex;
+//       align-items: center;
+//       justify-content: center;
+//       font-weight: bold; font-size: 0.8rem;
+//     }
+//     .info {
+//       strong {
+//         color: #f8fafc; font-size: 0.85rem;
+//         max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+//       }
+//       .bid-status {
+//         font-size: 0.65rem; color: $success-green;
+//         display: flex; align-items: center; gap: 4px;
+//         &.no-bids { color: $text-muted; font-style: italic; }
+//       }
+//     }
+//   }
+// }
+
+// /* 3. تنسيق المزادات القادمة (Upcoming Auctions) */
+// .upcoming-card {
+//   background: linear-gradient(145deg, #1e293b, #111827) !important;
+//   border: 1px solid rgba($accent-blue, 0.2) !important;
+
+//   .upcoming-badge {
+//     background: rgba($accent-blue, 0.1);
+//     color: $accent-blue;
+//     padding: 6px 12px;
+//     border-radius: 8px;
+//     font-size: 0.75rem;
+//     border: 1px solid rgba($accent-blue, 0.2);
+//   }
+
+//   .image-placeholder-bg {
+//     background: rgba(255, 255, 255, 0.03);
+//     border-radius: 12px;
+//     height: 150px;
+//     display: flex; align-items: center; justify-content: center;
+//     .image-contain { max-height: 130px; object-fit: contain; opacity: 0.85; transition: 0.3s; }
+//   }
+
+//   .date-info-box {
+//     background: rgba($accent-purple, 0.08);
+//     border: 1px solid rgba($accent-purple, 0.15);
+//     .highlight-date { color: #818cf8; font-weight: 700; font-size: 0.9rem; }
+//   }
+// }
+
+// /* 4. تنسيق المزادات المنتهية (Finished Auctions) */
+// .finished-card {
+//   background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
+//   border: 1px solid rgba($accent-purple, 0.2) !important;
+
+//   .card-top {
+//     background: rgba(255, 255, 255, 0.03) !important;
+//     border-bottom: 1px solid $border-glass;
+//   }
+
+//   .finished-tag {
+//     background: rgba($danger-red, 0.15);
+//     color: #f87171;
+//     border: 1px solid rgba($danger-red, 0.2);
+//     font-size: 0.75rem;
+//   }
+
+//   .img-wrapper {
+//     .image-container-fixed {
+//       height: 160px;
+//       display: flex; align-items: center; justify-content: center;
+//       background-color: White; border-radius: 12px;
+//       position: relative; overflow: hidden;
+//     }
+//     .image-fixed {
+//       max-height: 90%; max-width: 90%; object-fit: contain;
+//       filter: grayscale(0.8) opacity(0.6);
+//       transition: all 0.4s ease;
+//     }
+//   }
+
+//   &:hover .image-fixed { filter: grayscale(0.3) opacity(0.9); transform: scale(1.05); }
+
+//   .official-price-tag {
+//     background: rgba(255, 255, 255, 0.05);
+//     color: $text-muted;
+//     font-size: 0.8rem;
+//     span { color: $success-green; font-weight: bold; }
+//   }
+
+//   .winner-highlight-box {
+//     background: rgba($accent-purple, 0.1) !important;
+//     border: 1px solid rgba($accent-purple, 0.2) !important;
+//     .winner-avatar {
+//       width: 35px; height: 35px; border-radius: 50%;
+//       background: $accent-purple; color: white;
+//       display: flex; align-items: center; justify-content: center;
+//     }
+//     .trophy-badge { color: #fbbf24; filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.4)); }
+//   }
+// }
+
+// /* 5. الأزرار (Buttons) */
+// .btn-edit-full {
+//   width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+//   padding: 12px; margin-top: 10px;
+//   background: rgba($accent-purple, 0.1); color: #818cf8;
+//   border: 1px solid rgba($accent-purple, 0.3); border-radius: 10px;
+//   font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.3s;
+
+//   &:hover {
+//     background: $accent-purple; color: #ffffff;
+//     box-shadow: 0 4px 15px rgba($accent-purple, 0.4);
+//     transform: translateY(-2px);
+//   }
+
+//   &.outline-upcoming {
+//     background: transparent; border: 1px solid rgba($accent-purple, 0.4);
+//     &:hover { background: $accent-purple; }
+//   }
+// }
+
+// .btn-order-details {
+//   background: $accent-purple; color: white; border: none;
+//   transition: 0.3s;
+//   &:hover { background: darken($accent-purple, 10%); box-shadow: 0 4px 15px rgba($accent-purple, 0.3); }
+// }
+
+// .btn-admin-view {
+//   background: rgba(255, 255, 255, 0.05); color: $text-muted;
+//   border: 1px solid rgba(255, 255, 255, 0.1);
+//   padding: 6px 16px; border-radius: 8px; font-size: 0.8rem;
+//   transition: 0.3s;
+//   &:hover {
+//     background: rgba($accent-purple, 0.15); color: #818cf8;
+//     border-color: rgba($accent-purple, 0.4);
+//     i { transform: translateX(-5px); }
+//   }
+// }
+
+// /* 6. تأثيرات الأنيميشن */
+// .pulse-dot-small {
+//   width: 6px; height: 6px; background-color: $success-green; border-radius: 50%;
+//   animation: pulse-green 2s infinite;
+// }
+
+// @keyframes pulse-green {
+//   0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+//   70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+//   100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+// }
 
 
 
@@ -1622,3 +2153,1879 @@ $figma-border: rgba(255, 255, 255, 0.08);
 //   width: 100%;       // يخلي الكارت ياخد عرض السلايد المتاحة له (اللي هي ربع الشاشة)
 //   max-width: 310px;  // يمنعه من إنه يكبر بشكل بشع في الشاشات العريضة جداً
 // }
+
+
+
+
+// --- المتغيرات ---
+$primary: #4f46e5;
+$bg-light: #f8fafc;
+$ai-color: #1e293b;
+$success: #10b981;
+$danger: #ef4444;
+$warning-bg: #fffbeb;
+$warning-text: #b45309;
+$text-dark: #1e293b;
+
+// --- الحاوية الرئيسية ---
+.home-wrapper {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+// --- كارت الرصيد (الهيدر) ---
+// حافظت على التدرج اللوني الذي أرسلته لأنه يعطي شكلاً جمالياً
+.points-summary-card {
+  background: linear-gradient(135deg, $primary, #818cf8);
+  border-radius: 20px; padding: 25px; color: white; margin-bottom: 30px;
+  display: flex; flex-direction: column; gap: 15px;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2); // ظل خفيف
+
+  .card-content { display: flex; justify-content: space-between; align-items: center; }
+  h2 { font-size: 2.2rem; margin: 0; font-weight: 800; }
+
+  .pulse-circle {
+    width: 55px; height: 55px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    backdrop-filter: blur(5px);
+  }
+
+  .card-footer {
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 12px; font-size: 0.85rem; opacity: 0.9;
+  }
+}
+
+// --- شبكة المزادات (Grid System) ---
+.auctions-grid {
+  display: grid;
+  // توزيع تلقائي: 4 كروت في الشاشات الكبيرة، وتقل تدريجياً
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+  }
+}
+
+// --- كارت المزاد ---
+.auction-mini-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid #edf2f7;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  // الجزء العلوي (العداد والمستهدف)
+  .card-top {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .target-price {
+      text-align: left;
+      small { display: block; font-size: 0.65rem; color: #94a3b8; }
+      span { color: $success; font-weight: 800; font-size: 0.95rem; }
+    }
+  }
+
+  // تصميم العداد المودرن
+  .modern-timer {
+    display: flex;
+    gap: 6px;
+    direction: ltr;
+
+    .time-block {
+      background: #f1f5f9;
+      padding: 6px 8px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 45px;
+
+      strong { font-size: 0.9rem; color: $text-dark; font-weight: 800; }
+      span { font-size: 0.6rem; color: #64748b; text-transform: uppercase; }
+    }
+  }
+
+  // غلاف الصورة مع علامة "مباشر"
+  .img-wrapper {
+    height: 180px;
+    background: #fafafa;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 15px;
+    border-radius: 15px;
+
+    img {
+      max-height: 85%;
+      max-width: 90%;
+      object-fit: contain;
+    }
+
+    .live-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px; // بما أن الاتجاه RTL
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: $danger;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        background-color: $danger;
+        border-radius: 50%;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          width: 100%; height: 100%;
+          background: $danger;
+          border-radius: 50%;
+          animation: pulse 1.5s infinite;
+        }
+      }
+    }
+  }
+
+  // المحتوى الرئيسي
+  .card-main {
+    padding: 20px;
+
+    .product-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: $text-dark;
+      margin-bottom: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  // مربع المزايد الحالي
+  .top-bidder-highlight {
+    background: $bg-light;
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid transparent;
+
+    &.is-ai {
+      background: rgba($primary, 0.05);
+      border: 1px dashed rgba($primary, 0.2);
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      small { color: #64748b; font-size: 0.75rem; }
+      .bid-val { color: $primary; font-weight: 800; font-size: 1rem; }
+    }
+
+    .bidder-details {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: $primary;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: bold;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        strong { font-size: 0.85rem; color: $text-dark; }
+        small { font-size: 0.7rem; color: #94a3b8; }
+      }
+    }
+  }
+
+  // المتفاعلين (Avatar Stack)
+  .competitors {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    small { color: #94a3b8; font-size: 0.75rem; }
+
+    .avatar-stack {
+      display: flex;
+      flex-direction: row-reverse;
+      span {
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        background: #e2e8f0;
+        margin-left: -8px;
+        font-size: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        &.ai-tag { background: #1e293b; color: #38bdf8; }
+      }
+    }
+  }
+}
+
+// زر عرض التفاصيل
+.btn-admin-view {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-weight: 700;
+  transition: 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    background: $primary;
+    color: white;
+    border-color: $primary;
+    i { transform: translateX(-5px); }
+  }
+
+  i { transition: 0.3s; }
+}
+
+// أنيميشن النبض
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+// زر إضافة مزاد
+.btn-add-auction {
+  background: #1e293b; /* اللون الداكن الأساسي */
+  color: #ffffff;
+  border: 1px solid rgba(59, 130, 246, 0.3); /* حدود زرقاء خفيفة */
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* حركة ناعمة جداً */
+  position: relative;
+  overflow: hidden;
+}
+
+/* تأثير الهوفر (Hover) */
+.btn-add-auction:hover {
+  background: #2563eb;
+  border-color: #60a5fa;
+  transform: translateY(-3px);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4),
+              0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+.btn-add-auction:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(37, 99, 235, 0.3);
+}
+
+.btn-add-auction:hover i {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.custom-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 550px;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease-out;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    h3 { color: #1e293b; margin: 0; font-size: 1.4rem; }
+    .close-btn { background: none; border: none; font-size: 2rem; cursor: pointer; color: #94a3b8; }
+  }
+}
+
+.modal-form {
+  .form-row {
+    margin-bottom: 20px;
+    &.split { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    label { font-weight: 600; color: #475569; font-size: 0.9rem; }
+    input {
+      padding: 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      &:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  // margin-top: 30px;
+
+  button {
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .btn-cancel { background: #f1f5f9; border: none; color: #64748b; &:hover { background: #e2e8f0; } }
+  .btn-save { background: #4f46e5; border: none; color: white; &:hover { background: #4338ca; } }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.auction-mini-card {
+  position: relative;
+
+  .top-bidder-highlight {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px inset rgba(99, 102, 241, 0.1);
+
+    &.is-ai { background: #f5f3ff; }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      .bid-val { color: #10b981; font-weight: 800; }
+    }
+  }
+
+  .avatar-stack {
+    display: flex;
+    flex-direction: row-reverse;
+    span {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      border: 2px solid white;
+      margin-right: -10px; // تداخل الدوائر
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .ai-tag { background: #6366f1; color: white; }
+  }
+}
+
+.admin-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  gap: 5px;
+
+  button {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    i { font-size: 0.9rem; }
+  }
+  .edit-btn i { color: #6366f1; }
+  .delete-btn i { color: #ef4444; }
+}
+
+/* --- تنسيقات عامة --- */
+.home-wrapper {
+  padding-bottom: 80px; // مسافة عشان الزرار ميكنش لازق تحت
+}
+
+/* --- تنسيق التابات --- */
+.filter-tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+
+  button {
+    background: white;
+    // border: 1px solid #e2e8f0;
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: #64748b;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: 0.3s;
+
+    &.active {
+      background: #6366f1;
+      color: white;
+      border-color: #6366f1;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+  }
+}
+
+/* --- تنسيق زر عرض المزيد --- */
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+
+  .btn-load-more {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    color: #475569;
+    padding: 10px 30px;
+    border-radius: 25px;
+    font-weight: 700;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+/* --- بادجات الحالة --- */
+.status-badge {
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &.upcoming { color: #d97706; background: #fffbeb; }
+  &.completed { color: #10b981; background: #ecfdf5; }
+}
+
+
+
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0; // تغطية كاملة (top, left, right, bottom)
+  background: rgba(15, 23, 42, 0.7); // لون داكن شفاف
+  backdrop-filter: blur(15px) saturate(180%); // عزل تام وضبابية احترافية للمحتوى الخلفي
+  z-index: 99999; // قيمة عالية جداً لضمان الظهور فوق كل شيء (Sidebar, Navbar, etc.)
+  display: flex;
+  align-items: center; // توسيط في الديسكتوب
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+
+    .custom-modal-content {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+/* --- محتوى المودال (الديسكتوب) --- */
+.custom-modal-content {
+  background: #ffffff;
+  width: 550px;
+  max-width: 95%;
+  border-radius: 24px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: scale(0.9) translateY(20px); // أنيميشن يبدأ من تحت وبحجم أصغر
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); // تأثير Bounce خفيف
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* --- الـ Bottom Sheet في الموبايل --- */
+@media (max-width: 768px) {
+  .custom-modal-overlay {
+    align-items: flex-end; // يظهر من الأسفل
+    background: rgba(15, 23, 42, 0.6); // تعتيم خفيف للتركيز على المودال
+    backdrop-filter: blur(8px); // عزل احترافي
+  }
+
+  .custom-modal-content {
+    width: 100%;
+    height: 60vh; // يغطي فوق نص الشاشة بشوية لضمان رؤية المحتوى
+    max-height: 60vh;
+    border-radius: 30px 30px 0 0; // حواف دائرية علوية فقط
+    padding: 15px 20px;
+    margin: 0;
+    overflow: hidden; // منع السكرول الخارجي
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%); // بداية الحركة من تحت الشاشة
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+
+    // شريط السحب العلوي (الديكور الاحترافي)
+    &::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      margin: -5px auto 15px auto;
+    }
+  }
+
+  .custom-modal-overlay.show .custom-modal-content {
+    transform: translateY(0); // السحب للمنتصف
+  }
+
+  /* ضغط المحتوى ليظهر كاملاً بدون سكرول */
+  .modal-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; // تقليل المسافات بين العناصر
+
+    .form-group {
+      margin-bottom: 0;
+      label {
+        font-size: 0.8rem;
+        margin-bottom: 2px;
+        color: #64748b;
+      }
+      input {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        background: #f8fafc;
+      }
+    }
+
+    /* جعل كل حقلين في سطر واحد لتوفير مساحة طولية */
+    .form-row.split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+  }
+
+  .modal-header {
+    margin-bottom: 15px;
+    h3 { font-size: 1rem; }
+  }
+
+  .modal-footer {
+    margin-top: auto; // دفع الأزرار للأسفل
+    // padding-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+
+    button { padding: 12px; font-weight: 700; }
+  }
+}
+
+/* --- Overlay: تغطية الشاشة بالكامل --- */
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px); // عزل قوي للخلفية
+  z-index: 99999; // فوق السايد بار والهيدر
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    .custom-modal-content { transform: scale(1) translateY(0); }
+  }
+}
+
+/* --- Content: ديسكتوب --- */
+.custom-modal-content {
+  background: white;
+  width: 500px;
+  max-width: 95%;
+  border-radius: 24px;
+  padding: 25px;
+  transform: scale(0.9) translateY(20px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* --- الموبايل الاحترافي (نص الشاشة) --- */
+@media (max-width: 768px) {
+  .custom-modal-content {
+    height: auto;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 30px;
+
+
+    .modal-handle-bar {
+      margin: 10px auto 20px auto !important;
+    }
+  }
+
+  .modal-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+
+// زرار عرض التفاصيل (للمزادات النشطة)
+.btn-admin-view {
+  background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 2px rgba(99, 102, 241, 0.2);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 5px rgba(99, 102, 241, 0.3);
+    filter: brightness(1.1);
+  }
+}
+
+
+.btn-edit-auction {
+  background: #f8fafc; // خلفية فاتحة
+  color: #475569;
+  border: 1.5px solid #e2e8f0; // حدود خفيفة
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+
+  i {
+    color: #6366f1; // أيقونة القلم بلون مميز
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    background: #f1f5f9;
+    border-color: #6366f1;
+    color: #0f172a;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* تحسين شكل الكارت للمنتهي عشان الزرار لما يختفي الشكل ميبوظش */
+.completed-card {
+  opacity: 0.85;
+  filter: grayscale(0.2);
+  border: 1px dashed #cbd5e1;
+}
+
+
+/* --- التغطية الخلفية (Overlay) --- */
+.custom-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center; // الكمبيوتر: في المنتصف
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    align-items: flex-end; // الموبايل: تلتصق بالأسفل
+  }
+}
+
+/* --- جسم المودال --- */
+.custom-modal-content {
+  background: white;
+  width: 92%;
+  max-width: 500px;
+  border-radius: 24px; // زوايا دائرية من كل الجهات للكمبيوتر
+  padding: 25px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  direction: rtl;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    width: 100%; // تأخذ العرض كامل في الموبايل
+    max-width: none;
+    border-radius: 30px 30px 0 0; // دائرية من فوق بس في الموبايل
+    padding: 20px;
+    margin: 0;
+    animation: slideFromBottom 0.4s ease-out; // أنيميشن الطلع من تحت
+  }
+}
+
+/* --- تنسيق المدخلات --- */
+.modal-body {
+  .input-group {
+    margin-bottom: 12px;
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: #64748b;
+      font-size: 0.8rem;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #f1f5f9;
+      border-radius: 12px;
+      outline: none;
+      transition: 0.3s;
+      &:focus { border-color: #4f46e5; background: #fff; }
+    }
+  }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}
+
+/* --- الأزرار --- */
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  // margin-top: 15px;
+
+  button {
+    flex: 1;
+    padding: 13px;
+    border-radius: 12px;
+    font-weight: 700;
+    border: none;
+    transition: 0.3s;
+    font-size: 0.95rem;
+
+    &.btn-cancel { background: #f1f5f9; color: #64748b; }
+    &.btn-save { background: #4f46e5; color: white; }
+  }
+}
+
+/* --- الأنيميشن --- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+// أنيميشن الكمبيوتر (تظهر من مكانها)
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+// أنيميشن الموبايل (تطلع من تحت الشاشة)
+@keyframes slideFromBottom {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+
+.file-upload-wrapper {
+  .upload-area {
+    width: 100%;
+    height: 120px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #f8fafc;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+
+    &:hover { border-color: #4f46e5; background: #f1f5f9; }
+    &.has-image { border-style: solid; border-color: #e2e8f0; }
+
+    .upload-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #64748b;
+      i { font-size: 2rem; }
+      span { font-size: 0.85rem; font-weight: 600; }
+    }
+
+    .preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .btn-remove-img {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+.official-price-tag {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin: 12px 0;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-right: 4px solid #6c5ce7; // خط جانبي بلون الثيم الأساسي (أزرق/بنفسجي)
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 4px 12px 12px 4px; // زوايا انسيابية
+  transition: all 0.3s ease;
+
+  small {
+    font-size: 0.7rem;
+    color: #888;
+    font-weight: 600;
+    margin-left: 8px;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+
+  span {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1a1a1a; // لون أسود فخم
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+
+    &::after {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #6c5ce7;
+    }
+  }
+
+}
+
+.modal-form {
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background: #f9f9f9;
+      transition: border-color 0.2s;
+
+      &:focus {
+        border-color: #6c5ce7; // نفس لون الثيم بتاعك
+        outline: none;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+// --- Palette ألوان فيجما الموحدة ---
+$figma-card: #1a2130;
+$figma-primary: #3b82f6;
+$figma-border: rgba(255, 255, 255, 0.08);
+$figma-bg-dark: #0a0e17;
+$text-muted: #94a3b8;
+
+
+
+// 1. حاوية الفلاتر (النشطة، القادمة...)
+.filter-section {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid $figma-border !important;
+  border-radius: 14px;
+  padding: 10px;
+
+  button {
+    color: #94a3b8 !important;
+    background: transparent !important;
+    border-radius: 10px;
+    transition: 0.3s;
+
+    &.active {
+      background: $figma-primary !important;
+      color: white !important;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+    }
+  }
+}
+
+
+
+
+// --- Palette ألوان فيجما النهائية ---
+$figma-card-bg: #1a2130;
+$figma-primary: #3b82f6;
+$figma-border: rgba(255, 255, 255, 0.08);
+
+.auction-mini-card {
+  // 1. جسم الكارت: تدرج لوني خفي يدي عمق
+  background: linear-gradient(145deg, $figma-card-bg, #111723) !important;
+  border: 1px solid $figma-border !important;
+  border-radius: 28px !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3) !important;
+
+    .modern-timer {
+      display: flex;
+      gap: 5px;
+      direction: ltr;
+      .time-block {
+        background: #2d3748;
+        padding: 10px 8px;
+        border-radius: 8px;
+        min-width: 38px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.05);
+        strong { display: block; color: #fff; font-size: 0.85rem; line-height: 1.2; }
+        span { display: block; color: #718096; font-size: 0.55rem; text-transform: uppercase; }
+      }
+    }
+}
+
+// أنيميشن تنبيه للثواني الأخيرة
+@keyframes pulse-red {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+  // 3. النصوص الأساسية
+  .card-main {
+    .product-name {
+      color: #ffffff !important; // اسم المنتج لازم يكون أوضح حاجة
+      font-weight: 700 !important;
+    }
+
+    .official-price-tag {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      span { color: #10b981 !important; } // السعر الرسمي بالأخضر المنور
+    }
+
+    // 4. منطقة أعلى مزايد (الـ Highlight)
+    .top-bidder-highlight {
+      background: rgba($figma-primary, 0.05) !important;
+      border: 1px solid rgba($figma-primary, 0.15) !important;
+
+      .bid-val {
+        color: $figma-primary !important;
+        text-shadow: 0 0 15px rgba($figma-primary, 0.2);
+      }
+
+      .bidder-details {
+        strong { color: #e2e8f0 !important; }
+        .avatar {
+          background: linear-gradient(135deg, $figma-primary, #1d4ed8) !important;
+          color: white !important;
+        }
+      }
+    }
+  }
+
+  //     // شبكة الخصائص (نقطة البداية / إجمالي النقاط)
+    .data-specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+
+      .spec-item {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 10px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.05);
+        small { color: #718096; font-size: 0.7rem; display: block; margin-bottom: 4px; }
+        strong { color: #fff; font-size: 0.95rem; display: block; }
+      }
+    }
+
+  // 5. الأزرار (Buttons)
+  .btn-admin-view, .btn-edit-auction{
+    background: rgba($figma-primary, 0.1) !important;
+    color: $figma-primary !important;
+    border: 1px solid rgba($figma-primary, 0.2) !important;
+
+    &:hover ,i:hover{
+      background: $figma-primary !important;
+      color: #ffffff !important;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4) !important;
+    }
+  }
+
+// أنيميشن النبض للأفاتار
+@keyframes avatarPulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+// زر عرض المزيد (Load More)
+.btn-load-more {
+  background: transparent !important;
+  color: #94a3b8 !important;
+  border: 1px solid $figma-border !important;
+  border-radius: 50px;
+  &:hover {
+    background: $figma-primary !important;
+    color: white !important;
+    border-color: $figma-primary !important;
+  }
+}
+
+
+
+
+// --- Palette ألوان المودال الموحدة ---
+$modal-bg: #1a2130; // لون الكارت الأساسي
+$input-bg: #0f172a; // لون الحقول الداكن
+$accent-blue: #3b82f6; // اللون الأزرق الأساسي
+$text-gray: #94a3b8;
+
+.custom-modal-overlay {
+  background: rgba(0, 0, 0, 0.7); // تعتيم الخلفية
+  backdrop-filter: blur(5px);
+}
+
+.custom-modal-content {
+  background: $modal-bg !important;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  max-width: 550px;
+  padding: 2rem !important;
+
+  .modal-header {
+    border: none;
+    padding-bottom: 20px;
+
+    h3 {
+      color: #ffffff;
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      i { color: $accent-blue; } // الأيقونة الزرقاء
+    }
+
+    .close-btn {
+      color: $text-gray;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+
+      &:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+    }
+  }
+
+  .modal-form {
+    .form-group {
+      margin-bottom: 20px;
+
+      label {
+        color: $text-gray;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      input {
+        background: $input-bg !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        color: #fff !important;
+        padding: 12px 15px;
+        transition: 0.3s;
+
+        &:focus {
+          border-color: $accent-blue !important;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+          outline: none;
+        }
+
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+
+    // منطقة رفع الصورة المحدثة
+    .upload-area {
+      background: rgba(0, 0, 0, 0.2) !important;
+      border: 2px dashed rgba($accent-blue, 0.3) !important;
+      border-radius: 16px;
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.3s;
+
+      &:hover {
+        border-color: $accent-blue !important;
+        background: rgba($accent-blue, 0.05) !important;
+      }
+
+      .upload-placeholder {
+        i {
+          font-size: 2rem;
+          color: $accent-blue;
+          margin-bottom: 10px;
+        }
+        span {
+          color: $accent-blue;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    border: none;
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+
+    .btn-save {
+      background: $accent-blue !important;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      flex: 1;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      transition: 0.3s;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+      }
+    }
+
+    .btn-cancel {
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: $text-gray;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      flex: 1;
+      font-weight: 600;
+      transition: 0.3s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: white;
+      }
+    }
+  }
+}
+
+.no-data-vibe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: rgba(30, 41, 59, 0.5); // خلفية شبه شفافة تتناسب مع اللون الداكن
+  border-radius: 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  margin: 40px auto;
+  max-width: 600px;
+  backdrop-filter: blur(10px); // تأثير زجاجي ناعم
+
+  img {
+    width: 220px;
+    height: auto;
+    margin-bottom: 25px;
+    opacity: 0.8;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+    animation: float 3s ease-in-out infinite; // تحريك الصورة لجعل الواجهة حية
+  }
+
+  p {
+    color: #94a3b8; // لون رمادي هادئ للنصوص الثانوية
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0;
+
+    &::after {
+      content: ' 🌍'; // إضافة لمسة بسيطة بعد اسم الدولة
+    }
+  }
+
+  // أنيميشن لطيف للصورة
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+  }
+}
+
+.top-bidder-highlight {
+  margin-top: 15px;
+  padding: 10px 15px;
+  background: rgba(99, 102, 241, 0.1); // لون أرجواني خفيف جداً خلف النص
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(99, 102, 241, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .bidder-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #e2e8f0; // لون نص فاتح للتباين
+
+    i {
+      font-size: 1.2rem;
+      color: #6366f1; // لون أيقونة مميز (Indigo)
+      filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.5));
+    }
+
+    span {
+      font-size: 0.9rem;
+      color: #94a3b8; // لون رمادي للنص الثانوي
+
+      strong {
+        color: #f8fafc; // اسم المزايد يكون بلون أبيض واضح
+        font-weight: 600;
+        margin-right: 5px;
+
+        // إذا كان الاسم طويلاً سيتم قصه بنقاط ...
+        display: inline-block;
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+      }
+    }
+  }
+}
+
+// في حال لم يوجد مزايد بعد، يمكننا تلوين النص بشكل مختلف
+.no-bidder {
+  color: #ef4444 !important; // لون أحمر هادئ
+  font-style: italic;
+}
+
+
+
+
+.top-bidder-highlight {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(16, 185, 129, 0.05); // لون أخضر خفيف جداً للنشط
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+    small { color: #94a3b8; font-size: 0.75rem; }
+    .bid-val {
+      color: #10b981;
+      font-weight: 800;
+      font-size: 1rem;
+      small { font-size: 0.7rem; margin-right: 2px; }
+    }
+  }
+
+  .bidder-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        color: #f8fafc;
+        font-size: 0.9rem;
+        max-width: 130px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .bid-status {
+        font-size: 0.7rem;
+        color: #10b981;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 2px;
+
+        &.no-bids { color: #94a3b8; font-style: italic; }
+      }
+    }
+  }
+}
+
+// نقطة النبض الخضراء الصغيرة
+.pulse-dot-small {
+  width: 6px;
+  height: 6px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.custom-select {
+    width: 100%;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 12px;
+    color: white;
+    font-size: 0.9rem;
+    outline: none;
+
+    option {
+        background: #1e293b;
+    }
+}
+
+.searchable-select-container {
+  position: relative;
+  width: 100%;
+
+  .search-input {
+    width: 100%;
+    padding: 12px;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+  }
+
+  .custom-dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    margin-top: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+
+    .dropdown-item {
+      padding: 10px 15px;
+      cursor: pointer;
+      color: white;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #334155;
+      }
+
+      &.no-result {
+        color: #94a3b8;
+        cursor: default;
+      }
+    }
+  }
+}
+
+
+.card-footer-actions {
+  margin-top: 5px;
+  padding: 10px 5px 5px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05); // خط فاصل ناعم جداً
+
+  .btn-edit-full {
+    width: 100%;
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.08); // خلفية بنفسجية شفافة
+    color: #a5b4fc; // لون نص فاتح وواضح
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    i {
+      font-size: 1.1rem;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      background: #6366f1; // يتحول للون الصريح عند التمرير
+      color: #ffffff;
+      border-color: #818cf8;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+
+      i {
+        transform: rotate(-10deg) scale(1.1);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// تعديل بسيط على الكارت لضمان التناسق
+.auction-mini-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; // يضمن بقاء الزر في أسفل الكارت دائماً
+  height: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// --- Palette ألوان المودال الموحدة ---
+$modal-bg: #1a2130;
+$input-bg: #0f172a;
+$accent-blue: #3b82f6;
+$text-gray: #94a3b8;
+
+.custom-modal-content {
+  background: $modal-bg !important;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  max-width: 550px;
+  /* قللنا الـ padding الكلي من 2rem لـ 1.5rem */
+  padding: 1.5rem !important;
+
+  .modal-header {
+    border: none;
+    /* قللنا الـ padding تحت الهيدر */
+    padding-bottom: 12px;
+    margin-bottom: 10px;
+
+    h3 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    .close-btn {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .modal-form {
+    .form-row.split {
+      display: flex;
+      gap: 12px; /* مسافة معقولة بين الحقلين في نفس السطر */
+    }
+
+    .form-group {
+      /* قللنا المسافة بين الأسطر من 20px لـ 14px */
+      margin-bottom: 14px;
+      flex: 1;
+
+      label {
+        color: $text-gray;
+        font-size: 0.85rem;
+        /* قللنا المسافة بين العنوان والحقل */
+        margin-bottom: 5px;
+        display: block;
+      }
+
+      input {
+        background: $input-bg !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        color: #fff !important;
+        /* قللنا الـ padding الداخلي للحقل */
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        transition: 0.3s;
+      }
+    }
+
+    // منطقة رفع الصورة (ضبط الحجم)
+    .upload-area {
+      background: rgba(0, 0, 0, 0.2) !important;
+      border: 2px dashed rgba($accent-blue, 0.3) !important;
+      border-radius: 16px;
+      /* قللنا الارتفاع شوية عشان مياخدش مساحة كبيرة */
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 5px;
+
+      .upload-placeholder {
+        i {
+          font-size: 1.8rem;
+          margin-bottom: 5px;
+        }
+        span {
+          font-size: 0.9rem;
+        }
+      }
+
+      .preview-img {
+        max-height: 110px;
+        border-radius: 12px;
+      }
+    }
+  }
+
+  .modal-footer {
+    border: none;
+    display: flex;
+    gap: 12px;
+    /* قللنا المسافة فوق الأزرار */
+    margin-top: 15px;
+
+    .btn-save, .btn-cancel {
+      padding: 10px; /* جعل الأزرار أقل سمكاً */
+      border-radius: 12px;
+      font-weight: 700;
+      flex: 1;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .modal-overlay {
+    align-items: flex-end; // المودال بتطلع من تحت
+  }
+
+  .custom-modal-content {
+    /* 1. تقليل البادينج الكلي للمودال من الجوانب ومن فوق */
+    padding: 1rem 1.25rem 1.5rem !important;
+    border-radius: 24px 24px 0 0 !important;
+
+    // شريط السحب (Handle)
+    &::before {
+      width: 40px;
+      height: 4px;
+      top: 10px;
+    }
+
+    .modal-header {
+      margin-bottom: 12px; // تقليل الفراغ تحت العنوان
+      h3 { font-size: 1.1rem; } // تصغير العنوان شوية
+    }
+
+    .modal-form {
+      /* 2. التحكم في الصفوف المنقسمة */
+      .form-row.split {
+        gap: 10px; // تقريب الحقول من بعضها بالعرض
+        margin-bottom: 0;
+      }
+
+      .form-group {
+        margin-bottom: 10px; // تقليل المسافة بين الأسطر (كانت 14px)
+
+        label {
+          font-size: 0.8rem; // تصغير خط الليبل
+          margin-bottom: 3px; // تقليل الفراغ تحت الليبل
+        }
+
+        input {
+          padding: 8px 12px; // تقليل حجم الحقل داخلياً (Compact)
+          font-size: 0.9rem;
+          height: 42px; // توحيد الارتفاع ليكون مريح للعين واللمس
+        }
+      }
+
+      /* 3. ضغط منطقة رفع الصورة */
+      .upload-area {
+        height: 100px; // تقليل الارتفاع في الموبايل (كان 120px)
+        margin-top: 5px;
+
+        .upload-placeholder {
+          i { font-size: 1.4rem; margin-bottom: 4px; }
+          span { font-size: 0.8rem; }
+        }
+
+        .preview-img {
+          max-height: 90px;
+        }
+      }
+    }
+
+    .modal-footer {
+      margin-top: 15px; // تقليل الفراغ قبل الأزرار
+      gap: 10px;
+
+      button {
+        padding: 10px; // أزرار مدمجة
+        font-size: 0.9rem;
+        height: 45px; // ارتفاع مريح للضغط بالإبهام
+      }
+    }
+  }
+}
+
+/* --- تعديلات المودال للموبايل لزيادة السرعة --- */
+@media (max-width: 767px) {
+  .custom-modal-content {
+    /* قللنا الوقت من 0.4s لـ 0.25s واستخدمنا cubic-bezier بيخلي الحركة "خاطفة" في الأول */
+    animation: slideFromBottom 0.25s cubic-bezier(0.2, 1, 0.3, 1) forwards !important;
+
+    /* إضافة خاصية تخلي الـ GPU يعالج الحركة (عشان ميبقاش فيه تقطيع في الموبايلات الضعيفة) */
+    will-change: transform;
+  }
+
+  .custom-modal-overlay {
+    /* تسريع ظهور الخلفية المظلمة */
+    transition: all 0.2s ease-out !important;
+
+    &.show {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+/* --- تعديل الأنيميشن نفسه ليكون أكثر حيوية --- */
+@keyframes slideFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0.8; /* بدأت بظهور خفيف عشان تبان أسرع */
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+.upload-area {
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+  overflow: hidden;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+
+    .change-badge { opacity: 1; }
+  }
+
+  .preview-img {
+    max-height: 200px;
+    width: auto;
+    border-radius: 8px;
+  }
+
+  .change-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    opacity: 0;
+    transition: 0.3s;
+  }
+}

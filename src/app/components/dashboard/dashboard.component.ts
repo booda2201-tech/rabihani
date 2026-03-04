@@ -18,9 +18,9 @@ export class DashboardComponent implements OnInit {
   isCountryModalOpen = signal(false);
   products = signal<any[]>(this.loadFromStorage());
   isSidebarOpen = signal(false);
-selectedCountry = signal<any>(null)
+  selectedCountry = signal<any>(null)
   // تحديث قائمة الدول لتشمل العملات
-countries = signal<any[]>([]);
+  countries = signal<any[]>([]);
 
   // تحميل الدولة المختارة من التخزين
   // selectedCountry = signal(this.loadCountryFromStorage());

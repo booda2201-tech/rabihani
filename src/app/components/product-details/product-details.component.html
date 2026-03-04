@@ -219,7 +219,7 @@
 
 
 
-<div class="details-wrapper" dir="rtl" *ngIf="product()">
+<!-- <div class="details-wrapper" dir="rtl" *ngIf="product()">
 
 <header class="details-header">
   <button class="btn-back-styled" (click)="goBack()">
@@ -231,7 +231,7 @@
 
     <div class="timer-status">
       <span class="status-dot" [class.blinking]="!isAuctionPaused()"></span>
-      <!-- <span>{{ isAuctionPaused() ? 'المزاد متوقف' : 'ينتهي خلال' }}</span> -->
+      <span>{{ isAuctionPaused() ? 'المزاد متوقف' : 'ينتهي خلال' }}</span>
     </div>
 
     <div class="timer-digits">
@@ -277,9 +277,6 @@
 
       <div class="img-container">
         <img [src]="product().img" alt="Product">
-        <!-- <div class="floating-badge" *ngIf="product().views > 1000">
-            🔥 تريند
-        </div> -->
       </div>
 
       <div class="text-content">
@@ -345,24 +342,24 @@
         </div>
       </div>
 
-<div class="ai-control-section">
-  <div class="ai-info">
-    <div class="ai-icon" [class.active]="isAiBotActive()">
-      <i class="bi bi-robot"></i>
-    </div>
-    <div class="ai-text">
-      <strong>البوت الذكي (Auto-Bid)</strong>
-      <small>{{ isAiBotActive() ? 'يقوم بالمزايدة تلقائياً الآن' : 'البوت في وضع السكون حالياً' }}</small>
-    </div>
-  </div>
+        <div class="ai-control-section">
+          <div class="ai-info">
+            <div class="ai-icon" [class.active]="isAiBotActive()">
+              <i class="bi bi-robot"></i>
+            </div>
+            <div class="ai-text">
+              <strong>البوت الذكي (Auto-Bid)</strong>
+              <small>{{ isAiBotActive() ? 'يقوم بالمزايدة تلقائياً الآن' : 'البوت في وضع السكون حالياً' }}</small>
+            </div>
+          </div>
 
-  <div class="ai-toggle">
-    <label class="switch">
-      <input type="checkbox" [checked]="isAiBotActive()" (change)="toggleAiBot()">
-      <span class="slider round"></span>
-    </label>
-  </div>
-</div>
+          <div class="ai-toggle">
+            <label class="switch">
+              <input type="checkbox" [checked]="isAiBotActive()" (change)="toggleAiBot()">
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
 
       <div class="action-buttons-grid">
         <button class="btn-pause-toggle"
@@ -379,6 +376,168 @@
       </div>
     </div>
   </div>
+</div> -->
+
+
+
+
+
+<div class="details-wrapper" dir="rtl" *ngIf="product() as p">
+
+  <header class="details-header">
+    <button class="btn-back-styled" (click)="goBack()">
+      <i class="bi bi-chevron-right"></i>
+      <span>الرئيسية</span>
+    </button>
+
+    <!-- <div class="digital-timer-container" [class.paused]="isAuctionPaused()">
+      <div class="timer-status">
+        <span class="status-dot" [class.blinking]="!isAuctionPaused()"></span>
+        <span>{{ isAuctionPaused() ? 'المزاد متوقف' : 'ينتهي خلال' }}</span>
+      </div>
+      <div class="timer-digits">
+        <div class="time-unit">
+          <div class="num-box">{{ timeLeft().hours | number:'2.0' }}</div>
+          <span class="label">ساعة</span>
+        </div>
+        <div class="separator">:</div>
+        <div class="time-unit">
+          <div class="num-box">{{ timeLeft().minutes | number:'2.0' }}</div>
+          <span class="label">دقيقة</span>
+        </div>
+        <div class="separator">:</div>
+        <div class="time-unit seconds">
+          <div class="num-box">{{ timeLeft().seconds | number:'2.0' }}</div>
+          <span class="label">ثانية</span>
+        </div>
+      </div>
+    </div> -->
+
+        <div class="digital-timer-container" [class.paused]="isAuctionPaused()">
+          <div class="timer-status">
+            <span class="status-dot" [class.blinking]="!isAuctionPaused()"></span>
+            <span>{{ isAuctionPaused() ? 'المزاد متوقف' : 'ينتهي خلال' }}</span>
+          </div>
+
+          <div class="timer-digits">
+            <div class="time-unit" *ngIf="timeLeft().days > 0">
+              <div class="num-box">{{ timeLeft().days | number:'2.0' }}</div>
+              <span class="label">يوم</span>
+            </div>
+            <div class="separator" *ngIf="timeLeft().days > 0">:</div>
+
+            <div class="time-unit">
+              <div class="num-box">{{ timeLeft().hours | number:'2.0' }}</div>
+              <span class="label">ساعة</span>
+            </div>
+            <div class="separator">:</div>
+
+            <div class="time-unit">
+              <div class="num-box">{{ timeLeft().minutes | number:'2.0' }}</div>
+              <span class="label">دقيقة</span>
+            </div>
+            <div class="separator">:</div>
+
+            <div class="time-unit seconds">
+              <div class="num-box">{{ timeLeft().seconds | number:'2.0' }}</div>
+              <span class="label">ثانية</span>
+            </div>
+          </div>
+        </div>
+  </header>
+
+  <div class="main-grid">
+    <div class="product-info-card">
+      <div class="header-row d-flex justify-content-between align-items-center">
+        <div class="status-badge" [class.active]="p.status === 1">
+          {{ p.isCancelled ? 'ملغي' : (p.status === 1 ? 'نشط' : 'منتهي') }}
+        </div>
+        <div class="target-price-box">
+          <div class="target-content">
+            <i class="bi bi-tag-fill"></i>
+            <div class="target-text">
+              <small>سعر المنتج</small>
+              <strong>{{ p.product.price | number }} <span class="unit">نقطة</span></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="img-container">
+        <img [src]="p.product.imageUrl" [alt]="p.product.name">
+      </div>
+
+      <div class="text-content">
+        <h1>{{ p.name }}</h1>
+        <h3 class="product-subname">{{ p.product.name }}</h3>
+        <p class="description">{{ p.product.description }}</p>
+
+        <div class="stats-row">
+          <div class="stat-item">
+            <i class="bi bi-geo-alt-fill"></i>
+            <span>{{ p.countryName }}</span>
+          </div>
+          <div class="stat-item">
+            <i class="bi bi-people-fill"></i>
+            <span>الحد الأقصى: {{ p.limited }}</span>
+          </div>
+          <div class="stat-item">
+            <i class="bi bi-layers-fill"></i>
+            <span>{{ p.product.categoryName }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-controls-card">
+      <div class="current-status-box" *ngIf="p.currentHighestBid > 0">
+        <div class="price-header">
+          <div class="price-info">
+            <small>أعلى مزايدة حالياً ({{ p.highestBidderName }})</small>
+            <h2>{{ p.currentHighestBid | number }} <small>نقطة</small></h2>
+          </div>
+          <div class="start-points">
+            <small>بداية المزاد</small>
+            <div class="val text-center">{{ p.startPoints }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-section">
+        <div class="section-header">
+          <h3><i class="bi bi-graph-up-arrow"></i> سجل المزايدات </h3>
+          <span class="badge-count">{{ p.bids.length }}</span>
+        </div>
+
+        <div class="history-list">
+          <div class="history-item" *ngFor="let bid of p.bids; let i = index" [class.leader-row]="i === 0">
+            <div class="user-info">
+              <div class="leader-crown" *ngIf="i === 0">👑</div>
+              <div class="mini-avatar" [style.background-color]="getRandomColor(bid.userName)">
+                {{ bid.userName[0] }}
+              </div>
+              <div class="text-details">
+                <strong>{{ bid.userName }}</strong>
+                <small>{{ bid.createdAt | date:'shortTime' }}</small>
+              </div>
+            </div>
+            <div class="bid-amount">{{ bid.points | number }} نقطة</div>
+          </div>
+
+          <div class="empty-state" *ngIf="p.bids.length === 0">
+              <p class="text-white text-center py-4">لا توجد مزايدات حتى الآن</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons-grid">
+        <button class="btn-pause-toggle" [class.paused]="isAuctionPaused()" (click)="toggleAuctionStatus()">
+          <i class="bi" [ngClass]="isAuctionPaused() ? 'bi-play-fill' : 'bi-pause-fill'"></i>
+          <span>{{ isAuctionPaused() ? 'استئناف المزاد' : 'إيقاف مؤقت' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -388,10 +547,7 @@
 
 
 
-
-
-
-<div class="custom-modal-overlay" *ngIf="isEditModalOpen()" (click)="closeModal()">
+<!-- <div class="custom-modal-overlay" *ngIf="isEditModalOpen()" (click)="closeModal()">
   <div class="custom-modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h4>تعديل بيانات المزاد</h4>
@@ -418,4 +574,4 @@
       <button class="btn-save-admin" (click)="saveProduct()">تحديث</button>
     </div>
   </div>
-</div>
+</div> -->

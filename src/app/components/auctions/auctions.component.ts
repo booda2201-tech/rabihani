@@ -1,296 +1,850 @@
-import { Component, OnInit, OnDestroy, signal, computed, effect } from '@angular/core';
+
+// import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
+// import { ApiService } from '../../Services/api.service';
+
+// @Component({
+//   selector: 'app-auctions',
+//   templateUrl: './auctions.component.html',
+//   styleUrls: ['./auctions.component.scss']
+// })
+// export class AuctionsComponent implements OnInit, OnDestroy {
+//   activeAuctions: any[] = [];
+//   allProducts: any[] = [];
+//   itemsToShow: number = 4; // حل مشكلة الخطأ في الصورة
+//   selectedCountry: any;
+//   searchTerm: string = '';
+//   showDropdown: boolean = false;
+//   showAddModal = false;
+//   isEditMode = false;
+//   timerInterval: any;
+//   storageCheckInterval: any;
+
+//   newAuctionObj: any = {
+//     id: null,
+//     name: '',
+//     productId: null,
+//     startPoints: 0,
+//     targetPoints: 0,
+//     startTime: '',
+//     endTime: '',
+//     img: ''
+//   };
+
+//   constructor(private apiService: ApiService, private el: ElementRef) {}
+
+//   ngOnInit(): void {
+//     this.refreshCountryAndData();
+//     this.loadAllProducts();
+//     this.setupStorageWatcher();
+//     this.startCountdown();
+//   }
+
+//   // دالة تحويل التاريخ لتنسيق datetime-local (مهمة جداً لظهور الوقت عند التعديل)
+//   private formatDateTimeLocal(dateStr: string | undefined): string {
+//     if (!dateStr) return '';
+//     const date = new Date(dateStr);
+//     const tzOffset = date.getTimezoneOffset() * 60000;
+//     return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
+//   }
+
+//   // إغلاق القائمة عند النقر في الخارج
+//   @HostListener('document:click', ['$event'])
+//   onClick(event: Event) {
+//     if (!this.el.nativeElement.contains(event.target)) {
+//       this.showDropdown = false;
+//     }
+//   }
+
+//   // --- منطق البحث واختيار المنتج ---
+//   filteredProducts() {
+//     return this.searchTerm
+//       ? this.allProducts.filter(p => p.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
+//       : this.allProducts;
+//   }
+
+//   selectProduct(prod: any) {
+//     this.newAuctionObj.productId = prod.id;
+//     this.newAuctionObj.name = prod.name;
+//     this.newAuctionObj.img = prod.imageUrl;
+//     this.searchTerm = prod.name;
+//     this.showDropdown = false;
+//   }
+
+//   // --- فتح المودال (إضافة أو تعديل) ---
+//   openAddModal() {
+//     this.isEditMode = false;
+//     this.resetForm();
+//     this.showAddModal = true;
+//   }
+
+// openEditModal(auction: any) {
+//   this.isEditMode = true;
+//   this.showAddModal = true;
+
+//   this.newAuctionObj = {
+//     id: auction.id,
+//     name: auction.name,
+//     // التأكد من جلب الـ ID الصحيح للمنتج
+//     productId: auction.product?.id || auction.productId,
+//     startPoints: auction.startPrice || auction.startPoints || 0,
+//     targetPoints: auction.targetPrice || auction.limited || 0,
+//     startTime: this.formatDateTimeLocal(auction.startTime),
+//     endTime: this.formatDateTimeLocal(auction.endTime),
+//     img: auction.img
+//   };
+
+//   this.searchTerm = auction.name;
+// }
+//   // --- الإرسال الفعلي (POST أو PUT) ---
+// submitNewAuction() {
+//   const payload = {
+//     roomName: this.newAuctionObj.name,
+//     productId: Number(this.newAuctionObj.productId),
+//     startPoints: Number(this.newAuctionObj.startPoints),
+//     startTime: new Date(this.newAuctionObj.startTime).toISOString(),
+//     endTime: new Date(this.newAuctionObj.endTime).toISOString(),
+//     limited: Number(this.newAuctionObj.targetPoints),
+//     countryId: Number(this.selectedCountry.id)
+//   };
+
+//   if (this.isEditMode) {
+//     // التغيير هنا: استخدم updateAuctionRoom وليس updateProduct
+//     this.apiService.updateAuctionRoom(this.newAuctionObj.id, payload).subscribe({
+//       next: () => {
+//         this.handleSuccess('تم التعديل بنجاح');
+//       },
+//       error: (err) => {
+//         console.error(err);
+//         alert('حدث خطأ أثناء التعديل');
+//       }
+//     });
+//   } else {
+//     this.apiService.postAuction(payload).subscribe({
+//       next: () => this.handleSuccess('تمت الإضافة بنجاح'),
+//       error: (err) => console.error(err)
+//     });
+//   }
+// }
+
+//   private handleSuccess(msg: string) {
+//     alert(msg);
+//     this.loadActiveAuctions();
+//     this.closeModal();
+//   }
+
+//   // --- جلب البيانات والتايمر ---
+// loadActiveAuctions() {
+//   this.apiService.getActiveAuctionRooms(this.selectedCountry.id, 0).subscribe((res: any) => {
+//     this.activeAuctions = (res || []).map((item: any) => ({
+//       ...item,
+//       // البيانات الأساسية من السيرفر
+//       officialPrice: item.product?.price || 0,
+//       currency: item.product?.currency || 'KWD',
+//       img: item.product?.imageUrl || 'assets/placeholder.png',
+//       startPrice: item.startPoints || 0,
+//       targetPrice: item.limited || 0, // السيرفر يرسلها باسم limited
+//       totalPoints: item.currentHighestBid || item.startPoints || 0,
+
+//       // منطق الوقت والمزايد
+//       timeLeft: this.calculateSeconds(item.endTime),
+//       lastBidder: {
+//         name: item.highestBidderName || 'لا يوجد مزايد'
+//       }
+//     }));
+//   });
+// }
+
+// loadAllProducts() {
+//   this.apiService.getProducts().subscribe(res => {
+//     // تأكد أن res هي المصفوفة، إذا كانت داخل كائن (مثلاً res.data) قم بتغييرها
+//     this.allProducts = Array.isArray(res) ? res : (res.data || []);
+//     console.log('Products Loaded:', this.allProducts); // للتأكد في الكونسول
+//   });
+// }
+
+//   closeModal() { this.showAddModal = false; this.resetForm(); }
+
+//   resetForm() {
+//     this.newAuctionObj = { id: null, name: '', productId: null, startPoints: 0, targetPoints: 0, startTime: '', endTime: '', img: '' };
+//     this.searchTerm = '';
+//   }
+
+// refreshCountryAndData() {
+//   const data = localStorage.getItem('selected_country');
+//   const newCountry = data ? JSON.parse(data) : { id: 3, name: 'مصر' };
+
+//   // طلب البيانات فقط إذا تغير رقم الدولة عن القيمة الموجودة حالياً
+//   if (!this.selectedCountry || this.selectedCountry.id !== newCountry.id) {
+//     this.selectedCountry = newCountry;
+//     this.loadActiveAuctions(); // طلب البيانات فوراً عند التغيير
+//     console.log('Country changed, loading data for:', this.selectedCountry.name);
+//   }
+// }
+
+//   private calculateSeconds(endTime: string): number {
+//     const diff = new Date(endTime).getTime() - new Date().getTime();
+//     return diff > 0 ? Math.floor(diff / 1000) : 0;
+//   }
+
+//   getTimeParts(s: number) {
+//     if (s <= 0) return { d: 0, h: '00', m: '00', s: '00' };
+//     return {
+//       d: Math.floor(s / 86400),
+//       h: Math.floor((s % 86400) / 3600).toString().padStart(2, '0'),
+//       m: Math.floor((s % 3600) / 60).toString().padStart(2, '0'),
+//       s: (s % 60).toString().padStart(2, '0')
+//     };
+//   }
+
+//   startCountdown() {
+//     this.timerInterval = setInterval(() => {
+//       this.activeAuctions.forEach(item => { if (item.timeLeft > 0) item.timeLeft--; });
+//     }, 1000);
+//   }
+
+//   setupStorageWatcher() {
+//     this.storageCheckInterval = setInterval(() => this.refreshCountryAndData(), 1000);
+//   }
+
+//   ngOnDestroy() {
+//     clearInterval(this.timerInterval);
+//     clearInterval(this.storageCheckInterval);
+//   }
+// }
+
+
+
+// import { ApiService } from '../../Services/api.service';
+// import { AfterViewInit, Component, inject, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
+// import Swiper from 'swiper';
+// import { DashboardComponent } from '../dashboard/dashboard.component';
+
+
+// @Component({
+//   selector: 'app-auctions',
+//   templateUrl: './auctions.component.html',
+//   styleUrls: ['./auctions.component.scss']
+// })
+
+// export class AuctionsComponent implements OnInit, OnDestroy {
+//   public dashboard = inject(DashboardComponent);
+//   private apiService = inject(ApiService);
+//   private cdr = inject(ChangeDetectorRef);
+
+//   // مصفوفات البيانات
+//   allAuctions: any[] = [];
+//   activeAuctions: any[] = [];
+//   upcomingAuctions: any[] = [];
+//   finishedAuctions: any[] = [];
+//   allProducts: any[] = [];
+//   // حالات المودال والتحميل
+//   isEditMode = false;
+//   searchTerm = '';
+//   showDropdown = false;
+
+//   selectedAuction: any = null;
+//   isModalOpen = false;
+//   isLoading = true;
+//   private timerInterval: any;
+
+
+//   ngOnInit() {
+//     this.loadData();
+//     this.startCountdown();
+
+//     // مراقبة تغيير الدولة من الـ Dashboard لتحديث البيانات فوراً
+//     // ملاحظة: بما أن Dashboard يستخدم Signals، هذا الـ setInterval يضمن تحديث الواجهة عند التغيير
+//     setInterval(() => {
+//       this.filterAuctionsByCountry();
+//     }, 1000);
+
+//     // داخل ngOnInit
+//     //   effect(() => {
+//     //   // هذا الكود سيعمل فقط عندما تتغير selectedCountry تلقائياً
+//     //   this.dashboard.selectedCountry();
+//     //   this.filterAuctionsByCountry();
+//     // }, { allowSignalWrites: true });
+
+//   }
+
+//   loadData() {
+//     this.isLoading = true;
+//     this.apiService.getAuctionRooms().subscribe({
+//       next: (data: any) => {
+//         // الـ API يرجع المصفوفة مباشرة أو داخل property حسب تصميم الباك-إند
+//         this.allAuctions = Array.isArray(data) ? data : (data.data || []);
+//         this.filterAuctionsByCountry();
+//         this.isLoading = false;
+//       },
+//       error: (err) => {
+//         console.error('Error fetching auctions:', err);
+//         this.isLoading = false;
+//       }
+//     });
+//   }
+
+// // ... داخل الكلاس HomeComponent
+
+// filterAuctionsByCountry() {
+//   const currentCountry = this.dashboard.selectedCountry();
+//   const countryId = currentCountry.id;
+
+//   // 1. المزادات النشطة (Status = 1)
+//   this.activeAuctions = this.allAuctions
+//     .filter(a => a.countryId === countryId && a.status === 1)
+//     .map(a => this.mapToUI(a));
+
+//   // 2. المزادات القادمة (Status = 0)
+//   this.upcomingAuctions = this.allAuctions
+//     .filter(a => a.countryId === countryId && a.status === 0)
+//     .map(a => this.mapToUI(a));
+
+//   // 3. المزادات المنتهية (Status = 2)
+//   this.finishedAuctions = this.allAuctions
+//     .filter(a => a.countryId === countryId && a.status === 2)
+//     .map(item => ({
+//       ...this.mapToUI(item),
+//       winner: item.winner ? {
+//         name: item.winner.userName || 'مستخدم غير معروف',
+//         avatar: item.winner.userName ? item.winner.userName[0] : 'W',
+//         winningPoints: item.winner.winningPoints
+//       } : null
+//     }));
+
+//   this.cdr.detectChanges();
+// }
+
+// private mapToUI(item: any) {
+//   return {
+//     id: item.id,
+//     name: item.name,
+//     officialPrice: item.product?.price || 0,
+//     img: item.product?.imageUrl || 'assets/images/placeholder.png',
+//     startPrice: item.startPoints || 0,
+//     targetPrice: item.limited || 0,
+//     currentBid: item.currentHighestBid || 0,
+//     totalPoints: item.currentHighestBid || item.startPoints,
+//     timeLeft: this.calculateSeconds(item.endTime),
+//     startTime: item.startTime,
+//     endTime: item.endTime,
+//     status: item.status,// مهم للمزادات القادمة
+//     currency: item.product?.currency || this.dashboard.selectedCountry().currency || 'ج.م',
+//     lastBidder: {
+//       name: item.highestBidderName || 'لا يوجد مزايد',
+//       avatar: item.highestBidderName ? item.highestBidderName[0] : '?'
+//     }
+//   };
+// }
+
+//   private calculateSeconds(endTime: string): number {
+//     if (!endTime) return 0;
+//     const diff = Math.floor((new Date(endTime).getTime() - new Date().getTime()) / 1000);
+//     return diff > 0 ? diff : 0;
+//   }
+
+//   private startCountdown() {
+//     this.timerInterval = setInterval(() => {
+//       this.activeAuctions.forEach(a => {
+//         if (a.timeLeft > 0) a.timeLeft--;
+//       });
+//     }, 1000);
+//   }
+
+// getTimeParts(totalSeconds: number) {
+//   const days = Math.floor(totalSeconds / (3600 * 24));
+//   const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+//   const minutes = Math.floor((totalSeconds % 3600) / 60);
+//   const seconds = totalSeconds % 60;
+
+//   return {
+//     d: days,
+//     h: hours < 10 ? '0' + hours : hours,
+//     m: minutes < 10 ? '0' + minutes : minutes,
+//     s: seconds < 10 ? '0' + seconds : seconds
+//   };
+// }
+//   ngAfterViewInit() {
+//     setTimeout(() => this.initSwipers(), 500);
+//   }
+
+//   private initSwipers() {
+//     const swiperConfig = {
+//       slidesPerView: 'auto' as const,
+//       spaceBetween: 15,
+//       observer: true,
+//       observeParents: true,
+//     };
+//     new Swiper('.auctions-swiper', swiperConfig);
+//     new Swiper('.upcoming-swiper', swiperConfig);
+//     new Swiper('.finished-swiper', swiperConfig);
+//     new Swiper('.stats-swiper-mobile', swiperConfig);
+//   }
+
+//   // دوال المودال والتحكم
+// openEditModal(auction: any, event: Event) {
+//   event.stopPropagation();
+//   this.isEditMode = true;
+
+//   // نأخذ نسخة عميقة حتى لا يتغير السطر في الجدول إلا بعد الضغط على "حفظ"
+//   this.selectedAuction = {
+//     ...auction,
+//     // تحويل التواريخ لتناسب format المدخل datetime-local
+//     startTime: auction.startTime ? new Date(auction.startTime).toISOString().slice(0, 16) : '',
+//     endTime: auction.endTime ? new Date(auction.endTime).toISOString().slice(0, 16) : '',
+//     targetPoints: auction.targetPrice, // تأكد من مطابقة المسميات مع الـ HTML
+//     startPoints: auction.startPrice
+//   };
+
+//   this.isModalOpen = true;
+//   document.body.style.overflow = 'hidden';
+// }
+
+// // دالة الحفظ الفعلي
+// submitUpdate() {
+//   if (!this.selectedAuction.id) return;
+
+//   this.isLoading = true;
+//   // نجهز البيانات المرسلة للـ API
+//   const payload = {
+//     id: this.selectedAuction.id,
+//     name: this.selectedAuction.name,
+//     startTime: this.selectedAuction.startTime,
+//     endTime: this.selectedAuction.endTime,
+//     startPoints: this.selectedAuction.startPoints,
+//     limited: this.selectedAuction.targetPoints,
+//     // أضف أي حقول أخرى يطلبها الـ API الخاص بك
+//   };
+
+//   this.apiService.updateAuctionRoom(this.selectedAuction.id, payload).subscribe({
+//     next: (res) => {
+//       // 1. تحديث البيانات في المصفوفة المحلية فوراً دون إعادة تحميل الصفحة كاملة
+//       this.loadData();
+//       this.closeModal();
+//       // يمكنك إضافة Toast Message هنا "تم التحديث بنجاح"
+//     },
+//     error: (err) => {
+//       console.error('Update failed', err);
+//       alert('حدث خطأ أثناء التحديث');
+//     },
+//     complete: () => this.isLoading = false
+//   });
+// }
+
+// // معالجة تغيير الصورة
+// onFileSelected(event: any) {
+//   const file = event.target.files[0];
+//   if (file) {
+//     const reader = new FileReader();
+//     reader.onload = () => {
+//       this.selectedAuction.img = reader.result as string;
+//       // هنا يمكنك رفع الصورة للـ سيرفر فوراً أو إرسالها مع الـ Form
+//     };
+//     reader.readAsDataURL(file);
+//   }
+// }
+
+
+//   closeModal() {
+//     this.isModalOpen = false;
+//     this.selectedAuction = null;
+//     document.body.style.overflow = 'auto';
+//   }
+
+//   ngOnDestroy() {
+//     if (this.timerInterval) clearInterval(this.timerInterval);
+//   }
+// }
 
 
 
 
-export interface LastBidder {
-  name: string;
-  isAi: boolean;
-  time?: string;
-}
-
-export interface AuctionItem {
-  id: number;
-  name: string;
-  officialPrice: number;
-  img: string;
-  currentBid: number;
-  targetPrice: number;
-  timeLeft: number;
-  countryCode: string;
-  status: 'active' | 'upcoming' | 'completed';
-  lastBidder: LastBidder;
-  startPrice?: number;
-  totalPoints?: number;
-  startDate?: string;
-  endDate?: string;
-}
-
+import { Component, OnInit, OnDestroy, AfterViewInit, inject, ChangeDetectorRef } from '@angular/core';
+import { DashboardComponent } from '../dashboard/dashboard.component';
+import { ApiService } from '../../Services/api.service';
+import Swiper from 'swiper';
 
 @Component({
   selector: 'app-auctions',
   templateUrl: './auctions.component.html',
   styleUrls: ['./auctions.component.scss']
 })
-export class AuctionsComponent implements OnInit, OnDestroy {
-  imagePreview: string | null = null;
-  selectedFile: File | null = null;
-  currentFilter = signal<'active' | 'upcoming' | 'completed'>('active');
-  itemsToShow = signal(4);
-  showAddModal = false;
-  isEditMode = false;
-  selectedItem: any = null;
-  timerInterval: any;
-  selectedCountry = signal(this.getCountryFromStorage());
+export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
+  public dashboard = inject(DashboardComponent);
+  private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
 
-  newAuctionObj = {
-      name: '',
-      date: '',
-      hours: 24,
-      startPoints: 0,
-      targetPoints: 0,
-      officialPrice: 0,
-      img: ''
-    };
+  allAuctions: any[] = [];
+  activeAuctionsList: any[] = [];
+  upcomingAuctionsList: any[] = [];
+  finishedAuctionsList: any[] = [];
 
+  selectedAuction: any = null;
+  isModalOpen = false;
+  isLoading = false;
+  private timerInterval: any;
 
-allAuctions = signal<AuctionItem[]>([
-    // ================== مصر EG ==================
-    { id: 1, countryCode: 'EG', status: 'active', name: 'MacBook Pro M3 Max', officialPrice: 185000, img: 'https://picsum.photos/id/0/600/400', startPrice: 500, currentBid: 125500, targetPrice: 150000, totalPoints: 18400, timeLeft: 3665, lastBidder: { name: 'أحمد علي', isAi: false, time: 'ثانيتين' } },
-    { id: 2, countryCode: 'EG', status: 'active', name: 'iPhone 15 Pro Max', officialPrice: 55000, img: 'https://m.media-amazon.com/images/I/81+GIkwqLIL._AC_SL1500_.jpg', startPrice: 300, currentBid: 55000, targetPrice: 60000, totalPoints: 10200, timeLeft: 5400, lastBidder: { name: 'محمود شاكر', isAi: false, time: '5 ثوانٍ' } },
-    { id: 5, countryCode: 'EG', status: 'active', name: 'iPad Air M2', officialPrice: 75000, img: 'https://picsum.photos/id/9/600/400', startPrice: 150, currentBid: 2800, targetPrice: 80000, totalPoints: 4000, timeLeft: 15000, lastBidder: { name: 'سارة أحمد', isAi: false, time: '10 ثوانٍ' } },
-    { id: 10, countryCode: 'EG', status: 'active', name: 'Samsung S25 Ultra', officialPrice: 65000, img: 'https://images.unsplash.com/photo-1707201355080-60604118f6d2?q=80&w=500', currentBid: 48000, targetPrice: 62000, timeLeft: 12000, lastBidder: { name: 'ياسين كمال', isAi: false } },
-    { id: 17, countryCode: 'EG', status: 'active', name: 'ثلاجة LG InstaView', officialPrice: 75000, img: 'https://picsum.photos/id/160/600/400', startPrice: 2000, currentBid: 42000, targetPrice: 65000, totalPoints: 50000, timeLeft: 86400, lastBidder: { name: 'هاني رمزي', isAi: false, time: 'دقيقة' } },
-    { id: 21, countryCode: 'EG', status: 'active', name: 'شاشة LG OLED 65"', officialPrice: 55000, img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=500', currentBid: 32000, targetPrice: 45000, timeLeft: 25000, lastBidder: { name: 'عمر خالد', isAi: true } },
-    { id: 40, countryCode: 'EG', status: 'active', name: 'كاميرا Sony A7 IV', officialPrice: 120000, img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=500', currentBid: 95000, targetPrice: 110000, timeLeft: 43200, lastBidder: { name: 'إبراهيم', isAi: false } },
-    { id: 41, countryCode: 'EG', status: 'active', name: 'ساعة Garmin Epix 2', officialPrice: 28000, img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=500', currentBid: 18000, targetPrice: 22000, timeLeft: 86400, lastBidder: { name: 'سارة', isAi: false } },
-    { id: 42, countryCode: 'EG', status: 'active', name: 'لابتوب Dell XPS 15', officialPrice: 95000, img: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=500', currentBid: 65000, targetPrice: 80000, timeLeft: 5000, lastBidder: { name: 'نور الدين', isAi: true } },
-    { id: 61, countryCode: 'EG', status: 'active', name: 'غسالة Samsung AddWash', officialPrice: 35000, img: 'https://images.unsplash.com/photo-1582733775062-eb92170f5e1f?q=80&w=500', currentBid: 22000, targetPrice: 30000, timeLeft: 18000, lastBidder: { name: 'مصطفى كامل', isAi: false } },
-    { id: 3, countryCode: 'EG', status: 'upcoming', name: 'iPad Pro M4', officialPrice: 65000, img: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=500', currentBid: 0, targetPrice: 60000, timeLeft: 0, startDate: '2026-03-10', lastBidder: { name: '-', isAi: false } },
-    { id: 22, countryCode: 'EG', status: 'upcoming', name: 'سماعات AirPods Max', officialPrice: 38000, img: 'https://images.unsplash.com/photo-1613040819284-6de569567a9a?q=80&w=500', currentBid: 0, targetPrice: 35000, timeLeft: 0, startDate: '2026-03-15', lastBidder: { name: '-', isAi: false } },
-    { id: 43, countryCode: 'EG', status: 'upcoming', name: 'طقم ذهب عيار 21', officialPrice: 150000, img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=500', currentBid: 0, targetPrice: 120000, timeLeft: 0, startDate: '2026-03-20', lastBidder: { name: '-', isAi: false } },
-    { id: 11, countryCode: 'EG', status: 'completed', name: 'Canon EOS R5', officialPrice: 160000, img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=500', currentBid: 140000, targetPrice: 140000, timeLeft: 0, endDate: '2026-02-15', lastBidder: { name: 'علي حسن', isAi: false } },
-    { id: 23, countryCode: 'EG', status: 'completed', name: 'PlayStation 5 Slim', officialPrice: 32000, img: 'https://images.unsplash.com/photo-1606813907291-d86ebb9954ad?q=80&w=500', currentBid: 28000, targetPrice: 28000, timeLeft: 0, endDate: '2026-02-10', lastBidder: { name: 'كريم أشرف', isAi: false } },
-    { id: 44, countryCode: 'EG', status: 'completed', name: 'سكوتر كهربائي', officialPrice: 15000, img: 'https://images.unsplash.com/photo-1595180635489-08573199c43d?q=80&w=500', currentBid: 12000, targetPrice: 12000, timeLeft: 0, endDate: '2026-02-01', lastBidder: { name: 'هاني', isAi: false } },
-
-    // ================== السعودية SA ==================
-    { id: 4, countryCode: 'SA', status: 'active', name: 'Sony PS5 Pro', officialPrice: 3800, img: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=500', startPrice: 200, currentBid: 3200, targetPrice: 4500, totalPoints: 5200, timeLeft: 90000, lastBidder: { name: 'فهد الشمري', isAi: false, time: 'دقيقة' } },
-    { id: 9, countryCode: 'SA', status: 'active', name: 'Samsung 75" Neo QLED', officialPrice: 75000, img: 'https://picsum.photos/id/231/600/400', startPrice: 1000, currentBid: 8500, targetPrice: 12000, totalPoints: 11000, timeLeft: 54000, lastBidder: { name: 'البوت الذكي', isAi: true, time: 'لحظة' } },
-    { id: 12, countryCode: 'SA', status: 'active', name: 'DJI Avata 2 Drone', officialPrice: 5200, img: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=500', currentBid: 4100, targetPrice: 5500, timeLeft: 45000, lastBidder: { name: 'سلطان بن عبدالعزيز', isAi: true } },
-    { id: 16, countryCode: 'SA', status: 'active', name: 'نظام صوتي Bose 700', officialPrice: 75000, img: 'https://picsum.photos/id/211/600/400', startPrice: 150, currentBid: 1800, targetPrice: 3000, totalPoints: 2500, timeLeft: 12000, lastBidder: { name: 'سلطان محمد', isAi: false, time: '5 ثوانٍ' } },
-    { id: 24, countryCode: 'SA', status: 'active', name: 'لابتوب Razer Blade 16', officialPrice: 18000, img: 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?q=80&w=500', currentBid: 12500, targetPrice: 16000, timeLeft: 15000, lastBidder: { name: 'بدر العتيبي', isAi: false } },
-    { id: 45, countryCode: 'SA', status: 'active', name: 'iPad Air M2', officialPrice: 3400, img: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?q=80&w=500', currentBid: 2800, targetPrice: 3500, timeLeft: 7200, lastBidder: { name: 'فيصل', isAi: false } },
-    { id: 46, countryCode: 'SA', status: 'active', name: 'طقم كنب ملكي', officialPrice: 15000, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=500', currentBid: 8000, targetPrice: 12000, timeLeft: 172800, lastBidder: { name: 'أم ريما', isAi: false } },
-    { id: 13, countryCode: 'SA', status: 'active', name: 'قهوة مختصة - فاخرة', officialPrice: 950, img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=500', currentBid: 450, targetPrice: 800, timeLeft: 3600, lastBidder: { name: 'نورة عبدالله', isAi: false } },
-    { id: 62, countryCode: 'SA', status: 'active', name: 'هاتف Honor Magic V3', officialPrice: 6500, img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=500', currentBid: 4200, targetPrice: 5800, timeLeft: 25000, lastBidder: { name: 'تركي آل الشيخ', isAi: false } },
-    { id: 5, countryCode: 'SA', status: 'upcoming', name: 'ساعة رولكس أصلية', officialPrice: 95000, img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=500', currentBid: 0, targetPrice: 85000, timeLeft: 0, startDate: '2026-03-01', lastBidder: { name: '-', isAi: false } },
-    { id: 25, countryCode: 'SA', status: 'upcoming', name: 'تويوتا لاندكروزر 2026', officialPrice: 350000, img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=500', currentBid: 0, targetPrice: 320000, timeLeft: 0, startDate: '2026-04-01', lastBidder: { name: '-', isAi: false } },
-    { id: 47, countryCode: 'SA', status: 'upcoming', name: 'مجموعة بخور ملكي', officialPrice: 2000, img: 'https://images.unsplash.com/photo-1595131838595-3154b9f4450b?q=80&w=500', currentBid: 0, targetPrice: 1500, timeLeft: 0, startDate: '2026-03-05', lastBidder: { name: '-', isAi: false } },
-    { id: 14, countryCode: 'SA', status: 'completed', name: 'بخور عود كمبودي', officialPrice: 3000, img: 'https://images.unsplash.com/photo-1595131838595-3154b9f4450b?q=80&w=500', currentBid: 2500, targetPrice: 2500, timeLeft: 0, endDate: '2026-02-20', lastBidder: { name: 'عبدالرحمن', isAi: false } },
-    { id: 26, countryCode: 'SA', status: 'completed', name: 'نظارة Ray-Ban', officialPrice: 2200, img: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=500', currentBid: 1800, targetPrice: 1800, timeLeft: 0, endDate: '2026-01-30', lastBidder: { name: 'سلمان الخطيب', isAi: false } },
-    { id: 48, countryCode: 'SA', status: 'completed', name: 'تلفزيون سامسونج 85', officialPrice: 13500, img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=500', currentBid: 11000, targetPrice: 11000, timeLeft: 0, endDate: '2026-01-15', lastBidder: { name: 'عادل', isAi: false } },
-
-    // ================== الإمارات AE ==================
-    { id: 4, countryCode: 'AE', status: 'active', name: 'Samsung Galaxy S21 Ultra', officialPrice: 75000, img: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=500', startPrice: 400, currentBid: 6500, targetPrice: 8000, totalPoints: 9100, timeLeft: 450000, lastBidder: { name: 'البوت الذكي', isAi: true, time: 'لحظة' } },
-    { id: 6, countryCode: 'AE', status: 'active', name: 'Apple Vision Pro', officialPrice: 16500, img: 'https://images.unsplash.com/photo-1626218174358-77b7f9dd98b9?q=80&w=500', currentBid: 12000, targetPrice: 15000, timeLeft: 4500, lastBidder: { name: 'زايد', isAi: false } },
-    { id: 26, countryCode: 'AE', status: 'active', name: 'DJI Mavic 3 Pro', officialPrice: 75000, img: 'https://picsum.photos/id/26/600/400', startPrice: 1000, currentBid: 14200, targetPrice: 20000, totalPoints: 19000, timeLeft: 86400, lastBidder: { name: 'جاسم محمد', isAi: false, time: 'دقيقة' } },
-    { id: 11, countryCode: 'AE', status: 'active', name: 'Apple Watch Ultra 2', officialPrice: 75000, img: 'https://picsum.photos/id/20/600/400', startPrice: 300, currentBid: 3800, targetPrice: 4500, totalPoints: 5000, timeLeft: 12000, lastBidder: { name: 'البوت الذكي', isAi: true, time: 'ثانية' } },
-    { id: 18, countryCode: 'AE', status: 'active', name: 'Tesla Wall Connector', officialPrice: 75000, img: 'https://picsum.photos/id/102/600/400', startPrice: 500, currentBid: 4100, targetPrice: 6000, totalPoints: 5500, timeLeft: 21000, lastBidder: { name: 'سعيد الفلاسي', isAi: false, time: '10 ثوانٍ' } },
-    { id: 15, countryCode: 'AE', status: 'active', name: 'لوحة سيارة مميزة (7)', officialPrice: 1000000, img: 'https://images.unsplash.com/photo-1594913785162-e6785b493bd2?q=80&w=500', currentBid: 250000, targetPrice: 500000, timeLeft: 172800, lastBidder: { name: 'محمد آل مكتوم', isAi: false } },
-    { id: 27, countryCode: 'AE', status: 'active', name: 'حقيبة Hermès Birkin', officialPrice: 75000, img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=500', currentBid: 45000, targetPrice: 60000, timeLeft: 86400, lastBidder: { name: 'ريم السويدي', isAi: false } },
-    { id: 49, countryCode: 'AE', status: 'active', name: 'سماعات Devialet Phantom', officialPrice: 16000, img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=500', currentBid: 11500, targetPrice: 14000, timeLeft: 12000, lastBidder: { name: 'سيف', isAi: true } },
-    { id: 50, countryCode: 'AE', status: 'active', name: 'ساعة Patek Philippe', officialPrice: 250000, img: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=500', currentBid: 180000, targetPrice: 220000, timeLeft: 300000, lastBidder: { name: 'حمدان', isAi: false } },
-    { id: 51, countryCode: 'AE', status: 'active', name: 'دراجة Ducati Panigale', officialPrice: 125000, img: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=500', currentBid: 85000, targetPrice: 100000, timeLeft: 60000, lastBidder: { name: 'راشد', isAi: false } },
-    { id: 63, countryCode: 'AE', status: 'active', name: 'جت سكي Sea-Doo 2026', officialPrice: 85000, img: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=500', currentBid: 55000, targetPrice: 75000, timeLeft: 43200, lastBidder: { name: 'منصور', isAi: false } },
-    { id: 16, countryCode: 'AE', status: 'upcoming', name: 'سبيكة ذهب 24 قيراط', officialPrice: 15000, img: 'https://images.unsplash.com/photo-1610375461246-83df82444002?q=80&w=500', currentBid: 0, targetPrice: 12000, timeLeft: 0, startDate: '2026-03-05', lastBidder: { name: '-', isAi: false } },
-    { id: 28, countryCode: 'AE', status: 'upcoming', name: 'ساعة Hublot Big Bang', officialPrice: 110000, img: 'https://images.unsplash.com/photo-1547996160-81dfa63595aa?q=80&w=500', currentBid: 0, targetPrice: 95000, timeLeft: 0, startDate: '2026-03-25', lastBidder: { name: '-', isAi: false } },
-    { id: 52, countryCode: 'AE', status: 'upcoming', name: 'يخت Galeon 500', officialPrice: 2000000, img: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=500', currentBid: 0, targetPrice: 1500000, timeLeft: 0, startDate: '2026-05-01', lastBidder: { name: '-', isAi: false } },
-    { id: 7, countryCode: 'AE', status: 'completed', name: 'Tesla Model 3 Key', officialPrice: 4500, img: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=500', currentBid: 3500, targetPrice: 3500, timeLeft: 0, endDate: '2026-01-20', lastBidder: { name: 'خليفة', isAi: false } },
-    { id: 29, countryCode: 'AE', status: 'completed', name: 'إقامة في برج العرب', officialPrice: 20000, img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=500', currentBid: 15000, targetPrice: 15000, timeLeft: 0, endDate: '2026-02-01', lastBidder: { name: 'سعيد الجابر', isAi: true } },
-    { id: 53, countryCode: 'AE', status: 'completed', name: 'قلم Montblanc محدود', officialPrice: 6000, img: 'https://images.unsplash.com/photo-1585336139118-b31b7f0b5030?q=80&w=500', currentBid: 4500, targetPrice: 4500, timeLeft: 0, endDate: '2026-01-10', lastBidder: { name: 'منصور', isAi: false } },
-
-    // ================== الكويت KW ==================
-    { id: 7, countryCode: 'KW', status: 'active', name: 'Dyson V15 Detect', officialPrice: 75000, img: 'https://picsum.photos/id/192/600/400', startPrice: 250, currentBid: 2100, targetPrice: 3500, totalPoints: 4000, timeLeft: 5400, lastBidder: { name: 'البوت الذكي', isAi: true, time: '5 ثوانٍ' } },
-    { id: 12, countryCode: 'KW', status: 'active', name: 'Nintendo Switch OLED', officialPrice: 75000, img: 'https://picsum.photos/id/180/600/400', startPrice: 100, currentBid: 1200, targetPrice: 1800, totalPoints: 2000, timeLeft: 8000, lastBidder: { name: 'خالد السالم', isAi: false, time: '15 ثانية' } },
-    { id: 13, countryCode: 'KW', status: 'active', name: 'Sony WH-1000XM5', officialPrice: 75000, img: 'https://picsum.photos/id/212/600/400', startPrice: 150, currentBid: 1850, targetPrice: 2200, totalPoints: 2500, timeLeft: 4300, lastBidder: { name: 'البوت الذكي', isAi: true, time: 'لحظة' } },
-    { id: 19, countryCode: 'KW', status: 'active', name: 'قهوة Breville Oracle', officialPrice: 75000, img: 'https://picsum.photos/id/103/600/400', startPrice: 800, currentBid: 6200, targetPrice: 9000, totalPoints: 8500, timeLeft: 32000, lastBidder: { name: 'نواف العنزي', isAi: false, time: 'دقيقة' } },
-    { id: 8, countryCode: 'KW', status: 'active', name: 'Gaming PC RTX 4090', officialPrice: 2500, img: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=500', currentBid: 1800, targetPrice: 2200, timeLeft: 12000, lastBidder: { name: 'مبارك', isAi: false } },
-    { id: 17, countryCode: 'KW', status: 'active', name: 'سماعات Bose QC', officialPrice: 160, img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=500', currentBid: 95, targetPrice: 130, timeLeft: 5400, lastBidder: { name: 'مشعل', isAi: true } },
-    { id: 30, countryCode: 'KW', status: 'active', name: 'ماكينة La Marzocco', officialPrice: 1800, img: 'https://images.unsplash.com/photo-1510525944062-1d54be2e4822?q=80&w=500', currentBid: 1200, targetPrice: 1550, timeLeft: 43200, lastBidder: { name: 'فهد المطيري', isAi: false } },
-    { id: 54, countryCode: 'KW', status: 'active', name: 'كرسي Herman Miller', officialPrice: 600, img: 'https://images.unsplash.com/photo-1592074791365-c2611527501f?q=80&w=500', currentBid: 350, targetPrice: 450, timeLeft: 21600, lastBidder: { name: 'جراح', isAi: false } },
-    { id: 55, countryCode: 'KW', status: 'active', name: 'كاميرا Fujifilm X100V', officialPrice: 850, img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=500', currentBid: 550, targetPrice: 700, timeLeft: 3600, lastBidder: { name: 'ناصر', isAi: false } },
-    { id: 64, countryCode: 'KW', status: 'active', name: 'مجموعة بخور القرشي', officialPrice: 450, img: 'https://images.unsplash.com/photo-1595131838595-3154b9f4450b?q=80&w=500', currentBid: 280, targetPrice: 400, timeLeft: 12000, lastBidder: { name: 'بدر', isAi: false } },
-    { id: 18, countryCode: 'KW', status: 'upcoming', name: 'عطور فرنسية', officialPrice: 350, img: 'https://images.unsplash.com/photo-1541643600914-78b084683601?q=80&w=500', currentBid: 0, targetPrice: 250, timeLeft: 0, startDate: '2026-03-12', lastBidder: { name: '-', isAi: false } },
-    { id: 31, countryCode: 'KW', status: 'upcoming', name: 'iPhone SE Limited', officialPrice: 220, img: 'https://images.unsplash.com/photo-1592750475338-74575a4955ff?q=80&w=500', currentBid: 0, targetPrice: 180, timeLeft: 0, startDate: '2026-04-10', lastBidder: { name: '-', isAi: false } },
-    { id: 32, countryCode: 'KW', status: 'completed', name: 'ساعة ابل الترا 2', officialPrice: 320, img: 'https://images.unsplash.com/photo-1434493907317-a46b5bc78344?q=80&w=500', currentBid: 280, targetPrice: 280, timeLeft: 0, endDate: '2026-02-18', lastBidder: { name: 'غانم', isAi: false } },
-    { id: 56, countryCode: 'KW', status: 'completed', name: 'سوني A7C', officialPrice: 750, img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=500', currentBid: 600, targetPrice: 600, timeLeft: 0, endDate: '2026-01-10', lastBidder: { name: 'يوسف', isAi: false } },
-
-    // ================== قطر QA ==================
-    { id: 8, countryCode: 'QA', status: 'active', name: 'Canon EOS R5', officialPrice: 75000, img: 'https://picsum.photos/id/251/600/400', startPrice: 1500, currentBid: 18000, targetPrice: 25000, totalPoints: 22000, timeLeft: 72000, lastBidder: { name: 'فهد الكواري', isAi: false, time: '30 ثانية' } },
-    { id: 14, countryCode: 'QA', status: 'active', name: 'Alienware m18 Laptop', officialPrice: 75000, img: 'https://picsum.photos/id/161/600/400', startPrice: 2000, currentBid: 21000, targetPrice: 28000, totalPoints: 26000, timeLeft: 95000, lastBidder: { name: 'البوت الذكي', isAi: true, time: '4 ثوانٍ' } },
-    { id: 15, countryCode: 'QA', status: 'active', name: 'Asus ROG Ally', officialPrice: 75000, img: 'https://picsum.photos/id/101/600/400', startPrice: 300, currentBid: 2400, targetPrice: 3500, totalPoints: 3200, timeLeft: 11000, lastBidder: { name: 'تميم جاسم', isAi: false, time: 'ثانية' } },
-    { id: 20, countryCode: 'QA', status: 'active', name: 'هاتف Fold 5 Special', officialPrice: 75000, img: 'https://picsum.photos/id/104/600/400', startPrice: 400, currentBid: 5800, targetPrice: 7500, totalPoints: 6900, timeLeft: 15000, lastBidder: { name: 'البوت الذكي', isAi: true, time: 'لحظة' } },
-    { id: 19, countryCode: 'QA', status: 'active', name: 'مضرب بادل احترافي', officialPrice: 2200, img: 'https://images.unsplash.com/photo-1617083277661-75053e15566f?q=80&w=500', currentBid: 1200, targetPrice: 1800, timeLeft: 86400, lastBidder: { name: 'تميم', isAi: false } },
-    { id: 20, countryCode: 'QA', status: 'active', name: 'سكوتر Xiaomi', officialPrice: 3500, img: 'https://images.unsplash.com/photo-1595180635489-08573199c43d?q=80&w=500', currentBid: 2100, targetPrice: 2800, timeLeft: 21600, lastBidder: { name: 'جاسم', isAi: false } },
-    { id: 33, countryCode: 'QA', status: 'active', name: 'Surface Laptop 7', officialPrice: 9500, img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=500', currentBid: 6500, targetPrice: 8000, timeLeft: 15000, lastBidder: { name: 'ناصر الخليفي', isAi: false } },
-    { id: 57, countryCode: 'QA', status: 'active', name: 'نظارة Apple Vision Pro', officialPrice: 18000, img: 'https://images.unsplash.com/photo-1626218174358-77b7f9dd98b9?q=80&w=500', currentBid: 13500, targetPrice: 16000, timeLeft: 43200, lastBidder: { name: 'فاطمة', isAi: false } },
-    { id: 58, countryCode: 'QA', status: 'active', name: 'طاولة بلياردو فاخرة', officialPrice: 18000, img: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=500', currentBid: 12000, targetPrice: 15000, timeLeft: 172800, lastBidder: { name: 'طلال', isAi: true } },
-    { id: 65, countryCode: 'QA', status: 'active', name: 'تلفزيون LG C3 77"', officialPrice: 15000, img: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?q=80&w=500', currentBid: 11000, targetPrice: 14000, timeLeft: 50000, lastBidder: { name: 'موزة', isAi: false } },
-    { id: 9, countryCode: 'QA', status: 'upcoming', name: 'Nikon Z8 Camera', officialPrice: 24000, img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=500', currentBid: 0, targetPrice: 20000, timeLeft: 0, startDate: '2026-04-15', lastBidder: { name: '-', isAi: false } },
-    { id: 34, countryCode: 'QA', status: 'upcoming', name: 'تذاكر VIP مونديال', officialPrice: 20000, img: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=500', currentBid: 0, targetPrice: 15000, timeLeft: 0, startDate: '2026-05-01', lastBidder: { name: '-', isAi: false } },
-    { id: 59, countryCode: 'QA', status: 'upcoming', name: 'ساعة Cartier Tank', officialPrice: 45000, img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=500', currentBid: 0, targetPrice: 35000, timeLeft: 0, startDate: '2026-06-01', lastBidder: { name: '-', isAi: false } },
-    { id: 35, countryCode: 'QA', status: 'completed', name: 'عطر الفارس', officialPrice: 1800, img: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=500', currentBid: 1200, targetPrice: 1200, timeLeft: 0, endDate: '2026-01-15', lastBidder: { name: 'حمد', isAi: true } },
-    { id: 60, countryCode: 'QA', status: 'completed', name: 'درع تذكاري مذهب', officialPrice: 7000, img: 'https://images.unsplash.com/photo-1610375461246-83df82444002?q=80&w=500', currentBid: 5000, targetPrice: 5000, timeLeft: 0, endDate: '2026-02-01', lastBidder: { name: 'خليفة', isAi: false } },
-]);
-
-
-  filteredList = computed(() => {
-    const country = this.selectedCountry().code;
-    const filter = this.currentFilter();
-    return this.allAuctions().filter(item =>
-      item.countryCode === country && item.status === filter
-    );
-  });
-
-  constructor() {
-    effect(() => {
-      const interval = setInterval(() => {
-        const stored = this.getCountryFromStorage();
-        if (JSON.stringify(stored) !== JSON.stringify(this.selectedCountry())) {
-          this.selectedCountry.set(stored);
-        }
-      }, 1000);
-      return () => clearInterval(interval);
-    });
-  }
-
-  ngOnInit(): void {
+  ngOnInit() {
+    this.loadData();
     this.startCountdown();
-  }
 
-  private getCountryFromStorage() {
-    const data = localStorage.getItem('selected_country');
-    return data ? JSON.parse(data) : { name: 'مصر', code: 'EG', currency: 'ج.م' };
-  }
-
-  setFilter(filter: 'active' | 'upcoming' | 'completed') {
-    this.currentFilter.set(filter);
-    this.itemsToShow.set(4);
-  }
-
-  loadMore() {
-    this.itemsToShow.update(v => v + 4);
-  }
-
-
-openAddModal() {
-    this.isEditMode = false;
-    this.showAddModal = true;
-    this.imagePreview = null;
-    this.newAuctionObj = {
-        name: '',
-        date: '',
-        hours: 24,
-        startPoints: 0,
-        targetPoints: 0,
-        officialPrice: 0,
-        img: ''
-    };
-  }
-
-openEditModal(item: any) {
-    this.selectedItem = item;
-    this.isEditMode = true;
-    this.newAuctionObj = {
-      name: item.name,
-      date: item.startDate || '',
-      hours: item.timeLeft ? Math.floor(item.timeLeft / 3600) : 24,
-      startPoints: item.currentBid,
-      targetPoints: item.targetPrice,
-      officialPrice: item.officialPrice || 0,
-      img: item.img
-    };
-    this.imagePreview = item.img;
-  }
-
-  closeModal() {
-    this.showAddModal = false;
-    this.isEditMode = false;
-  }
-
-submitNewAuction() {
-    const newItem = {
-      id: Date.now(),
-      countryCode: this.selectedCountry().code,
-      status: 'upcoming' as const,
-      name: this.newAuctionObj.name,
-      officialPrice: this.newAuctionObj.officialPrice, // حفظ السعر الرسمي
-      img: this.imagePreview || 'https://via.placeholder.com/300',
-      currentBid: this.newAuctionObj.startPoints,
-      targetPrice: this.newAuctionObj.targetPoints,
-      timeLeft: this.newAuctionObj.hours * 3600,
-      lastBidder: { name: '-', isAi: false },
-      startDate: this.newAuctionObj.date
-    };
-
-    this.allAuctions.update(prev => [newItem, ...prev]);
-    this.closeModal();
-    this.setFilter('upcoming');
-  }
-
-
-saveChanges() {
-  if (!this.selectedItem) return;
-
-  this.allAuctions.update(prev => prev.map(item =>
-    item.id === this.selectedItem.id
-    ? {
-        ...item,
-        name: this.newAuctionObj.name,
-        officialPrice: this.newAuctionObj.officialPrice, // <-- تحديث السعر الرسمي
-        targetPrice: this.newAuctionObj.targetPoints,
-        startDate: this.newAuctionObj.date, // <-- تحديث تاريخ البدء
-        timeLeft: this.newAuctionObj.hours * 3600, // <-- تحديث المدة
-        img: this.imagePreview || item.img
-      }
-    : item
-  ));
-  this.closeModal();
-}
-
-  startCountdown() {
+    // مراقبة تغيير الدولة لتحديث البيانات دون تجميد الصفحة
+    // نستخدم التحديث اليدوي فقط عند الحاجة
     this.timerInterval = setInterval(() => {
-      this.allAuctions.update(items => items.map(item => {
-        if (item.status === 'active' && item.timeLeft > 0) {
-          return { ...item, timeLeft: item.timeLeft - 1 };
-        }
-        return item;
-      }));
+       this.refreshFiltering();
     }, 1000);
   }
 
-  getTimeParts(seconds: number) {
-    if (seconds <= 0) return { d: 0, h: '00', m: '00', s: '00' };
-    return {
-      d: Math.floor(seconds / 86400),
-      h: this.pad(Math.floor((seconds % 86400) / 3600)),
-      m: this.pad(Math.floor((seconds % 3600) / 60)),
-      s: this.pad(seconds % 60)
-    };
+  loadData() {
+    this.isLoading = true;
+    this.apiService.getAuctionRooms().subscribe({
+      next: (data: any) => {
+        this.allAuctions = Array.isArray(data) ? data : (data.data || []);
+        this.refreshFiltering();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching auctions:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
-  private pad(n: any) { return n < 10 ? `0${n}` : n; }
+  // دالة واحدة لفلترة البيانات بدلاً من الـ Getters المتكررة
+  refreshFiltering() {
+    const country = this.dashboard.selectedCountry();
+
+      if (!country || !country.name || !this.allAuctions || this.allAuctions.length === 0) {
+        return;
+      }
+
+    const countryId = country.id;
+
+    this.activeAuctionsList = this.allAuctions
+      .filter(a => a.countryId === countryId && a.status === 1)
+      .map(a => this.mapToUI(a));
+
+    this.upcomingAuctionsList = this.allAuctions
+      .filter(a => a.countryId === countryId && a.status === 0)
+      .map(a => this.mapToUI(a));
+
+    this.finishedAuctionsList = this.allAuctions
+      .filter(a => a.countryId === countryId && a.status === 2)
+      .map(item => ({
+        ...this.mapToUI(item),
+        winner: item.winner ? {
+          name: item.winner.userName || 'مستخدم غير معروف',
+          avatar: item.winner.userName ? item.winner.userName[0] : 'W',
+          winningPoints: item.winner.winningPoints
+        } : null
+      }));
+
+    this.cdr.detectChanges();
+  }
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file) {
+    if (file && this.selectedAuction) {
       const reader = new FileReader();
-      reader.onload = () => this.imagePreview = reader.result as string;
+      reader.onload = () => {
+        this.selectedAuction.img = reader.result as string;
+      };
       reader.readAsDataURL(file);
     }
   }
 
-  removeImage() { this.imagePreview = null; }
+  submitUpdate() {
+    if (!this.selectedAuction || !this.selectedAuction.id) return;
+    this.isLoading = true;
+
+    const payload = {
+      id: this.selectedAuction.id,
+      roomName: this.selectedAuction.name,
+      productId: this.selectedAuction.productId || this.selectedAuction.product?.id,
+      startPoints: Number(this.selectedAuction.startPoints),
+      startTime: new Date(this.selectedAuction.startTime).toISOString(),
+      endTime: new Date(this.selectedAuction.endTime).toISOString(),
+      limited: Number(this.selectedAuction.targetPoints),
+      countryId: this.selectedAuction.countryId
+    };
+
+    this.apiService.updateAuctionRoom(this.selectedAuction.id, payload).subscribe({
+      next: (res) => {
+        const index = this.allAuctions.findIndex(a => a.id === payload.id);
+        if (index !== -1) {
+          this.allAuctions[index] = { ...this.allAuctions[index], ...payload, name: payload.roomName };
+          this.refreshFiltering();
+        }
+        this.closeModal();
+        alert('تم حفظ التعديلات بنجاح');
+      },
+      error: (err) => {
+        alert(err.error?.message || 'خطأ في التحديث (400)');
+      },
+      complete: () => this.isLoading = false
+    });
+  }
+
+  private mapToUI(item: any) {
+    return {
+      ...item,
+      name: item.name || item.roomName,
+      officialPrice: item.product?.price || 0,
+      img: item.product?.imageUrl || 'assets/images/placeholder.png',
+      startPrice: item.startPoints || 0,
+      targetPrice: item.limited || 0,
+      currentBid: item.currentHighestBid || 0,
+      totalPoints: item.currentHighestBid || item.startPoints,
+      timeLeft: this.calculateSeconds(item.endTime),
+      currency: item.product?.currency || this.dashboard.selectedCountry()?.currency || 'ج.م',
+      lastBidder: {
+        name: item.highestBidderName || 'لا يوجد مزايد',
+        avatar: item.highestBidderName ? item.highestBidderName[0] : '?'
+      }
+    };
+  }
+
+  openEditModal(auction: any, event: Event) {
+    event.stopPropagation();
+    const formatDate = (dateStr: string) => {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      return d.toLocaleString('sv-SE', { hour12: false }).replace(' ', 'T').substring(0, 16);
+    };
+
+    this.selectedAuction = {
+      ...auction,
+      startTime: formatDate(auction.startTime),
+      endTime: formatDate(auction.endTime),
+      targetPoints: auction.targetPrice,
+      startPoints: auction.startPrice
+    };
+    this.isModalOpen = true;
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.selectedAuction = null;
+    document.body.style.overflow = 'auto';
+  }
+
+  private calculateSeconds(endTime: string): number {
+    if (!endTime) return 0;
+    const diff = Math.floor((new Date(endTime).getTime() - new Date().getTime()) / 1000);
+    return diff > 0 ? diff : 0;
+  }
+
+  private startCountdown() {
+    // تم دمج التحديث داخل setInterval الموجود في ngOnInit
+  }
+
+  getTimeParts(totalSeconds: number) {
+    const d = Math.floor(totalSeconds / 86400);
+    const h = Math.floor((totalSeconds % 86400) / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    return { d, h: h < 10 ? '0'+h : h, m: m < 10 ? '0'+m : m, s: s < 10 ? '0'+s : s };
+  }
+
+  ngAfterViewInit() { setTimeout(() => this.initSwipers(), 500); }
+  private initSwipers() {
+    const config = { slidesPerView: 'auto' as const, spaceBetween: 15, observer: true, observeParents: true };
+    new Swiper('.auctions-swiper', config);
+    new Swiper('.upcoming-swiper', config);
+    new Swiper('.finished-swiper', config);
+    new Swiper('.stats-swiper-mobile', config);
+  }
 
   ngOnDestroy() { if (this.timerInterval) clearInterval(this.timerInterval); }
 }
+
+
+
+
+// export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
+//   public dashboard = inject(DashboardComponent);
+//   private apiService = inject(ApiService);
+//   private cdr = inject(ChangeDetectorRef);
+
+//   allAuctions: any[] = [];
+//   selectedAuction: any = null;
+//   isModalOpen = false;
+//   isLoading = false;
+//   private timerInterval: any;
+
+//   // --- القوائم الذكية (Getters) للتحديث الفوري ---
+//   get currentCountry() {
+//     return this.dashboard.selectedCountry();
+//   }
+
+//   get activeAuctionsList() {
+//     if (!this.currentCountry) return [];
+//     return this.allAuctions
+//       .filter(a => a.countryId === this.currentCountry.id && a.status === 1)
+//       .map(a => this.mapToUI(a));
+//   }
+
+//   get upcomingAuctionsList() {
+//     if (!this.currentCountry) return [];
+//     return this.allAuctions
+//       .filter(a => a.countryId === this.currentCountry.id && a.status === 0)
+//       .map(a => this.mapToUI(a));
+//   }
+
+//   get finishedAuctionsList() {
+//     if (!this.currentCountry) return [];
+//     return this.allAuctions
+//       .filter(a => a.countryId === this.currentCountry.id && a.status === 2)
+//       .map(item => ({
+//         ...this.mapToUI(item),
+//         winner: item.winner ? {
+//           name: item.winner.userName || 'مستخدم غير معروف',
+//           avatar: item.winner.userName ? item.winner.userName[0] : 'W',
+//           winningPoints: item.winner.winningPoints
+//         } : null
+//       }));
+//   }
+
+//   ngOnInit() {
+//     this.loadData();
+//     this.startCountdown();
+//   }
+
+//   loadData() {
+//     this.isLoading = true;
+//     this.apiService.getAuctionRooms().subscribe({
+//       next: (data: any) => {
+//         this.allAuctions = Array.isArray(data) ? data : (data.data || []);
+//         this.isLoading = false;
+//         this.cdr.detectChanges();
+//       },
+//       error: (err) => {
+//         console.error('Error fetching auctions:', err);
+//         this.isLoading = false;
+//       }
+//     });
+//   }
+
+//   // --- دالة اختيار الملف (التي تسببت في الخطأ) ---
+//   onFileSelected(event: any) {
+//     const file = event.target.files[0];
+//     if (file && this.selectedAuction) {
+//       const reader = new FileReader();
+//       reader.onload = () => {
+//         this.selectedAuction.img = reader.result as string;
+//       };
+//       reader.readAsDataURL(file);
+//     }
+//   }
+
+//   submitUpdate() {
+//     if (!this.selectedAuction || !this.selectedAuction.id) return;
+//     this.isLoading = true;
+
+//     // تجهيز البيانات طبقاً لصورة الـ Postman المرفقة
+//     const payload = {
+//       id: this.selectedAuction.id,
+//       roomName: this.selectedAuction.name,
+//       productId: this.selectedAuction.productId,
+//       startPoints: this.selectedAuction.startPoints,
+//       startTime: new Date(this.selectedAuction.startTime).toISOString(),
+//       endTime: new Date(this.selectedAuction.endTime).toISOString(),
+//       limited: this.selectedAuction.targetPoints,
+//       countryId: this.selectedAuction.countryId
+//     };
+
+//     this.apiService.updateAuctionRoom(this.selectedAuction.id, payload).subscribe({
+//       next: (res) => {
+//         const index = this.allAuctions.findIndex(a => a.id === payload.id);
+//         if (index !== -1) {
+//           this.allAuctions[index] = {
+//             ...this.allAuctions[index],
+//             ...payload,
+//             name: payload.roomName
+//           };
+//         }
+//         this.closeModal();
+//       },
+//       error: (err) => {
+//         console.error('Update error:', err);
+//         alert('حدث خطأ أثناء حفظ البيانات');
+//       },
+//       complete: () => this.isLoading = false
+//     });
+//   }
+
+//   private mapToUI(item: any) {
+//     return {
+//       ...item,
+//       id: item.id,
+//       name: item.name || item.roomName,
+//       officialPrice: item.product?.price || 0,
+//       img: item.product?.imageUrl || 'assets/images/placeholder.png',
+//       startPrice: item.startPoints || 0,
+//       targetPrice: item.limited || 0,
+//       currentBid: item.currentHighestBid || 0,
+//       totalPoints: item.currentHighestBid || item.startPoints,
+//       timeLeft: this.calculateSeconds(item.endTime),
+//       currency: item.product?.currency || this.currentCountry?.currency || 'ج.م',
+//       lastBidder: {
+//         name: item.highestBidderName || 'لا يوجد مزايد',
+//         avatar: item.highestBidderName ? item.highestBidderName[0] : '?'
+//       }
+//     };
+//   }
+
+//   // --- بقية الدوال المساعدة ---
+//   private calculateSeconds(endTime: string): number {
+//     if (!endTime) return 0;
+//     const diff = Math.floor((new Date(endTime).getTime() - new Date().getTime()) / 1000);
+//     return diff > 0 ? diff : 0;
+//   }
+
+//   getTimeParts(totalSeconds: number) {
+//     const days = Math.floor(totalSeconds / (3600 * 24));
+//     const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+//     const minutes = Math.floor((totalSeconds % 3600) / 60);
+//     const seconds = totalSeconds % 60;
+//     return { d: days, h: hours < 10 ? '0' + hours : hours, m: minutes < 10 ? '0' + minutes : minutes, s: seconds < 10 ? '0' + seconds : seconds };
+//   }
+
+//   openEditModal(auction: any, event: Event) {
+//     event.stopPropagation();
+//     const formatDate = (dateStr: string) => {
+//       if (!dateStr) return '';
+//       const d = new Date(dateStr);
+//       return d.toLocaleString('sv-SE', { hour12: false }).replace(' ', 'T').substring(0, 16);
+//     };
+
+//     this.selectedAuction = {
+//       ...auction,
+//       startTime: formatDate(auction.startTime),
+//       endTime: formatDate(auction.endTime),
+//       targetPoints: auction.targetPrice,
+//       startPoints: auction.startPrice
+//     };
+//     this.isModalOpen = true;
+//     document.body.style.overflow = 'hidden';
+//   }
+
+//   closeModal() {
+//     this.isModalOpen = false;
+//     this.selectedAuction = null;
+//     document.body.style.overflow = 'auto';
+//   }
+
+//   private startCountdown() {
+//     this.timerInterval = setInterval(() => { this.cdr.detectChanges(); }, 1000);
+//   }
+
+//   ngAfterViewInit() { setTimeout(() => this.initSwipers(), 500); }
+//   private initSwipers() {
+//     const config = { slidesPerView: 'auto' as const, spaceBetween: 15, observer: true, observeParents: true };
+//     new Swiper('.auctions-swiper', config);
+//     new Swiper('.upcoming-swiper', config);
+//     new Swiper('.finished-swiper', config);
+//     new Swiper('.stats-swiper-mobile', config);
+//   }
+
+//   ngOnDestroy() { if (this.timerInterval) clearInterval(this.timerInterval); }
+// }

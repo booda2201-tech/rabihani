@@ -362,25 +362,31 @@
         }'>
 
       <swiper-slide *ngFor="let cat of categoryStats">
-        <div class="cat-card-item" [class.active]="filterCategory === cat.id.toString()" (click)="setCategory(cat)">
-          <div class="action-overlay">
-            <button class="btn-edit" (click)="$event.stopPropagation(); editCat(cat)" title="تعديل">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="btn-delete" (click)="$event.stopPropagation(); deleteCat(cat)" title="حذف">
-              <i class="bi bi-trash3-fill"></i>
-            </button>
+          <div class="cat-card-item" [class.active]="filterCategory === cat.id.toString()" (click)="setCategory(cat)">
+            <div class="action-overlay">
+              <button class="btn-edit" (click)="$event.stopPropagation(); editCat(cat)" title="تعديل">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button class="btn-delete" (click)="$event.stopPropagation(); deleteCat(cat)" title="حذف">
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+            </div>
+
+          <div class="image-box">
+            <img [src]="cat.displayImage"
+                  [alt]="cat.name"
+                  (error)="handleImageError($event)"
+                  class="cat-img">
           </div>
 
-          <div class="icon-box"><i class="bi" [ngClass]="cat.icon"></i></div>
-          <div class="info-box">
-            <span class="label">{{ cat.name }}</span>
-            <span class="count">{{ cat.count }} منتج</span>
+            <div class="info-box">
+              <span class="label">{{ cat.name }}</span>
+              <span class="count">{{ cat.count || 0 }} منتج</span>
+            </div>
           </div>
-        </div>
       </swiper-slide>
     </swiper-container>
-  </div>
+  </div> 
 
   <div class="static-section">
     <button class="add-new-cat-card" (click)="isAddCategoryModalOpen.set(true)">
@@ -422,67 +428,87 @@
     </div>
   </div>
 
-  <div class="table-container d-none d-md-block">
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>المنتج</th>
-          <th>القسم</th>
-          <th>السعر</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of filteredProducts">
-          <td class="product-cell">
-            <div class="product-info-with-img">
-              <img [src]="p.imageUrl || 'assets/placeholder-product.png'" class="table-product-img" alt="">
-              <strong>{{ p.name }}</strong>
-            </div>
-          </td>
-          <td><span class="badge-cat">{{ p.categoryName }}</span></td>
-          <td><strong class="price-text">{{ p.price | number }} {{ selectedCountry().currency }}</strong></td>
-          <td>
-            <div class="actions-btns">
-              <button class="edit-btn" (click)="openEditModal(p)"><i class="bi bi-pencil-square"></i></button>
-              <button class="delete-btn" (click)="deleteProduct(p.id)"><i class="bi bi-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="table-container d-none d-md-block">
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>المنتج</th>
+        <th>القسم</th>
+        <th>الوصف</th> <th>السعر</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of filteredProducts">
+        <td class="product-cell">
+          <div class="product-info-with-img">
+            <img [src]="p.imageUrl || 'assets/placeholder-product.png'" class="table-product-img" alt="">
+            <strong>{{ p.name }}</strong>
+          </div>
+        </td>
+        <td><span class="badge-cat">{{ p.categoryName }}</span></td>
+        <td class="description-cell">
+          <div class="desc-truncate" [title]="p.description">
+            {{ p.description || 'لا يوجد وصف' }}
+          </div>
+        </td>
+        <td>
+          <strong class="price-text">
+            {{ p.price | number }} {{ selectedCountry().currency }}
+          </strong>
+        </td>
+        <td>
+          <div class="actions-btns">
+            <button class="edit-btn" (click)="openEditModal(p)">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="delete-btn" (click)="deleteProduct(p.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-  <div class="mobile-cards d-md-none">
-    <div class="p-card" *ngFor="let p of filteredProducts">
-      <div class="card-header-flex">
-        <img [src]="p.imageUrl || 'assets/placeholder-product.png'" class="mobile-product-img" alt="">
-        <div class="name-section m-auto">
-          <span class="p-name">{{ p.name }}</span>
-        </div>
-      </div>
+<div class="mobile-cards d-md-none">
+  <div class="p-card" *ngFor="let p of filteredProducts">
+    <div class="card-header-flex">
+      <img [src]="p.imageUrl || 'assets/placeholder-product.png'" class="mobile-product-img" alt="">
+      <div class="name-section m-auto">
+        <span class="p-name">{{ p.name }}</span>
 
-      <div class="card-data-grid">
-        <div class="data-item">
-          <span class="label">القسم</span>
-          <strong class="value">{{ p.categoryName }}</strong>
+        <div class="p-description-mobile">
+          {{ p.description || 'لا يوجد وصف لهذا المنتج' }}
         </div>
-        <div class="data-item border-right">
-          <span class="label">السعر</span>
-          <strong class="value price-highlight">{{ p.price | number }} {{ selectedCountry().currency }}</strong>
-        </div>
-      </div>
-
-      <div class="card-footer-actions">
-        <button class="m-edit" (click)="openEditModal(p)">
-          <i class="bi bi-pencil"></i> تعديل
-        </button>
-        <button class="m-delete" (click)="deleteProduct(p.id)">
-          <i class="bi bi-trash"></i>
-        </button>
       </div>
     </div>
+
+    <div class="card-data-grid">
+      <div class="data-item">
+        <span class="label">القسم</span>
+        <strong class="value">{{ p.categoryName }}</strong>
+      </div>
+      <div class="data-item border-right">
+        <span class="label">السعر</span>
+        <strong class="value price-highlight">
+          {{ p.price | number }} {{ selectedCountry().currency }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="card-footer-actions">
+      <button class="m-edit" (click)="openEditModal(p)">
+        <i class="bi bi-pencil"></i> تعديل
+      </button>
+      <button class="m-delete" (click)="deleteProduct(p.id)">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
   </div>
+</div>
+
 </div>
 </main>
 
@@ -511,12 +537,17 @@
       <label>وصف القسم:</label>
       <textarea [(ngModel)]="newCategoryDescription" placeholder="أدخل وصف القسم..." class="form-control mb-3"></textarea>
 
-        <div class="icon-upload-group">
-          <label>أيقونة القسم:</label>
-          <div class="file-input-wrapper">
-            <input type="file" (change)="onFileSelected($event)" class="form-control-file" accept="image/*">
-            <small class="file-hint" *ngIf="!selectedFile">يرجى اختيار صورة واضحة (PNG/JPG)</small>
-            <small class="file-success" *ngIf="selectedFile">✅ تم اختيار: {{ selectedFile.name }}</small>
+        <div class="upload-section">
+          <label for="catImage" class="upload-label">
+            <i class="bi bi-cloud-arrow-up"></i> اختر صورة القسم
+          </label>
+          <input type="file" id="catImage" (change)="onCategoryFileSelected($event)" hidden accept="image/*">
+
+          <div class="preview-container" *ngIf="categoryImagePreview">
+            <img [src]="categoryImagePreview" class="img-preview">
+            <button type="button" class="btn-remove" (click)="removeSelectedCategoryImg()">
+              <i class="bi bi-x-circle-fill"></i>
+            </button>
           </div>
         </div>
 
@@ -526,6 +557,40 @@
     </div>
   </div>
 </div>
+</div>
+
+<div class="custom-modal-overlay" *ngIf="isEditCategoryModalOpen()" (click)="isEditCategoryModalOpen.set(false)">
+  <div class="custom-modal-content edit-sheet" (click)="$event.stopPropagation()">
+
+    <div class="modal-handle d-md-none"></div>
+
+    <div class="modal-header">
+      <h4>تعديل القسم</h4>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group mb-4">
+        <label>اسم القسم:</label>
+        <input type="text" [(ngModel)]="editCategoryData.name" class="form-control modern-input" placeholder="أدخل اسم القسم...">
+      </div>
+
+      <div class="upload-section-modern">
+        <label for="editCatImgInput" class="upload-preview-box">
+          <img [src]="editCategoryImagePreview" *ngIf="editCategoryImagePreview" class="full-preview">
+          <div class="upload-overlay">
+            <i class="bi bi-camera-fill"></i>
+            <span>تغيير الصورة</span>
+          </div>
+        </label>
+        <input type="file" id="editCatImgInput" (change)="onEditCategoryFileSelected($event)" hidden accept="image/*">
+      </div>
+    </div>
+
+    <div class="modal-footer-modern p-3">
+      <button class="btn-cancel-main" (click)="isEditCategoryModalOpen.set(false)">إلغاء</button>
+      <button class="btn-save-main" (click)="confirmUpdateCategory()">حفظ التعديلات</button>
+    </div>
+  </div>
 </div>
 
 <div class="custom-modal-overlay" *ngIf="isAddModalOpen()" (click)="closeAddModal()">

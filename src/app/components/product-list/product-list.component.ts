@@ -489,6 +489,7 @@ import { register } from 'swiper/element/bundle';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../Services/api.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 register();
 
@@ -553,6 +554,11 @@ newProduct: any = {
   newCategoryDescription: string = '';
   selectedFile: File | null = null;
   selectedEditFile: File | null = null;
+  categoryImagePreview: string | null = null;
+  isEditCategoryModalOpen = signal(false);
+  editCategoryData: any = { id: 0, name: '', description: '' };
+  editCategoryFile: File | null = null;
+  editCategoryImagePreview: string | null = null;
 
 
   // --- مصفوفات البيانات ---
@@ -570,7 +576,9 @@ newProduct: any = {
   filterDateFrom: string = '';
   filterDateTo: string = '';
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService,
+    private cdr: ChangeDetectorRef
+  ) {
     setInterval(() => {
       const data = localStorage.getItem('selected_country');
       if (data) {
@@ -659,18 +667,47 @@ calculateInventoryValue() {
   }, 0);
 }
 
-  updateCategoryStats() {
-    if (this.categories.length > 0 && this.allProducts.length > 0) {
-      this.categoryStats = this.categories.map((cat: any) => {
-        const count = this.allProducts.filter(p =>
-          p.categoryId === cat.id || p.categoryName === cat.name
-        ).length;
-        return { ...cat, count: count, icon: this.getIconForCategory(cat.name) };
-      });
-    } else {
-      this.categoryStats = this.categories;
-    }
+// أضف هذا المتغير في بداية الكلاس
+readonly SERVER_URL = 'http://alhendalcompany-001-site7.stempurl.com/';
+
+updateCategoryStats() {
+  if (this.categories && this.categories.length > 0) {
+    this.categoryStats = this.categories.map((cat: any) => {
+      const count = this.allProducts.filter(p =>
+        p.categoryId === cat.id || p.categoryName === cat.name
+      ).length;
+
+      // 1. الأولوية لمسمى iconUrl القادم من Postman
+      let rawPath = cat.iconUrl || cat.icon || cat.iconPath || cat.image;
+      let finalImageUrl = '';
+
+      if (rawPath && rawPath !== 'null') {
+        // التحقق إذا كان الرابط كاملاً (مثل روابط placeholder في الصورة) أو مساراً نسبياً
+        if (rawPath.startsWith('http')) {
+          finalImageUrl = rawPath;
+        } else {
+          const baseUrl = this.SERVER_URL.replace(/\/+$/, '');
+          const cleanPath = rawPath.replace(/^\/+/, '');
+          finalImageUrl = `${baseUrl}/${cleanPath}`;
+        }
+      } else {
+        finalImageUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(cat.name)}&background=random&size=128`;
+      }
+
+      return { ...cat, count, displayImage: finalImageUrl };
+    });
+    this.cdr.detectChanges();
   }
+}
+
+handleImageError(event: any) {
+  const fallback = 'https://ui-avatars.com/api/?name=Error&background=333&color=fff';
+  if (event.target.src === fallback) {
+    event.target.style.display = 'none';
+    return;
+  }
+  event.target.src = fallback;
+}
 
 setCategory(cat: any) {
   if (cat === 'الكل') {
@@ -722,6 +759,7 @@ saveProduct() {
   if (!this.currentProduct.id) return;
 
   const formData = new FormData();
+  // إرسال البيانات الأساسية
   formData.append('Id', this.currentProduct.id.toString());
   formData.append('Name', this.currentProduct.name);
   formData.append('Price', this.currentProduct.price.toString());
@@ -729,17 +767,22 @@ saveProduct() {
   formData.append('Description', this.currentProduct.description || '');
   formData.append('CountryCode', this.selectedCountry().code);
 
-  if (this.selectedFile) {
-    formData.append('Image', this.selectedFile);
+  // الجزء الخاص بالصورة: نستخدم selectedEditFile الذي يتم تعيينه في onEditImagePicked
+  if (this.selectedEditFile) {
+    formData.append('Image', this.selectedEditFile);
   }
 
   this.apiService.updateProduct(this.currentProduct.id, formData).subscribe({
     next: () => {
-      this.loadProducts();
+      this.loadProducts(); // إعادة تحميل القائمة لتظهر الصورة الجديدة
       this.closeModal();
+      this.selectedEditFile = null; // تصفير الملف بعد النجاح
       alert('تم التعديل بنجاح');
     },
-    error: (err) => console.error('Update Error:', err)
+    error: (err) => {
+      console.error('Update Error:', err);
+      alert('حدث خطأ أثناء تحديث المنتج');
+    }
   });
 }
 
@@ -767,32 +810,37 @@ saveProduct() {
   }
 
 confirmAddCategory() {
-if (!this.newCategoryName || !this.selectedFile) {
-    alert('برجاء إدخال الاسم واختيار صورة');
+  if (!this.newCategoryName || !this.selectedFile) {
+    alert('برجاء اختيار صورة واسم للقسم');
     return;
   }
 
-const formData = new FormData();
+  const formData = new FormData();
   formData.append('Name', this.newCategoryName);
-  formData.append('Description', this.newCategoryDescription);
+  formData.append('Description', this.newCategoryDescription || '');
+  // تأكد من مطابقة مسمى "Icon" المطلوب في خطأ الـ API
   formData.append('Icon', this.selectedFile);
 
   this.apiService.addCategory(formData).subscribe({
     next: (res) => {
-      this.loadCategories();
-      this.newCategoryName = '';
-      this.newCategoryDescription = '';
-      this.selectedFile = null;
-      // this.isAddCategoryModalOpen.set(false);
-
-      console.log('Category added successfully');
+      alert('تمت الإضافة بنجاح');
+      this.loadCategories(); // لإعادة جلب البيانات وعرض الصورة الجديدة فوراً
+      this.isAddCategoryModalOpen.set(false);
+      this.resetCategoryForm(); // تصفير النموذج
     },
-      error: (err) => {
-          console.error('حدث خطأ أثناء الإضافة', err);
-        }
+    error: (err) => {
+      console.error('API Error:', err);
+      alert('فشل إضافة القسم، تأكد من اختيار ملف صورة صحيح');
+    }
   });
 }
 
+resetCategoryForm() {
+  this.newCategoryName = '';
+  this.newCategoryDescription = '';
+  this.categoryImagePreview = null;
+  this.selectedFile = null;
+}
 
 onFileSelected(event: any) {
   const file = event.target.files[0];
@@ -888,7 +936,7 @@ openEditModal(product: any) {
 
 // 1. دالة حذف القسم
 deleteCat(category: any) {
-  if (confirm(`هل أنت متأكد من حذف قسم "${category.name}"؟ قد يؤدي ذلك لحذف أو إخفاء المنتجات التابعة له.`)) {
+  if (confirm(`هل أنت متأكد من حذف قسم "${category.name}"`)) {
     this.apiService.deleteCategory(category.id).subscribe({
       next: () => {
         alert('تم حذف القسم بنجاح');
@@ -905,27 +953,74 @@ deleteCat(category: any) {
 
 // 2. دالة تعديل القسم
 editCat(category: any) {
-  const newName = prompt('أدخل الاسم الجديد للقسم:', category.name);
+  this.editCategoryData = { ...category };
+  // عرض الصورة الحالية في المعاينة
+  this.editCategoryImagePreview = category.displayImage;
+  this.editCategoryFile = null;
+  this.isEditCategoryModalOpen.set(true);
+}
 
-  if (newName && newName !== category.name) {
-    // استخدمنا FormData لأن الـ API أظهر في Postman أنه يتعامل معها
-    const formData = new FormData();
-    formData.append('Id', category.id.toString());
-    formData.append('Name', newName);
-    // تأكد من إرسال الوصف والأيقونة القديمة أو الحالية إذا كان الـ API يطلبهم
-    formData.append('Description', category.description || 'لا يوجد وصف');
-
-    this.apiService.updateCategory(category.id, formData).subscribe({
-      next: () => {
-        this.loadCategories();
-        alert('تم تحديث القسم بنجاح');
-      },
-      error: (err) => {
-        console.error(err);
-        alert('فشل التحديث: تأكد من مطابقة الحقول لمتطلبات السيرفر');
-      }
-    });
+onEditCategoryFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.editCategoryFile = file;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.editCategoryImagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 }
+
+confirmUpdateCategory() {
+  if (!this.editCategoryData.name) {
+    alert('اسم القسم مطلوب');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('Id', this.editCategoryData.id.toString());
+  formData.append('Name', this.editCategoryData.name);
+  formData.append('Description', this.editCategoryData.description || 'لا يوجد وصف');
+
+  // نرسل الملف الجديد فقط إذا قام المستخدم بتغييره
+  if (this.editCategoryFile) {
+    formData.append('Icon', this.editCategoryFile);
+  }
+
+  this.apiService.updateCategory(this.editCategoryData.id, formData).subscribe({
+    next: () => {
+      alert('تم تحديث القسم بنجاح');
+      this.loadCategories();
+      this.isEditCategoryModalOpen.set(false);
+    },
+    error: (err) => {
+      console.error(err);
+      alert('فشل التحديث، راجع بيانات السيرفر');
+    }
+  });
+}
+
+
+onCategoryFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedFile = file;
+
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.categoryImagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+removeSelectedCategoryImg() {
+  this.selectedFile = null;
+  this.categoryImagePreview = null;
+}
+
+
 
 }
