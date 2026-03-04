@@ -15,8 +15,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   product = signal<any>(null);
   timeLeft = signal({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // isAiBotActive = signal(true);
   isAuctionPaused = signal(false);
+  isAuctionFinished = signal(false);
   private timerInterval: any;
   private routeSub!: Subscription;
 
@@ -34,43 +34,54 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadAuctionDetails(id: number) {
+loadAuctionDetails(id: number) {
     this.apiService.getAuctionRoomById(id).subscribe({
       next: (data) => {
         this.product.set(data);
         this.isAuctionPaused.set(data.isCancelled);
-        this.startTimer(data.endTime);
+
+        // التحقق فوراً إذا كان المزاد منتهياً بناءً على الوقت أو الحالة من السيرفر
+        const now = new Date().getTime();
+        const endTime = new Date(data.endTime).getTime();
+
+        if (endTime <= now || data.status === 'finished') { // افترضنا وجود status
+          this.isAuctionFinished.set(true);
+          this.timeLeft.set({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        } else {
+          this.isAuctionFinished.set(false);
+          this.startTimer(data.endTime);
+        }
       },
       error: (err) => console.error('Error fetching data:', err)
     });
   }
 
 startTimer(endTimeStr: string) {
-  if (this.timerInterval) clearInterval(this.timerInterval);
-  const endTime = new Date(endTimeStr).getTime();
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    const endTime = new Date(endTimeStr).getTime();
 
-  this.timerInterval = setInterval(() => {
-    if (!this.isAuctionPaused()) {
-      const now = new Date().getTime();
-      const distanceMs = endTime - now;
-      const totalSeconds = Math.floor(distanceMs / 1000);
+    this.timerInterval = setInterval(() => {
+      if (!this.isAuctionPaused() && !this.isAuctionFinished()) {
+        const now = new Date().getTime();
+        const distanceMs = endTime - now;
 
-      if (totalSeconds <= 0) {
-        this.timeLeft.set({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        clearInterval(this.timerInterval);
-        return;
+        if (distanceMs <= 0) {
+          this.timeLeft.set({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+          this.isAuctionFinished.set(true); // تحديث الحالة عند انتهاء الوقت
+          clearInterval(this.timerInterval);
+          return;
+        }
+
+        const totalSeconds = Math.floor(distanceMs / 1000);
+        this.timeLeft.set({
+          days: Math.floor(totalSeconds / 86400),
+          hours: Math.floor((totalSeconds % 86400) / 3600),
+          minutes: Math.floor((totalSeconds % 3600) / 60),
+          seconds: Math.floor(totalSeconds % 60)
+        });
       }
-
-      // حساب الأجزاء بناءً على الثواني
-      this.timeLeft.set({
-        days: Math.floor(totalSeconds / 86400),
-        hours: Math.floor((totalSeconds % 86400) / 3600),
-        minutes: Math.floor((totalSeconds % 3600) / 60),
-        seconds: Math.floor(totalSeconds % 60)
-      });
-    }
-  }, 1000);
-}
+    }, 1000);
+  }
 
   getRandomColor(name: string): string {
     const colors = ['#f59e0b', '#ec4899', '#8b5cf6', '#10b981', '#3b82f6'];

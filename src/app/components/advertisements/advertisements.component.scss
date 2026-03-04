@@ -562,6 +562,12 @@ $text-muted: #64748b;
     background: #ff3b30;
     color: white;
   }
+  @media (max-width:400px) {
+    padding: 5px 10px !important;
+    font-size: 12px !important;
+    border-radius: 10px !important;
+
+  }
 }
 
 .ads-hero-list {
@@ -1388,6 +1394,12 @@ $figma-blue: #3b82f6;
   font-weight: 600;
   display: inline-block;
   margin-bottom: 12px;
+
+  // في شاشات الموبايل نصغر الخط شوية
+  @media (max-width: 400px) {
+    padding: 5px 10px;
+    font-size: 0.6rem !important;
+  }
 }
 
 

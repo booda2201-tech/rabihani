@@ -10,14 +10,19 @@
       <i class="bi bi-chevron-right"></i>
       <span>الرئيسية</span>
     </button>
-
-        <div class="digital-timer-container" [class.paused]="isAuctionPaused()">
+        <div class="digital-timer-container" [class.paused]="isAuctionPaused()" [class.finished]="isAuctionFinished()">
           <div class="timer-status">
-            <span class="status-dot" [class.blinking]="!isAuctionPaused()"></span>
-            <span>{{ isAuctionPaused() ? 'المزاد متوقف' : 'ينتهي خلال' }}</span>
+            <span class="status-dot"
+                  [class.blinking]="!isAuctionPaused() && !isAuctionFinished()"
+                  [style.background-color]="isAuctionFinished() ? '#ff4d4d' : ''">
+            </span>
+
+            <span>
+              {{ isAuctionFinished() ? 'المزاد منتهي' : (isAuctionPaused() ? 'المزاد متوقف مؤقتاً' : 'ينتهي خلال') }}
+            </span>
           </div>
 
-          <div class="timer-digits">
+          <div class="timer-digits" [style.opacity]="isAuctionFinished() ? '0.6' : '1'">
             <div class="time-unit" *ngIf="timeLeft().days > 0">
               <div class="num-box">{{ timeLeft().days | number:'2.0' }}</div>
               <span class="label">يوم</span>
