@@ -154,12 +154,14 @@ submitNewAuction() {
 
   // --- جلب البيانات والتايمر ---
 loadActiveAuctions() {
+  // نرسل الـ ID الخاص بالدولة المختارة حالياً
   this.apiService.getActiveAuctionRooms(this.selectedCountry.id, 0).subscribe((res: any) => {
     this.activeAuctions = (res || []).map((item: any) => ({
       ...item,
       // البيانات الأساسية من السيرفر
       officialPrice: item.product?.price || 0,
-      currency: item.product?.currency || 'KWD',
+      currency: item.product?.currency || this.selectedCountry?.currency || 'EGP',
+
       img: item.product?.imageUrl || 'assets/placeholder.png',
       startPrice: item.startPoints || 0,
       targetPrice: item.limited || 0, // السيرفر يرسلها باسم limited
