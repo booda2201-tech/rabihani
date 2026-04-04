@@ -7,7 +7,7 @@
         <div class="card-content">
           <div class="text-side">
             <span>مزادات نشطة في {{ dashboard.selectedCountry()?.name || '...' }}</span>
-            <h2>{{ activeAuctionsList?.length || 0 }} <small>منتج</small></h2>
+            <h2>{{ activeAuctionsList.length || 0 }} <small>منتج</small></h2>
           </div>
           <div class="pulse-circle"><i class="bi bi-lightning-fill"></i></div>
         </div>
@@ -17,7 +17,7 @@
         <div class="card-content">
           <div class="text-side">
             <span>إجمالي المزادات المنتهية</span>
-            <h2>{{ finishedAuctionsList?.length || 0 }} <small>منتج</small></h2>
+            <h2>{{ finishedAuctionsList.length || 0 }} <small>منتج</small></h2>
           </div>
           <div class="pulse-circle"><i class="bi bi-check2-all"></i></div>
         </div>
@@ -27,7 +27,7 @@
         <div class="card-content">
           <div class="text-side">
             <span>مزادات قادمة ({{ dashboard.selectedCountry()?.code || '' }})</span>
-            <h2>{{ upcomingAuctionsList?.length || 0 }} <small>منتج</small></h2>
+            <h2>{{ upcomingAuctionsList.length || 0 }} <small>منتج</small></h2>
           </div>
           <div class="pulse-circle"><i class="bi bi-calendar-event"></i></div>
         </div>
@@ -213,21 +213,6 @@
   </div>
 </div>
 
-<!-- <div class="custom-modal-overlay" [class.show]="isModalOpen" (click)="closeModal()">
-  <div class="custom-modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3>تعديل مزاد: {{ selectedAuction?.name }}</h3>
-      <button class="close-btn" (click)="closeModal()">×</button>
-    </div>
-    </div>
-</div> -->
-
-
-
-
-
-
-
 
 
 <div class="custom-modal-overlay" [class.show]="isModalOpen" (click)="closeModal()">
@@ -297,3 +282,11 @@
 
 
 
+<!-- <div class="custom-modal-overlay" [class.show]="isModalOpen" (click)="closeModal()">
+  <div class="custom-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>تعديل مزاد: {{ selectedAuction?.name }}</h3>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    </div>
+</div> -->

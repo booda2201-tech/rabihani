@@ -8,7 +8,7 @@
       </div>
       <button class="btn-add-auction" (click)="openAddModal()">
         <i class="bi bi-plus-circle"></i> إضافة مزاد
-      </button> 
+      </button>
     </div>
   </header>
 
@@ -131,9 +131,11 @@
                   </div>
                 </div>
               </div>
-              <input type="hidden" [(ngModel)]="newAuctionObj.productId" name="productId" required>
-            </div>
-
+              <input type="hidden"
+                      [(ngModel)]="newAuctionObj.productId"
+                      name="productId"
+                      required>
+              </div>
             <div class="form-group" [style.width]="isEditMode ? '100%' : ''">
               <label>اسم غرفة المزاد (Room Name)</label>
               <input
@@ -149,24 +151,21 @@
       <div class="form-row split">
         <div class="form-group">
           <label>تاريخ ووقت البدء</label>
-          <input
-            type="datetime-local"
-            [(ngModel)]="newAuctionObj.startTime"
-            name="startTime"
-            required
-          >
-        </div>
+            <input type="datetime-local"
+                    [(ngModel)]="newAuctionObj.startTime"
+                    [min]="minDateTime"
+                    name="startTime"
+                    required>
+            </div>
         <div class="form-group">
           <label>تاريخ ووقت الانتهاء</label>
-          <input
-            type="datetime-local"
-            [(ngModel)]="newAuctionObj.endTime"
-            name="endTime"
-            required
-          >
+            <input type="datetime-local"
+                    [(ngModel)]="newAuctionObj.endTime"
+                    [min]="newAuctionObj.startTime || minDateTime"
+                    name="endTime"
+                    required>
+            </div>
         </div>
-      </div>
-
       <div class="form-row split">
         <div class="form-group">
           <label>نقاط البداية (Start Points)</label>

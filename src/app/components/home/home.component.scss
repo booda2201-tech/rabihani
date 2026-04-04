@@ -1871,3 +1871,19 @@ $text-gray: #94a3b8;
     transition: 0.3s;
   }
 }
+
+
+
+/* 1. إخفاء الشريط في متصفحات Chrome, Safari, and Edge */
+.custom-dropdown-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* 2. إخفاء الشريط في متصفح Firefox */
+.custom-dropdown-list {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge القديم */
+
+    /* تأكد إن الـ overflow موجود عشان السكرول يفضل شغال */
+    overflow-y: auto;
+}

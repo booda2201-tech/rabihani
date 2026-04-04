@@ -1,6 +1,7 @@
 
 
-import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
+
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ElementRef, HostListener } from '@angular/core';
 import { ApiService } from '../../Services/api.service';
 
 @Component({
@@ -9,18 +10,24 @@ import { ApiService } from '../../Services/api.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
+  private el = inject(ElementRef);
+
+  // مصفوفات البيانات
+  allAuctionsRaw: any[] = [];
   activeAuctions: any[] = [];
   allProducts: any[] = [];
-  itemsToShow: number = 4; // حل مشكلة الخطأ في الصورة
-  selectedCountry: any;
+
+  // التحكم في العرض
+  itemsToShow: number = 4;
+  selectedCountry: any = { name: '...', id: null };
   searchTerm: string = '';
   showDropdown: boolean = false;
-  showAddModal = false;
-  isEditMode = false;
-  timerInterval: any;
-  storageCheckInterval: any;
-  selectedFile: File | null = null;
+  showAddModal: boolean = false;
+  isEditMode: boolean = false;
 
+  // كائن المزاد الجديد / التعديل
   newAuctionObj: any = {
     id: null,
     name: '',
@@ -32,36 +39,175 @@ export class HomeComponent implements OnInit, OnDestroy {
     img: ''
   };
 
-  constructor(private apiService: ApiService, private el: ElementRef) {}
+  selectedFile: File | null = null;
+  private timerInterval: any;
+  private storageInterval: any;
 
   ngOnInit(): void {
     this.refreshCountryAndData();
     this.loadAllProducts();
-    this.setupStorageWatcher();
-    this.startCountdown();
+
+    // مراقبة تغيير الدولة وتحديث العدادات
+    this.storageInterval = setInterval(() => this.refreshCountryAndData(), 2000);
+    this.timerInterval = setInterval(() => {
+      this.updateActiveAuctions();
+    }, 1000);
   }
 
-  // دالة تحويل التاريخ لتنسيق datetime-local (مهمة جداً لظهور الوقت عند التعديل)
-  private formatDateTimeLocal(dateStr: string | undefined): string {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    const tzOffset = date.getTimezoneOffset() * 60000;
-    return new Date(date.getTime() - tzOffset).toISOString().slice(0, 16);
+  // --- إدارة البيانات والفلترة ---
+
+  loadData() {
+    this.apiService.getAuctionRooms().subscribe({
+      next: (res: any) => {
+        this.allAuctionsRaw = Array.isArray(res) ? res : (res.data || []);
+        this.updateActiveAuctions();
+      }
+    });
   }
 
-  // إغلاق القائمة عند النقر في الخارج
-  @HostListener('document:click', ['$event'])
-  onClick(event: Event) {
-    if (!this.el.nativeElement.contains(event.target)) {
-      this.showDropdown = false;
+updateActiveAuctions() {
+  if (!this.allAuctionsRaw.length || !this.selectedCountry?.id) return;
+
+  const now = new Date().getTime(); // توحيد استخدام الـ Timestamp
+  const buffer = 5000;
+  this.activeAuctions = this.allAuctionsRaw
+    .filter((a: any) => {
+      const startTime = new Date(a.startTime).getTime();
+      const endTime = new Date(a.endTime).getTime();
+      const currentPoints = a.currentHighestBid || a.startPoints || 0;
+      const targetPoints = a.limited || 0;
+
+      // الشروط:
+      const isSameCountry = a.countryId === this.selectedCountry.id;
+      const isStarted = (now + buffer) >= startTime;
+      const isNotEnded = now < (endTime + buffer);
+      const isTargetNotReached = targetPoints === 0 || currentPoints < targetPoints;
+
+      // المزاد نشط فقط إذا تحقق شرط الدولة + (بدأ ولم ينتهِ وقتياً) + (لم يصل للمستهدف)
+      return isSameCountry &&
+              (a.status === 1 || (a.status === 0 && isStarted)) &&
+              isNotEnded &&
+              isTargetNotReached;
+    })
+    .map(a => this.mapToUI(a));
+
+  this.cdr.detectChanges();
+}
+
+private mapToUI(item: any) {
+  const endTime = new Date(item.endTime).getTime();
+  const now = new Date().getTime();
+
+  return {
+    ...item,
+    name: item.name || item.roomName,
+    officialPrice: item.product?.price || 0,
+    currency: item.product?.currency || this.selectedCountry?.currency || 'نقطة',
+    img: item.img || item.product?.imageUrl || 'assets/images/placeholder.png',
+    startPrice: item.startPoints || 0,
+    targetPrice: item.limited || 0,
+    totalPoints: item.currentHighestBid || item.startPoints || 0,
+    // استخدام نفس الحسبة للوقت المتبقي
+    timeLeft: Math.max(0, Math.floor((endTime - now) / 1000)),
+    lastBidder: {
+      name: item.highestBidderName || 'لا يوجد مزايد'
     }
+  };
+}
+
+  // --- إدارة المودال (إضافة/تعديل) ---
+
+  openAddModal() {
+    this.isEditMode = false;
+    this.resetForm();
+    this.showAddModal = true;
   }
 
-  // --- منطق البحث واختيار المنتج ---
+  openEditModal(item: any) {
+    this.isEditMode = true;
+    this.newAuctionObj = {
+      id: item.id,
+      name: item.name,
+      productId: item.productId || item.product?.id,
+      startPoints: item.startPrice,
+      targetPoints: item.targetPrice,
+      startTime: this.formatDateForInput(item.startTime),
+      endTime: this.formatDateForInput(item.endTime),
+      img: item.img
+    };
+    this.searchTerm = item.name;
+    this.showAddModal = true;
+  }
+
+submitNewAuction() {
+  // دالة لتحويل قيمة الـ input المحلية إلى تاريخ ISO صحيح
+  const toISODate = (localDateStr: string) => {
+    if (!localDateStr) return null;
+    return new Date(localDateStr).toISOString();
+  };
+
+  const payload = {
+    roomName: this.newAuctionObj.name,
+    productId: this.newAuctionObj.productId,
+    startPoints: Number(this.newAuctionObj.startPoints),
+    // تحويل الوقت المختار إلى ISO قبل الإرسال
+    startTime: toISODate(this.newAuctionObj.startTime),
+    endTime: toISODate(this.newAuctionObj.endTime),
+    limited: Number(this.newAuctionObj.targetPoints),
+    countryId: this.selectedCountry.id
+  };
+
+  const request = this.isEditMode
+    ? this.apiService.updateAuctionRoom(this.newAuctionObj.id, payload)
+    : this.apiService.postAuction(payload);
+
+  request.subscribe({
+    next: () => {
+      this.loadData();
+      this.closeModal();
+      alert('تم حفظ المزاد بنجاح');
+    },
+    error: (err) => alert('خطأ في الإرسال: تأكد من صحة البيانات أو الوقت')
+  });
+}
+
+  // --- دوال مساعدة (Helper Functions) ---
+
+  getTimeParts(totalSeconds: number) {
+    const d = Math.floor(totalSeconds / 86400);
+    const h = Math.floor((totalSeconds % 86400) / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    return { d, h: this.pad(h), m: this.pad(m), s: this.pad(s) };
+  }
+
+  private pad(n: number) { return n < 10 ? '0' + n : n; }
+
+  loadMore() { this.itemsToShow += 4; }
+
+get minDateTime() {
+  const now = new Date();
+  const tzoffset = now.getTimezoneOffset() * 60000;
+  return (new Date(Date.now() - tzoffset)).toISOString().slice(0, 16);
+}
+
+private formatDateForInput(dateStr: string) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = ('0' + (date.getMonth() + 1)).slice(-2);
+  const day = ('0' + date.getDate()).slice(-2);
+  const hours = ('0' + date.getHours()).slice(-2);
+  const minutes = ('0' + date.getMinutes()).slice(-2);
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+  loadAllProducts() {
+    this.apiService.getProducts().subscribe(res => this.allProducts = res || []);
+  }
+
   filteredProducts() {
-    return this.searchTerm
-      ? this.allProducts.filter(p => p.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
-      : this.allProducts;
+    return this.allProducts.filter(p => p.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
 
   selectProduct(prod: any) {
@@ -72,185 +218,42 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showDropdown = false;
   }
 
-  // --- فتح المودال (إضافة أو تعديل) ---
-  openAddModal() {
-    this.isEditMode = false;
-    this.resetForm();
-    this.showAddModal = true;
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => this.newAuctionObj.img = reader.result as string;
+      reader.readAsDataURL(file);
+    }
   }
-
-openEditModal(auction: any) {
-  this.isEditMode = true;
-  this.showAddModal = true;
-
-  this.newAuctionObj = {
-    id: auction.id,
-    name: auction.name,
-    // التأكد من جلب الـ ID الصحيح للمنتج
-    productId: auction.product?.id || auction.productId,
-    startPoints: auction.startPrice || auction.startPoints || 0,
-    targetPoints: auction.targetPrice || auction.limited || 0,
-    startTime: this.formatDateTimeLocal(auction.startTime),
-    endTime: this.formatDateTimeLocal(auction.endTime),
-    img: auction.img
-  };
-
-  this.searchTerm = auction.name;
-}
-
-submitNewAuction() {
-  // 1. تحضير البيانات في كائن JSON عادي أولاً (لتطابق الـ Postman)
-  const auctionData = {
-    roomName: this.newAuctionObj.name,
-    productId: Number(this.newAuctionObj.productId),
-    startPoints: Number(this.newAuctionObj.startPoints),
-    startTime: new Date(this.newAuctionObj.startTime).toISOString(),
-    endTime: new Date(this.newAuctionObj.endTime).toISOString(),
-    limited: Number(this.newAuctionObj.targetPoints),
-    countryId: Number(this.selectedCountry.id)
-  };
-
-  let requestData: any;
-
-
-  if (this.selectedFile) {
-    const formData = new FormData();
-
-    Object.keys(auctionData).forEach(key => {
-      formData.append(key, (auctionData as any)[key]);
-    });
-    formData.append('image', this.selectedFile);
-    if (this.isEditMode) formData.append('id', this.newAuctionObj.id);
-
-    requestData = formData;
-  } else {
-
-    requestData = auctionData;
-    if (this.isEditMode) (requestData as any).id = this.newAuctionObj.id;
-  }
-
-  // إرسال الطلب
-  if (this.isEditMode) {
-    this.apiService.updateAuctionRoom(this.newAuctionObj.id, requestData).subscribe({
-      next: () => this.handleSuccess('تم التعديل بنجاح'),
-      error: (err) => {
-        console.error("Error details:", err);
-        alert('فشل التعديل: ' + (err.error?.message || 'تأكد من إعدادات السيرفر'));
-      }
-    });
-  } else {
-    this.apiService.postAuction(requestData).subscribe({
-      next: () => this.handleSuccess('تمت الإضافة بنجاح'),
-      error: (err) => console.error(err)
-    });
-  }
-}
-
-  private handleSuccess(msg: string) {
-    alert(msg);
-    this.loadActiveAuctions();
-    this.closeModal();
-  }
-
-  // --- جلب البيانات والتايمر ---
-loadActiveAuctions() {
-  // نرسل الـ ID الخاص بالدولة المختارة حالياً
-  this.apiService.getActiveAuctionRooms(this.selectedCountry.id, 0).subscribe((res: any) => {
-    this.activeAuctions = (res || []).map((item: any) => ({
-      ...item,
-      // البيانات الأساسية من السيرفر
-      officialPrice: item.product?.price || 0,
-      currency: item.product?.currency || this.selectedCountry?.currency || 'EGP',
-
-      img: item.product?.imageUrl || 'assets/placeholder.png',
-      startPrice: item.startPoints || 0,
-      targetPrice: item.limited || 0, // السيرفر يرسلها باسم limited
-      totalPoints: item.currentHighestBid || item.startPoints || 0,
-
-      // منطق الوقت والمزايد
-      timeLeft: this.calculateSeconds(item.endTime),
-      lastBidder: {
-        name: item.highestBidderName || 'لا يوجد مزايد'
-      }
-    }));
-  });
-}
-
-loadAllProducts() {
-  this.apiService.getProducts().subscribe(res => {
-    // تأكد أن res هي المصفوفة، إذا كانت داخل كائن (مثلاً res.data) قم بتغييرها
-    this.allProducts = Array.isArray(res) ? res : (res.data || []);
-    console.log('Products Loaded:', this.allProducts); // للتأكد في الكونسول
-  });
-}
 
   closeModal() { this.showAddModal = false; this.resetForm(); }
 
-resetForm() {
-  this.newAuctionObj = { id: null, name: '', productId: null, startPoints: 0, targetPoints: 0, startTime: '', endTime: '', img: '' };
-  this.searchTerm = '';
-  this.selectedFile = null; // مهم جداً
-}
-
-refreshCountryAndData() {
-  const data = localStorage.getItem('selected_country');
-  const newCountry = data ? JSON.parse(data) : { id: 3, name: 'مصر' };
-
-  // طلب البيانات فقط إذا تغير رقم الدولة عن القيمة الموجودة حالياً
-  if (!this.selectedCountry || this.selectedCountry.id !== newCountry.id) {
-    this.selectedCountry = newCountry;
-    this.loadActiveAuctions(); // طلب البيانات فوراً عند التغيير
-    console.log('Country changed, loading data for:', this.selectedCountry.name);
-  }
-}
-
-  private calculateSeconds(endTime: string): number {
-    const diff = new Date(endTime).getTime() - new Date().getTime();
-    return diff > 0 ? Math.floor(diff / 1000) : 0;
+  resetForm() {
+    this.newAuctionObj = { id: null, name: '', productId: null, startPoints: 0, targetPoints: 0, startTime: '', endTime: '', img: '' };
+    this.searchTerm = '';
+    this.selectedFile = null;
   }
 
-  getTimeParts(s: number) {
-    if (s <= 0) return { d: 0, h: '00', m: '00', s: '00' };
-    return {
-      d: Math.floor(s / 86400),
-      h: Math.floor((s % 86400) / 3600).toString().padStart(2, '0'),
-      m: Math.floor((s % 3600) / 60).toString().padStart(2, '0'),
-      s: (s % 60).toString().padStart(2, '0')
-    };
+  private refreshCountryAndData() {
+    const data = localStorage.getItem('selected_country');
+    if (data) {
+      const country = JSON.parse(data);
+      if (this.selectedCountry.id !== country.id) {
+        this.selectedCountry = country;
+        this.loadData();
+      }
+    }
   }
 
-  startCountdown() {
-    this.timerInterval = setInterval(() => {
-      this.activeAuctions.forEach(item => { if (item.timeLeft > 0) item.timeLeft--; });
-    }, 1000);
-  }
-
-  setupStorageWatcher() {
-    this.storageCheckInterval = setInterval(() => this.refreshCountryAndData(), 1000);
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.el.nativeElement.contains(event.target)) this.showDropdown = false;
   }
 
   ngOnDestroy() {
     clearInterval(this.timerInterval);
-    clearInterval(this.storageCheckInterval);
-  }
-
-  onFileSelected(event: any) {
-  const file = event.target.files[0];
-  if (file) {
-    this.selectedFile = file;
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.newAuctionObj.img = reader.result as string; // للمعاينة الفورية
-    };
-    reader.readAsDataURL(file);
+    clearInterval(this.storageInterval);
   }
 }
-
-
-  loadMore() {
-
-    this.itemsToShow += 4;
-  }
-
-}
-

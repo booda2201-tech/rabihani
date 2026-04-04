@@ -31,10 +31,8 @@ export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadData();
     this.startCountdown();
 
-    // مراقبة تغيير الدولة لتحديث البيانات دون تجميد الصفحة
-    // نستخدم التحديث اليدوي فقط عند الحاجة
     this.timerInterval = setInterval(() => {
-       this.refreshFiltering();
+        this.refreshFiltering();
     }, 1000);
   }
 
@@ -54,36 +52,63 @@ export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   // دالة واحدة لفلترة البيانات بدلاً من الـ Getters المتكررة
-  refreshFiltering() {
-    const country = this.dashboard.selectedCountry();
+refreshFiltering() {
+  const country = this.dashboard.selectedCountry();
+  if (!country || !country.id || !this.allAuctions.length) return;
 
-      if (!country || !country.name || !this.allAuctions || this.allAuctions.length === 0) {
-        return;
-      }
+  const countryId = country.id;
+  const now = new Date().getTime(); // الوقت الحالي بالملي ثانية
 
-    const countryId = country.id;
+  // 1. المزادات النشطة
+  this.activeAuctionsList = this.allAuctions
+    .filter(a => {
+      const startTime = new Date(a.startTime).getTime();
+      const endTime = new Date(a.endTime).getTime();
+      const currentPoints = a.currentHighestBid || a.startPoints || 0;
+      const targetPoints = a.limited || 0;
 
-    this.activeAuctionsList = this.allAuctions
-      .filter(a => a.countryId === countryId && a.status === 1)
-      .map(a => this.mapToUI(a));
+      const isStarted = now >= startTime;
+      const isNotEnded = now < endTime;
+      const isTargetNotReached = targetPoints === 0 || currentPoints < targetPoints;
 
-    this.upcomingAuctionsList = this.allAuctions
-      .filter(a => a.countryId === countryId && a.status === 0)
-      .map(a => this.mapToUI(a));
+      return a.countryId === countryId &&
+              (a.status === 1 || (a.status === 0 && isStarted)) &&
+              isNotEnded &&
+              isTargetNotReached; // يختفي من النشطة لو وصل للمستهدف
+    })
+    .map(a => this.mapToUI(a));
 
-    this.finishedAuctionsList = this.allAuctions
-      .filter(a => a.countryId === countryId && a.status === 2)
-      .map(item => ({
-        ...this.mapToUI(item),
-        winner: item.winner ? {
-          name: item.winner.userName || 'مستخدم غير معروف',
-          avatar: item.winner.userName ? item.winner.userName[0] : 'W',
-          winningPoints: item.winner.winningPoints
-        } : null
-      }));
+  // 2. المزادات القادمة
+  this.upcomingAuctionsList = this.allAuctions
+    .filter(a => {
+      const startTime = new Date(a.startTime).getTime();
+      return a.countryId === countryId && a.status === 0 && now < startTime;
+    })
+    .map(a => this.mapToUI(a));
 
-    this.cdr.detectChanges();
-  }
+  // 3. المزادات المنتهية
+  this.finishedAuctionsList = this.allAuctions
+    .filter(a => {
+      const endTime = new Date(a.endTime).getTime();
+      const currentPoints = a.currentHighestBid || a.startPoints || 0;
+      const targetPoints = a.limited || 0;
+
+      const isTimeOver = now >= endTime;
+      const isTargetReached = targetPoints > 0 && currentPoints >= targetPoints;
+
+      return a.countryId === countryId && (a.status === 2 || isTimeOver || isTargetReached);
+    })
+    .map(item => ({
+      ...this.mapToUI(item),
+      winner: item.winner ? {
+        name: item.winner.userName || 'مستخدم غير معروف',
+        avatar: item.winner.userName ? item.winner.userName[0] : 'W',
+        winningPoints: item.winner.winningPoints
+      } : null
+    }));
+
+  this.cdr.detectChanges();
+}
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -96,37 +121,31 @@ export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  submitUpdate() {
-    if (!this.selectedAuction || !this.selectedAuction.id) return;
-    this.isLoading = true;
+submitUpdate() {
+  if (!this.selectedAuction || !this.selectedAuction.id) return;
+  this.isLoading = true;
 
-    const payload = {
-      id: this.selectedAuction.id,
-      roomName: this.selectedAuction.name,
-      productId: this.selectedAuction.productId || this.selectedAuction.product?.id,
-      startPoints: Number(this.selectedAuction.startPoints),
-      startTime: new Date(this.selectedAuction.startTime).toISOString(),
-      endTime: new Date(this.selectedAuction.endTime).toISOString(),
-      limited: Number(this.selectedAuction.targetPoints),
-      countryId: this.selectedAuction.countryId
-    };
+  const payload = {
+    id: this.selectedAuction.id,
+    roomName: this.selectedAuction.name,
+    productId: this.selectedAuction.productId || this.selectedAuction.product?.id,
+    startPoints: Number(this.selectedAuction.startPoints),
+    startTime: this.selectedAuction.startTime,
+    endTime: this.selectedAuction.endTime,
+    limited: Number(this.selectedAuction.targetPoints),
+    countryId: this.selectedAuction.countryId
+  };
 
-    this.apiService.updateAuctionRoom(this.selectedAuction.id, payload).subscribe({
-      next: (res) => {
-        const index = this.allAuctions.findIndex(a => a.id === payload.id);
-        if (index !== -1) {
-          this.allAuctions[index] = { ...this.allAuctions[index], ...payload, name: payload.roomName };
-          this.refreshFiltering();
-        }
-        this.closeModal();
-        alert('تم حفظ التعديلات بنجاح');
-      },
-      error: (err) => {
-        alert(err.error?.message || 'خطأ في التحديث (400)');
-      },
-      complete: () => this.isLoading = false
-    });
-  }
+  this.apiService.updateAuctionRoom(this.selectedAuction.id, payload).subscribe({
+    next: (res) => {
+      this.loadData();
+      this.closeModal();
+      alert('تم تحديث المزاد بنجاح');
+    },
+    error: (err) => alert('خطأ في التحديث'),
+    complete: () => this.isLoading = false
+  });
+}
 
   private mapToUI(item: any) {
     return {
@@ -172,11 +191,13 @@ export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
     document.body.style.overflow = 'auto';
   }
 
-  private calculateSeconds(endTime: string): number {
-    if (!endTime) return 0;
-    const diff = Math.floor((new Date(endTime).getTime() - new Date().getTime()) / 1000);
-    return diff > 0 ? diff : 0;
-  }
+private calculateSeconds(endTime: string): number {
+  if (!endTime) return 0;
+  const end = new Date(endTime).getTime();
+  const now = new Date().getTime();
+  const diff = Math.floor((end - now) / 1000);
+  return diff > 0 ? diff : 0;
+}
 
   private startCountdown() {
     // تم دمج التحديث داخل setInterval الموجود في ngOnInit
