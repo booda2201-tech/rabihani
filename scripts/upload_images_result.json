@@ -1,0 +1,25 @@
+{
+  "uploaded_ok": 47,
+  "failed": [
+    {
+      "id": 5,
+      "name": "Xiaomi Redmi Note 14 256GB",
+      "error": "no image found"
+    },
+    {
+      "id": 24,
+      "name": "Honor X8c 256GB",
+      "error": "no image found"
+    },
+    {
+      "id": 58,
+      "name": "Philips Air Fryer 6.2L",
+      "error": "no image found"
+    }
+  ],
+  "still_tiny_or_missing": [
+    "Honor X8c 256GB",
+    "Philips Air Fryer 6.2L"
+  ],
+  "total": 45
+}

@@ -1,0 +1,49 @@
+{
+  "products_1_4_10_still_exist": [],
+  "created": [
+    {
+      "id": 114,
+      "name": "Samsung Galaxy A26 5G 128GB",
+      "productId": 2,
+      "countryId": 3,
+      "startPoints": 100,
+      "limited": 2000,
+      "startTime": "2026-09-16T16:23:45Z",
+      "endTime": "2026-09-19T16:22:45Z",
+      "status": 0
+    },
+    {
+      "id": 115,
+      "name": "Samsung Galaxy M55 5G 128GB",
+      "productId": 3,
+      "countryId": 3,
+      "startPoints": 200,
+      "limited": 5000,
+      "startTime": "2026-09-16T16:23:45Z",
+      "endTime": "2026-09-19T16:22:45Z",
+      "status": 0
+    },
+    {
+      "id": 116,
+      "name": "Xiaomi Redmi Note 14 Pro 256GB",
+      "productId": 6,
+      "countryId": 3,
+      "startPoints": 150,
+      "limited": 3000,
+      "startTime": "2026-09-16T16:23:45Z",
+      "endTime": "2026-09-19T16:22:45Z",
+      "status": 0
+    },
+    {
+      "id": 117,
+      "name": "OPPO A5 Pro 256GB",
+      "productId": 9,
+      "countryId": 3,
+      "startPoints": 250,
+      "limited": 8000,
+      "startTime": "2026-09-16T16:23:45Z",
+      "endTime": "2026-09-19T16:22:45Z",
+      "status": 0
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "stopped_and_deleted_auctions": [
+    101,
+    102,
+    103,
+    104,
+    105
+  ],
+  "deleted_products": [
+    1,
+    4,
+    5,
+    10,
+    15
+  ],
+  "created_auctions": [
+    {
+      "id": 106,
+      "name": "Samsung Galaxy A16 128GB",
+      "countryId": 3,
+      "productId": 1,
+      "startTime": "2026-09-16T16:20:43Z",
+      "endTime": "2026-09-19T16:19:43Z",
+      "startPoints": 100,
+      "limited": 2000,
+      "status": 0
+    },
+    {
+      "id": 107,
+      "name": "Samsung Galaxy A26 5G 128GB",
+      "countryId": 3,
+      "productId": 2,
+      "startTime": "2026-09-16T16:20:43Z",
+      "endTime": "2026-09-19T16:19:43Z",
+      "startPoints": 200,
+      "limited": 5000,
+      "status": 0
+    },
+    {
+      "id": 108,
+      "name": "Samsung Galaxy M55 5G 128GB",
+      "countryId": 3,
+      "productId": 3,
+      "startTime": "2026-09-16T16:20:43Z",
+      "endTime": "2026-09-19T16:19:43Z",
+      "startPoints": 150,
+      "limited": 3000,
+      "status": 0
+    },
+    {
+      "id": 109,
+      "name": "Samsung Galaxy A36 5G 128GB",
+      "countryId": 3,
+      "productId": 4,
+      "startTime": "2026-09-16T16:20:43Z",
+      "endTime": "2026-09-19T16:19:43Z",
+      "startPoints": 250,
+      "limited": 8000,
+      "status": 0
+    }
+  ],
+  "active_now_total": 0,
+  "egypt_active_or_upcoming": [
+    {
+      "id": 106,
+      "name": "Samsung Galaxy A16 128GB",
+      "status": 0
+    },
+    {
+      "id": 107,
+      "name": "Samsung Galaxy A26 5G 128GB",
+      "status": 0
+    },
+    {
+      "id": 108,
+      "name": "Samsung Galaxy M55 5G 128GB",
+      "status": 0
+    },
+    {
+      "id": 109,
+      "name": "Samsung Galaxy A36 5G 128GB",
+      "status": 0
+    }
+  ]
+}
