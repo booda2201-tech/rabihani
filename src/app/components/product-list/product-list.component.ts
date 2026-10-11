@@ -97,6 +97,16 @@ newProduct: any = {
   filterSortBy: string = 'newest';
   filterDateFrom: string = '';
   filterDateTo: string = '';
+  isSortMenuOpen = false;
+  sortOptions = [
+    { value: 'newest', label: 'الأحدث', hint: 'آخر المنتجات المضافة', icon: 'bi bi-stars', tone: 'tone-new' },
+    { value: 'price-high', label: 'الأعلى سعراً', hint: 'من الأغلى إلى الأقل', icon: 'bi bi-graph-up-arrow', tone: 'tone-high' },
+    { value: 'price-low', label: 'الأقل سعراً', hint: 'من الأرخص إلى الأغلى', icon: 'bi bi-graph-down-arrow', tone: 'tone-low' },
+  ];
+
+  // --- ترقيم الصفحات ---
+  pageSize = 8;
+  currentPage = 1;
 
   constructor(private apiService: ApiService,
     private cdr: ChangeDetectorRef
@@ -177,7 +187,71 @@ applyFilters() {
   }
 
   this.filteredProducts = list;
+  this.currentPage = 1;
   this.calculateInventoryValue();
+}
+
+get totalPages(): number {
+  return Math.max(1, Math.ceil(this.filteredProducts.length / this.pageSize));
+}
+
+get pagedProducts(): any[] {
+  const start = (this.currentPage - 1) * this.pageSize;
+  return this.filteredProducts.slice(start, start + this.pageSize);
+}
+
+get currentSortLabel(): string {
+  return this.sortOptions.find(o => o.value === this.filterSortBy)?.label || 'الأحدث';
+}
+
+toggleSortMenu(event: Event) {
+  event.stopPropagation();
+  this.isSortMenuOpen = !this.isSortMenuOpen;
+}
+
+selectSort(value: string) {
+  this.filterSortBy = value;
+  this.isSortMenuOpen = false;
+  this.applyFilters();
+}
+
+get pageStart(): number {
+  if (!this.filteredProducts.length) return 0;
+  return (this.currentPage - 1) * this.pageSize + 1;
+}
+
+get pageEnd(): number {
+  return Math.min(this.currentPage * this.pageSize, this.filteredProducts.length);
+}
+
+get visiblePages(): (number | string)[] {
+  const total = this.totalPages;
+  const current = this.currentPage;
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const pages: (number | string)[] = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  if (start > 2) pages.push('...');
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push('...');
+  pages.push(total);
+  return pages;
+}
+
+goToPage(page: number | string) {
+  if (typeof page !== 'number') return;
+  if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+  this.currentPage = page;
+  this.scrollProductsIntoView();
+}
+
+private scrollProductsIntoView() {
+  const el = document.querySelector('.data-card');
+  el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 
@@ -440,6 +514,14 @@ openEditModal(product: any) {
     if (event.key === 'selected_country' && event.newValue) {
       this.selectedCountry.set(JSON.parse(event.newValue));
       this.applyFilters();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeSortMenu(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.custom-sort')) {
+      this.isSortMenuOpen = false;
     }
   }
 

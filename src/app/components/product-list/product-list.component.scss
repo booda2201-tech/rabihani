@@ -14,9 +14,8 @@ $border-color: #e2e8f0;
 // --- التعديل الخاص بحجم الشاشة وتوسيط المحتوى ---
 .app-main-content {
   direction: rtl;
-  // background: #f1f5f9;
-  min-height: 100vh;
-  padding: 20px;
+  min-height: auto;
+  padding: 0;
   max-width: 1500px;
   margin: auto;
   width: 100%;
@@ -149,13 +148,16 @@ body {
   background: #fff;
   border-radius: 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  overflow: visible;
   margin-top: 20px;
 
   .card-header-modern {
     padding: 24px;
     background: #fff;
     border-bottom: 1px solid #f1f5f9;
+    position: relative;
+    z-index: 40;
+    overflow: visible;
 
     .header-main-row {
       display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
@@ -469,9 +471,8 @@ $border-color: #e2e8f0;
 
 .app-main-content {
   direction: rtl;
-  // background: #f1f5f9;
-  min-height: 100vh;
-  padding: 20px;
+  min-height: auto;
+  padding: 0;
   max-width: 1500px;
   margin: auto;
   width: 100%;
@@ -535,7 +536,7 @@ body {
 // ======================================================
 
 @media (max-width: 768px) {
-  .app-main-content { padding: 12px; }
+  .app-main-content { padding: 0; }
 
   // 1. الإحصائيات: شبكة متناسقة 2x2 لتوفير المساحة
   .stats-container {
@@ -1004,10 +1005,11 @@ $text-muted: #64748b;
   }
 
   .filters-group {
-    flex: 3; // بياخد باقي المساحة ويوزع الفلاتر فيها
+    flex: 0 0 auto;
+    width: auto;
     display: flex;
     gap: 10px;
-    justify-content: flex-end; // بيخلي الفلاتر تترص ناحية الشمال (عشان إحنا RTL)
+    justify-content: flex-end;
 
     .filter-item {
       background: #ffffff;
@@ -1042,6 +1044,222 @@ $text-muted: #64748b;
   }
 }
 
+.custom-sort {
+  position: relative;
+  z-index: 30;
+  width: 240px;
+  max-width: 100%;
+  flex: 0 0 auto;
+
+  .sort-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #fff;
+    color: #1e293b;
+    cursor: pointer;
+    text-align: right;
+    font-family: inherit;
+    appearance: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .sort-icon-wrap {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #fff;
+    font-size: 1rem;
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.28);
+  }
+
+  .sort-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    flex: 1;
+    min-width: 0;
+
+    small {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.02em;
+    }
+
+    strong {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #1e293b;
+      line-height: 1.2;
+    }
+  }
+
+  .sort-chevron {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  &:hover .sort-trigger {
+    border-color: #c7d2fe;
+    box-shadow: 0 10px 24px rgba(99, 102, 241, 0.12);
+  }
+
+  &.open {
+    z-index: 80;
+
+    .sort-trigger {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+    }
+
+    .sort-chevron {
+      transform: rotate(180deg);
+      color: #6366f1;
+    }
+  }
+
+  .sort-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    width: auto;
+    min-width: 240px;
+    z-index: 90;
+    padding: 10px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.16);
+    overflow: hidden;
+    transform-origin: top right;
+    animation: sortDropIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sort-menu-glow {
+    position: absolute;
+    top: -40px;
+    right: -20px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  .sort-menu-title {
+    margin: 4px 8px 10px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #94a3b8;
+  }
+
+  .sort-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    margin-bottom: 4px;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: #334155;
+    cursor: pointer;
+    text-align: right;
+    font-family: inherit;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &:last-child { margin-bottom: 0; }
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    &.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.08));
+
+      .opt-text strong { color: #4f46e5; }
+      .opt-check { opacity: 1; transform: scale(1); }
+    }
+  }
+
+  .opt-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 1rem;
+
+    &.tone-new {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+
+    &.tone-high {
+      background: #ecfdf5;
+      color: #059669;
+    }
+
+    &.tone-low {
+      background: #fff7ed;
+      color: #ea580c;
+    }
+  }
+
+  .opt-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    flex: 1;
+
+    strong {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    small {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+  }
+
+  .opt-check {
+    color: #6366f1;
+    font-size: 1.05rem;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: 0.2s ease;
+  }
+}
+
+@keyframes sortDropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 // تحسين للموبايل عشان ميبقاش فيه فراغات
 @media (max-width: 992px) {
   .filters-group {
@@ -1054,14 +1272,14 @@ $text-muted: #64748b;
   }
 }
 .stats-container {
-
   .stat-box {
-    height: 120px; // تقليل الارتفاع قليلاً ليكون أكثر رشاقة
+    height: auto;
+    min-height: 104px;
   }
 }
 .modern-table {
   th, td {
-    padding: 12px 15px; // تقليل الـ padding الرأسي قليلاً
+    padding: 10px 14px;
   }
 
   // تخصيص عرض الأعمدة
@@ -1086,17 +1304,23 @@ $text-muted: #64748b;
     }
 
     .filters-group {
-      display: contents; // لفك الحاوية وتوزيع العناصر داخل الـ grid الأساسي
+      display: contents;
 
-      .filter-item {
+      .filter-item,
+      .custom-sort {
         justify-content: center;
-        height: 45px;
-        width: 100%; // تأخذ نصف العرض المخصص لها
+        width: 100%;
         margin: 0;
+        min-width: 0;
+      }
 
-        select {
+      .custom-sort {
+        grid-column: span 2;
+
+        .sort-menu {
           width: 100%;
-          text-align: center;
+          right: 0;
+          left: 0;
         }
       }
     }
@@ -1186,8 +1410,8 @@ swiper-container{
   gap: 12px;
 
   .table-product-img {
-    width: 100px;
-    height: 105px;
+    width: 72px;
+    height: 72px;
     border-radius: 8px;
     object-fit: cover; // لضمان عدم تمدد الصورة بشكل سيء
     background: #f0f0f0;
@@ -1461,13 +1685,15 @@ $text-main: #ffffff;
   border: 1px solid $figma-border !important;
   border-radius: 24px !important;
   color: $text-main !important;
-  overflow: hidden;
+  overflow: visible;
 
   // ظبط الجزء العلوي اللي فيه البحث والفلترة (Toolbar)
   .card-header-modern {
     background: rgba(0, 0, 0, 0.2) !important; // أغمق سنة من الكارت لتمييزه
     border-bottom: 1px solid $figma-border !important;
     padding: 20px !important;
+    overflow: visible !important;
+    z-index: 40;
 
     .section-title h2 {
       color: white !important;
@@ -1493,6 +1719,50 @@ $text-main: #ffffff;
       border: 1px solid $figma-border !important;
       label { color: #94a3b8 !important; }
       input { color: white !important; color-scheme: dark; } // يخلي أيقونة النتيجة داكنة
+    }
+
+    .custom-sort {
+      .sort-trigger {
+        background: rgba($figma-bg, 0.55);
+        border-color: $figma-border;
+        color: #fff;
+      }
+
+      .sort-copy small { color: #94a3b8; }
+      .sort-copy strong { color: #fff; }
+      .sort-chevron { color: #94a3b8; }
+
+      &:hover .sort-trigger {
+        border-color: rgba(99, 102, 241, 0.55);
+        box-shadow: 0 10px 24px rgba(99, 102, 241, 0.18);
+      }
+
+      &.open .sort-trigger {
+        border-color: #6366f1;
+        background: rgba(99, 102, 241, 0.12);
+      }
+
+      .sort-menu {
+        background: rgba(15, 23, 42, 0.96);
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
+      }
+
+      .sort-menu-title { color: #94a3b8; }
+
+      .sort-option {
+        color: #e2e8f0;
+
+        &:hover { background: rgba(255, 255, 255, 0.05); }
+
+        &.active {
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(168, 85, 247, 0.12));
+          .opt-text strong { color: #c7d2fe; }
+        }
+      }
+
+      .opt-text strong { color: #f8fafc; }
+      .opt-text small { color: #94a3b8; }
     }
   }
 }
@@ -2170,7 +2440,7 @@ $red-btn: #ef4444;
   display: flex;
   gap: 12px;
   direction: rtl;
-  width: 100%;
+  width: auto;
 }
 
 
@@ -2203,21 +2473,13 @@ $red-btn: #ef4444;
     width: 75px;
   }
 
-  .filter-item {
-    height: 48px;
-    display: flex;
-    align-items: center;
-    background: #1e293b;
-    border-radius: 8px;
-    padding: 0 10px;
+  .filter-item,
+  .custom-sort {
+    width: 100%;
   }
 
-  .filter-item select {
-    width: 100%;
-    background: transparent;
-    border: none;
-    color: white;
-    padding: 5px;
+  .custom-sort .sort-trigger {
+    height: 52px;
   }
 }
 
@@ -2323,7 +2585,7 @@ $red-btn: #ef4444;
     height: 60px;
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     overflow: hidden;
     border-radius: 12px; // أو 50% لشكل دائري
     // background: #f8f9fa;
@@ -2710,6 +2972,96 @@ $red-btn: #ef4444;
 @media (max-width: 767px) {
   .modal-footer-modern {
     padding: 0 5px; /* شوية مارجن داخلي بسيط في الموبايل */
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.product-info-with-img strong {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.categories-main-wrapper {
+  height: auto;
+  min-height: 120px;
+  margin: 4px 0 18px;
+}
+
+.products-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 18px 22px 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  .pagination-meta {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .pagination-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .page-tab,
+  .page-nav {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: #e2e8f0;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s ease;
+
+    &:hover:not(:disabled):not(.ellipsis) {
+      border-color: #3b82f6;
+      color: #fff;
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    &.active {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.28);
+    }
+
+    &.ellipsis,
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .products-pagination {
+    justify-content: center;
+    text-align: center;
+
+    .pagination-meta {
+      width: 100%;
+    }
+
+    .pagination-tabs {
+      justify-content: center;
+    }
   }
 }
 

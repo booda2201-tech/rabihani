@@ -26,7 +26,7 @@
       <div class="swiper-slide points-summary-card warning-card">
         <div class="card-content">
           <div class="text-side">
-            <span>مزادات قادمة ({{ dashboard.selectedCountry()?.code || '' }})</span>
+            <span>مزادات قادمة في {{ dashboard.selectedCountry()?.name || '...' }}</span>
             <h2>{{ upcomingAuctionsList.length || 0 }} <small>منتج</small></h2>
           </div>
           <div class="pulse-circle"><i class="bi bi-calendar-event"></i></div>

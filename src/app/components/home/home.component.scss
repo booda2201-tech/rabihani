@@ -13,7 +13,7 @@ $text-dark: #1e293b;
 .home-wrapper {
   max-width: 1500px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0;
 }
 
 // --- كارت الرصيد (الهيدر) ---
@@ -1052,8 +1052,8 @@ $figma-border: rgba(255, 255, 255, 0.08);
         min-width: 38px;
         text-align: center;
         border: 1px solid rgba(255,255,255,0.05);
-        strong { display: block; color: #fff; font-size: 0.85rem; line-height: 1.2; }
-        span { display: block; color: #718096; font-size: 0.55rem; text-transform: uppercase; }
+        strong { display: block; color: #fff; font-size: 0.9rem; line-height: 1.2; }
+        span { display: block; color: #94a3b8; font-size: 0.65rem; text-transform: uppercase; }
       }
     }
 }
@@ -1319,6 +1319,22 @@ $text-gray: #94a3b8;
   margin: 40px auto;
   max-width: 600px;
   backdrop-filter: blur(10px); // تأثير زجاجي ناعم
+
+  > i {
+    font-size: 3.4rem;
+    color: #60a5fa;
+    margin-bottom: 16px;
+  }
+
+  .btn-add-auction {
+    margin-top: 20px;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 20px;
+    font-weight: 700;
+  }
 
   img {
     width: 220px;

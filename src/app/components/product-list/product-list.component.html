@@ -93,13 +93,37 @@
       </div>
 
       <div class="filters-group">
-        <div class="filter-item">
-          <i class="bi bi-sort-down"></i>
-              <select [(ngModel)]="filterSortBy" (change)="applyFilters()">
-                <option class="text-black" value="newest">الأحدث</option>
-                <option class="text-black" value="price-high">الأعلى سعراً</option>
-                <option class="text-black" value="price-low">الأقل سعراً</option>
-              </select>
+        <div class="custom-sort" [class.open]="isSortMenuOpen">
+          <button type="button" class="sort-trigger" (click)="toggleSortMenu($event)">
+            <span class="sort-icon-wrap">
+              <i class="bi bi-sort-down"></i>
+            </span>
+            <span class="sort-copy">
+              <small>ترتيب حسب</small>
+              <strong>{{ currentSortLabel }}</strong>
+            </span>
+            <i class="bi bi-chevron-down sort-chevron"></i>
+          </button>
+
+          <div class="sort-menu" *ngIf="isSortMenuOpen" (click)="$event.stopPropagation()">
+            <div class="sort-menu-glow"></div>
+            <p class="sort-menu-title">اختر طريقة الترتيب</p>
+            <button
+              type="button"
+              class="sort-option"
+              *ngFor="let opt of sortOptions"
+              [class.active]="filterSortBy === opt.value"
+              (click)="selectSort(opt.value)">
+              <span class="opt-icon" [ngClass]="opt.tone">
+                <i [class]="opt.icon"></i>
+              </span>
+              <span class="opt-text">
+                <strong>{{ opt.label }}</strong>
+                <small>{{ opt.hint }}</small>
+              </span>
+              <i class="bi bi-check-lg opt-check" *ngIf="filterSortBy === opt.value"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -116,7 +140,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let p of filteredProducts">
+      <tr *ngFor="let p of pagedProducts">
         <td class="product-cell">
           <div class="product-info-with-img">
             <img [src]="p.imageUrl || 'assets/placeholder-product.png'" class="table-product-img" alt="">
@@ -150,7 +174,7 @@
 </div>
 
 <div class="mobile-cards d-md-none">
-  <div class="p-card" *ngFor="let p of filteredProducts">
+  <div class="p-card" *ngFor="let p of pagedProducts">
     <div class="card-header-flex">
       <img [src]="p.imageUrl || 'assets/placeholder-product.png'" class="mobile-product-img" alt="">
       <div class="name-section m-auto">
@@ -185,6 +209,43 @@
     </div>
   </div>
 </div>
+
+  <div class="products-pagination" *ngIf="filteredProducts.length">
+    <div class="pagination-meta">
+      عرض {{ pageStart }}–{{ pageEnd }} من {{ filteredProducts.length }} منتج
+    </div>
+
+    <div class="pagination-tabs" *ngIf="totalPages > 1">
+      <button
+        type="button"
+        class="page-nav"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+        title="الصفحة السابقة">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+
+      <button
+        type="button"
+        class="page-tab"
+        *ngFor="let page of visiblePages"
+        [class.active]="page === currentPage"
+        [class.ellipsis]="page === '...'"
+        [disabled]="page === '...'"
+        (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+      <button
+        type="button"
+        class="page-nav"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+        title="الصفحة التالية">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+    </div>
+  </div>
 
 </div>
 </main>

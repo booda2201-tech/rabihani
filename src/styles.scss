@@ -47,14 +47,33 @@ $rabihani-theme: mat.define-light-theme((
 
 html, body {
   height: 100%;
+  background: #0a0e17;
 }
 
 body {
   max-width: 1920px;
-  // background: #0f172a;
   margin: auto;
-  font-family: 'Almarai', Arial, Helvetica, sans-serif;
+  font-family: 'Cairo', 'Tajawal', Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  color: #e2e8f0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0e17;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.55);
 }
 
 
@@ -88,7 +107,7 @@ body {
   --bg-light: #f8f9fc;
 }
 
-body { background-color: var(--bg-light); font-family: 'Tajawal', sans-serif; }
+body { background-color: #0a0e17; font-family: 'Cairo', 'Tajawal', sans-serif; }
 
 .dashboard-wrapper {
   display: flex;

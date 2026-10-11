@@ -1,7 +1,8 @@
 
-
-
-
+<div class="details-loading" *ngIf="!product()">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p>جاري تحميل تفاصيل المزاد...</p>
+</div>
 
 <div class="details-wrapper" dir="rtl" *ngIf="product() as p">
 
@@ -60,7 +61,7 @@
             <i class="bi bi-tag-fill"></i>
             <div class="target-text">
               <small>سعر المنتج</small>
-              <strong>{{ p.product.price | number }} <span class="unit">نقطة</span></strong>
+              <strong>{{ p.product.price | number }} <span class="unit">{{ p.product.currency || 'جنيه' }}</span></strong>
             </div>
           </div>
         </div>
@@ -72,8 +73,8 @@
 
       <div class="text-content">
         <h1>{{ p.name }}</h1>
-        <h3 class="product-subname">{{ p.product.name }}</h3>
-        <p class="description">{{ p.product.description }}</p>
+        <h3 class="product-subname" *ngIf="p.product?.name && p.product.name !== p.name">{{ p.product.name }}</h3>
+        <p class="description" *ngIf="hasUsefulDescription(p.product?.description)">{{ p.product.description }}</p>
 
         <div class="stats-row">
           <div class="stat-item">
@@ -128,7 +129,8 @@
           </div>
 
           <div class="empty-state" *ngIf="p.bids.length === 0">
-              <p class="text-white text-center py-4">لا توجد مزايدات حتى الآن</p>
+              <i class="bi bi-inbox"></i>
+              <p>لا توجد مزايدات حتى الآن</p>
           </div>
         </div>
       </div>

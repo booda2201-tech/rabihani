@@ -23,7 +23,7 @@ $border-light: rgba(255, 255, 255, 0.05);
 
 .home-wrapper {
   max-width: 1500px; margin: 0 auto;
-  padding: 20px;
+  padding: 0;
 }
 
 
@@ -1152,22 +1152,30 @@ $figma-border: rgba(255, 255, 255, 0.08);
 }
 
 /* الشاشات الكبيرة (Desktop) - العودة للوضع الأصلي */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .stats-swiper-mobile {
     padding: 0;
 
     .swiper-wrapper {
-      display: grid !important; /* تحويله لشبكة */
-      grid-template-columns: repeat(3, 1fr) !important; /* 3 أعمدة متساوية */
-      gap: 20px !important;
-      transform: none !important; /* إلغاء أي حركة من Swiper */
+      display: grid !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      gap: 14px !important;
+      transform: none !important;
       width: 100% !important;
     }
 
     .swiper-slide {
-      width: 100% !important; /* الكارت يملأ العمود الخاص به */
+      width: 100% !important;
       margin: 0 !important;
     }
+  }
+
+  .points-summary-card {
+    min-width: 0;
+    padding: 18px;
+
+    h2 { font-size: 1.6rem; }
+    span { font-size: 0.82rem; }
   }
 }
 

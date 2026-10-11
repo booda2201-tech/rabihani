@@ -1,6 +1,6 @@
 
 
-<main class="main-content container-fluid p-4 p-md-5">
+<main class="main-content container-fluid px-0 py-1">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
       <h1 class="page-title">إدارة الدول</h1>
@@ -16,7 +16,7 @@
     <div class="category-item shadow-sm" *ngFor="let cat of countries; let i = index">
       <div class="cat-info">
         <h3>{{cat.name}}</h3>
-        <span class="currency-badge"><i class="bi bi-cash me-1"></i> {{cat.currency}}</span>
+        <span class="currency-badge"><i class="bi bi-cash"></i> {{cat.currency}}</span>
       </div>
       <div class="cat-actions d-flex gap-2">
         <button class="btn-action edit" (click)="openModal('edit', cat)" title="تعديل">

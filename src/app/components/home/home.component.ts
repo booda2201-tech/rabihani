@@ -216,6 +216,12 @@ private formatDateForInput(dateStr: string) {
     this.newAuctionObj.img = prod.imageUrl;
     this.searchTerm = prod.name;
     this.showDropdown = false;
+    this.applyProductPoints(prod);
+  }
+
+  private applyProductPoints(prod: any) {
+    const price = Number(prod?.price) || 0;
+    this.newAuctionObj.targetPoints = Math.round(price * 1.3);
   }
 
   onFileSelected(event: any) {

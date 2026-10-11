@@ -83,6 +83,12 @@ startTimer(endTimeStr: string) {
     }, 1000);
   }
 
+  hasUsefulDescription(text?: string): boolean {
+    if (!text?.trim()) return false;
+    const t = text.trim();
+    return !/sku\s*:/i.test(t) && !/\|\s*brand\s*:/i.test(t);
+  }
+
   getRandomColor(name: string): string {
     const colors = ['#f59e0b', '#ec4899', '#8b5cf6', '#10b981', '#3b82f6'];
     let hash = 0;

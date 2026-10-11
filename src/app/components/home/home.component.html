@@ -26,6 +26,7 @@
               <strong>{{ getTimeParts(item.timeLeft).s }}</strong><span> ث </span>
             </div>
           </div>
+          
           <div class="target-price">
             <small>المستهدف</small>
             <span>{{ item.targetPrice | number }} نقطة </span>
@@ -81,9 +82,9 @@
   </div>
 
   <div class="no-data-vibe" *ngIf="activeAuctions.length === 0">
-    <i class="bi bi-search-heart" style="font-size: 4rem; color: #6366f1; margin-bottom: 20px;"></i>
+    <i class="bi bi-search-heart"></i>
     <p>نعتذر، لا توجد مزادات نشطة حالياً في {{ selectedCountry.name }}</p>
-    <button class="btn-add-auction" style="margin-top: 20px; background: #6366f1;" (click)="openAddModal()">
+    <button class="btn-add-auction" (click)="openAddModal()">
         ابدأ بإضافة أول مزاد الآن
     </button>
   </div>
