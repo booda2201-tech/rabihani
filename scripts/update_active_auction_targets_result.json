@@ -1,0 +1,42 @@
+[
+  {
+    "id": 118,
+    "name": "OPPO Reno 13F 256GB",
+    "price": 18500.0,
+    "startPoints": 100,
+    "oldLimited": 2000,
+    "newLimited": 24050,
+    "status": 200,
+    "ok": true
+  },
+  {
+    "id": 119,
+    "name": "Anker Soundcore R50i NC",
+    "price": 1599.0,
+    "startPoints": 200,
+    "oldLimited": 5000,
+    "newLimited": 2079,
+    "status": 200,
+    "ok": true
+  },
+  {
+    "id": 120,
+    "name": "Black+Decker Air Fryer",
+    "price": 5000.0,
+    "startPoints": 150,
+    "oldLimited": 3000,
+    "newLimited": 6500,
+    "status": 200,
+    "ok": true
+  },
+  {
+    "id": 121,
+    "name": "Tornado Microwave 20L",
+    "price": 5000.0,
+    "startPoints": 250,
+    "oldLimited": 8000,
+    "newLimited": 6500,
+    "status": 200,
+    "ok": true
+  }
+]

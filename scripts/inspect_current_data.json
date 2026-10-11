@@ -1,0 +1,679 @@
+{
+  "now": "2026-09-20T07:28:44.279646+00:00",
+  "countries": [
+    {
+      "id": 1,
+      "name": "الكويت",
+      "currency": "KWD"
+    },
+    {
+      "id": 2,
+      "name": "السعودية",
+      "currency": "SAR"
+    },
+    {
+      "id": 3,
+      "name": "مصر",
+      "currency": "جنيه"
+    },
+    {
+      "id": 4,
+      "name": "الإمارات",
+      "currency": "AED"
+    },
+    {
+      "id": 5,
+      "name": "البحرين",
+      "currency": "BHD"
+    },
+    {
+      "id": 6,
+      "name": "عُمان",
+      "currency": "OMR"
+    },
+    {
+      "id": 7,
+      "name": "قطر",
+      "currency": "QAR"
+    },
+    {
+      "id": 8,
+      "name": "الأردن",
+      "currency": "JOD"
+    },
+    {
+      "id": 9,
+      "name": "لبنان",
+      "currency": "LBP"
+    },
+    {
+      "id": 10,
+      "name": "العراق",
+      "currency": "IQD"
+    },
+    {
+      "id": 12,
+      "name": "USA",
+      "currency": "$"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "إلكترونيات",
+      "description": "أجهزة وإكسسوارات إلكترونية",
+      "iconUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1772530328/categories/iaxahidf6u1xxildywb6.png"
+    },
+    {
+      "id": 2,
+      "name": "هواتف ذكية",
+      "description": "موبايلات وتابلت",
+      "iconUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1772530153/categories/ybvik60gns05itehgyyc.png"
+    },
+    {
+      "id": 3,
+      "name": "أزياء وملابس",
+      "description": "ملابس رجالي ونسائي وأطفال",
+      "iconUrl": "https://placehold.co/400x300?text=Image"
+    },
+    {
+      "id": 4,
+      "name": "منزل ومطبخ",
+      "description": "أدوات منزلية ومطبخية",
+      "iconUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1772530708/categories/fzjodg1ntcciwfgojpoh.jpg"
+    },
+    {
+      "id": 5,
+      "name": "رياضة وسباحه",
+      "description": "معدات رياضية وملابس رياضية",
+      "iconUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1772530830/categories/vtjyeeydjfmp7rsskkbb.jpg"
+    },
+    {
+      "id": 6,
+      "name": "ساعات وإكسسوارات",
+      "description": "ساعات ونظارات وإكسسوارات",
+      "iconUrl": "https://placehold.co/400x300?text=Image"
+    },
+    {
+      "id": 7,
+      "name": "كتب ووسائط",
+      "description": "كتب وموسيقى وأفلام",
+      "iconUrl": "https://placehold.co/400x300?text=Image"
+    },
+    {
+      "id": 8,
+      "name": "ألعاب وهوايات",
+      "description": "ألعاب فيديو وهوايات",
+      "iconUrl": "https://placehold.co/400x300?text=Image"
+    },
+    {
+      "id": 9,
+      "name": "سيارات",
+      "description": "قطع غيار وإكسسوارات سيارات",
+      "iconUrl": "https://placehold.co/400x300?text=Image"
+    },
+    {
+      "id": 10,
+      "name": "هدايا وتذكارات",
+      "description": "هدايا وتذكارات ومناسبات",
+      "iconUrl": "https://placehold.co/400x300?text=Image"
+    },
+    {
+      "id": 24,
+      "name": "ترند",
+      "description": "بيايسااتس",
+      "iconUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1772526574/categories/cfrgh41wro1zxhz9owvw.png"
+    }
+  ],
+  "product_count": 50,
+  "product_keys": [
+    "id",
+    "name",
+    "description",
+    "imageUrl",
+    "price",
+    "currency",
+    "categoryId",
+    "categoryName",
+    "countryId",
+    "countryName"
+  ],
+  "sample_product": {
+    "id": 2,
+    "name": "Samsung Galaxy A26 5G 128GB",
+    "description": "Samsung Galaxy A26 5G 128GB - Mobile Phones | Brand: Samsung | SKU: MOB-SAM-A26-128",
+    "imageUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789575520/products/r53doift1lgrcyqgtoeg.jpg",
+    "price": 16000.0,
+    "currency": null,
+    "categoryId": 2,
+    "categoryName": "هواتف ذكية",
+    "countryId": null,
+    "countryName": null
+  },
+  "products_by_category": {
+    "(2, 'هواتف ذكية')": [
+      {
+        "id": 2,
+        "name": "Samsung Galaxy A26 5G 128GB",
+        "price": 16000.0
+      },
+      {
+        "id": 3,
+        "name": "Samsung Galaxy M55 5G 128GB",
+        "price": 13550.0
+      },
+      {
+        "id": 6,
+        "name": "Xiaomi Redmi Note 14 Pro 256GB",
+        "price": 17000.0
+      },
+      {
+        "id": 7,
+        "name": "Xiaomi Redmi 14C 128GB",
+        "price": 6500.0
+      },
+      {
+        "id": 9,
+        "name": "OPPO A5 Pro 256GB",
+        "price": 17900.0
+      },
+      {
+        "id": 13,
+        "name": "realme C75 256GB",
+        "price": 9500.0
+      },
+      {
+        "id": 24,
+        "name": "Honor X8c 256GB",
+        "price": 13500.0
+      },
+      {
+        "id": 25,
+        "name": "Honor X7c 256GB",
+        "price": 10000.0
+      },
+      {
+        "id": 26,
+        "name": "Infinix Note 50 256GB",
+        "price": 11500.0
+      },
+      {
+        "id": 27,
+        "name": "Infinix Hot 50i 128GB",
+        "price": 6000.0
+      },
+      {
+        "id": 63,
+        "name": "Samsung Galaxy A16 128GB",
+        "price": 10500.0
+      },
+      {
+        "id": 64,
+        "name": "Samsung Galaxy A36 5G 128GB",
+        "price": 19000.0
+      },
+      {
+        "id": 65,
+        "name": "Xiaomi Redmi Note 14 256GB",
+        "price": 12000.0
+      },
+      {
+        "id": 66,
+        "name": "OPPO Reno 13F 256GB",
+        "price": 18500.0
+      },
+      {
+        "id": 67,
+        "name": "realme Note 60 128GB",
+        "price": 6000.0
+      }
+    ],
+    "(1, 'إلكترونيات')": [
+      {
+        "id": 28,
+        "name": "Anker Soundcore K20i",
+        "price": 659.0
+      },
+      {
+        "id": 29,
+        "name": "Xiaomi Redmi Buds 6 Play",
+        "price": 749.0
+      },
+      {
+        "id": 30,
+        "name": "Oraimo OTW-330S",
+        "price": 599.0
+      },
+      {
+        "id": 31,
+        "name": "Anker Soundcore R50i",
+        "price": 949.0
+      },
+      {
+        "id": 32,
+        "name": "Philips TAT3559",
+        "price": 1099.0
+      },
+      {
+        "id": 33,
+        "name": "Honor X7 Lite Earbuds",
+        "price": 1099.0
+      },
+      {
+        "id": 34,
+        "name": "Anker Soundcore R50i NC",
+        "price": 1599.0
+      },
+      {
+        "id": 35,
+        "name": "JBL Tune 520BT",
+        "price": 2099.0
+      },
+      {
+        "id": 36,
+        "name": "Sony WH-CH520",
+        "price": 1999.0
+      },
+      {
+        "id": 37,
+        "name": "JBL GO 4",
+        "price": 1999.0
+      },
+      {
+        "id": 38,
+        "name": "Huawei FreeBuds 7i",
+        "price": 3999.0
+      },
+      {
+        "id": 39,
+        "name": "Soundcore Liberty 5",
+        "price": 3999.0
+      },
+      {
+        "id": 40,
+        "name": "Apple AirPods 4",
+        "price": 7999.0
+      },
+      {
+        "id": 41,
+        "name": "Apple AirPods 4 ANC",
+        "price": 11299.0
+      },
+      {
+        "id": 42,
+        "name": "Apple AirPods Max 2",
+        "price": 34999.0
+      }
+    ],
+    "(4, 'منزل ومطبخ')": [
+      {
+        "id": 43,
+        "name": "Fresh Electric Kettle 1.7L",
+        "price": 700.0
+      },
+      {
+        "id": 44,
+        "name": "Tornado Electric Kettle 1.7L",
+        "price": 1300.0
+      },
+      {
+        "id": 45,
+        "name": "Black+Decker Kettle 1.7L",
+        "price": 1800.0
+      },
+      {
+        "id": 46,
+        "name": "Philips Kettle 1.7L",
+        "price": 2000.0
+      },
+      {
+        "id": 47,
+        "name": "Mienta Blender",
+        "price": 1500.0
+      },
+      {
+        "id": 48,
+        "name": "Fresh Blender",
+        "price": 1400.0
+      },
+      {
+        "id": 49,
+        "name": "Moulinex Blender",
+        "price": 2500.0
+      },
+      {
+        "id": 50,
+        "name": "Braun Hand Blender",
+        "price": 2500.0
+      },
+      {
+        "id": 51,
+        "name": "Fresh Microwave 20L",
+        "price": 4500.0
+      },
+      {
+        "id": 52,
+        "name": "Tornado Microwave 20L",
+        "price": 5000.0
+      },
+      {
+        "id": 53,
+        "name": "Samsung Microwave 23L",
+        "price": 7000.0
+      },
+      {
+        "id": 54,
+        "name": "Fresh Stand Fan",
+        "price": 1800.0
+      },
+      {
+        "id": 55,
+        "name": "Tornado Stand Fan",
+        "price": 2300.0
+      },
+      {
+        "id": 56,
+        "name": "Fresh Box Fan",
+        "price": 1500.0
+      },
+      {
+        "id": 57,
+        "name": "Philips Air Fryer 4.1L",
+        "price": 4500.0
+      },
+      {
+        "id": 58,
+        "name": "Philips Air Fryer 6.2L",
+        "price": 6500.0
+      },
+      {
+        "id": 59,
+        "name": "Black+Decker Air Fryer",
+        "price": 5000.0
+      },
+      {
+        "id": 60,
+        "name": "Fresh Sandwich Maker",
+        "price": 1200.0
+      },
+      {
+        "id": 61,
+        "name": "Tornado Toaster",
+        "price": 1500.0
+      },
+      {
+        "id": 62,
+        "name": "Black+Decker Coffee Maker",
+        "price": 2500.0
+      }
+    ]
+  },
+  "auction_count": 16,
+  "egypt_auctions": [
+    {
+      "id": 114,
+      "name": "Samsung Galaxy A26 5G 128GB",
+      "status": 2,
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z",
+      "productId": 2,
+      "categoryId": 2
+    },
+    {
+      "id": 115,
+      "name": "Samsung Galaxy M55 5G 128GB",
+      "status": 2,
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z",
+      "productId": 3,
+      "categoryId": 2
+    },
+    {
+      "id": 116,
+      "name": "Xiaomi Redmi Note 14 Pro 256GB",
+      "status": 2,
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z",
+      "productId": 6,
+      "categoryId": 2
+    },
+    {
+      "id": 117,
+      "name": "OPPO A5 Pro 256GB",
+      "status": 2,
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z",
+      "productId": 9,
+      "categoryId": 2
+    },
+    {
+      "id": 95,
+      "name": "حذاء رياضي",
+      "status": 2,
+      "start": "2026-06-29T08:45:00Z",
+      "end": "2026-06-29T08:50:00Z",
+      "productId": 9,
+      "categoryId": 2
+    },
+    {
+      "id": 94,
+      "name": "شاومي نوت",
+      "status": 2,
+      "start": "2026-05-25T12:43:00Z",
+      "end": "2026-08-25T12:43:00Z",
+      "productId": 6,
+      "categoryId": 2
+    },
+    {
+      "id": 92,
+      "name": "آيفون 15 برو",
+      "status": 2,
+      "start": "2026-05-25T12:42:00Z",
+      "end": "2026-08-25T12:42:00Z",
+      "productId": 2,
+      "categoryId": 2
+    },
+    {
+      "id": 90,
+      "name": "سماعات لاسلكية",
+      "status": 2,
+      "start": "2026-05-25T12:41:00Z",
+      "end": "2026-08-25T12:41:00Z",
+      "productId": 2,
+      "categoryId": 2
+    },
+    {
+      "id": 91,
+      "name": "شاحن لاسلكي",
+      "status": 2,
+      "start": "2026-05-25T12:41:00Z",
+      "end": "2026-08-25T12:42:00Z",
+      "productId": 3,
+      "categoryId": 2
+    },
+    {
+      "id": 84,
+      "name": "قميص رجالي كلاسيكي",
+      "status": 2,
+      "start": "2026-04-28T13:13:00Z",
+      "end": "2026-04-28T13:23:00Z",
+      "productId": 7,
+      "categoryId": 2
+    },
+    {
+      "id": 83,
+      "name": "كتاب تطوير ذاتي",
+      "status": 2,
+      "start": "2026-04-28T13:06:00Z",
+      "end": "2026-04-28T13:12:00Z",
+      "productId": 13,
+      "categoryId": 2
+    },
+    {
+      "id": 82,
+      "name": "ساعة ذكية Pro",
+      "status": 2,
+      "start": "2026-04-28T13:05:00Z",
+      "end": "2026-04-28T13:11:00Z",
+      "productId": 2,
+      "categoryId": 2
+    },
+    {
+      "id": 81,
+      "name": "دراجة رياضية",
+      "status": 2,
+      "start": "2026-04-23T13:09:00Z",
+      "end": "2026-04-23T20:10:00Z",
+      "productId": 2,
+      "categoryId": 2
+    },
+    {
+      "id": 79,
+      "name": "ساعة ذكية Pro",
+      "status": 2,
+      "start": "2026-04-23T13:08:00Z",
+      "end": "2026-04-23T20:00:00Z",
+      "productId": 2,
+      "categoryId": 2
+    },
+    {
+      "id": 77,
+      "name": "شاومي نوت",
+      "status": 2,
+      "start": "2026-04-11T13:55:00Z",
+      "end": "2026-04-16T13:55:00Z",
+      "productId": 6,
+      "categoryId": 2
+    }
+  ],
+  "all_auctions_brief": [
+    {
+      "id": 114,
+      "countryId": 3,
+      "status": 2,
+      "name": "Samsung Galaxy A26 5G 128GB",
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z"
+    },
+    {
+      "id": 115,
+      "countryId": 3,
+      "status": 2,
+      "name": "Samsung Galaxy M55 5G 128GB",
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z"
+    },
+    {
+      "id": 116,
+      "countryId": 3,
+      "status": 2,
+      "name": "Xiaomi Redmi Note 14 Pro 256GB",
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z"
+    },
+    {
+      "id": 117,
+      "countryId": 3,
+      "status": 2,
+      "name": "OPPO A5 Pro 256GB",
+      "start": "2026-09-16T16:23:45Z",
+      "end": "2026-09-19T16:22:45Z"
+    },
+    {
+      "id": 100,
+      "countryId": 1,
+      "status": 2,
+      "name": "شاومي نوت",
+      "start": "2026-08-18T06:43:00Z",
+      "end": "2026-08-19T06:43:00Z"
+    },
+    {
+      "id": 95,
+      "countryId": 3,
+      "status": 2,
+      "name": "حذاء رياضي",
+      "start": "2026-06-29T08:45:00Z",
+      "end": "2026-06-29T08:50:00Z"
+    },
+    {
+      "id": 94,
+      "countryId": 3,
+      "status": 2,
+      "name": "شاومي نوت",
+      "start": "2026-05-25T12:43:00Z",
+      "end": "2026-08-25T12:43:00Z"
+    },
+    {
+      "id": 92,
+      "countryId": 3,
+      "status": 2,
+      "name": "آيفون 15 برو",
+      "start": "2026-05-25T12:42:00Z",
+      "end": "2026-08-25T12:42:00Z"
+    },
+    {
+      "id": 90,
+      "countryId": 3,
+      "status": 2,
+      "name": "سماعات لاسلكية",
+      "start": "2026-05-25T12:41:00Z",
+      "end": "2026-08-25T12:41:00Z"
+    },
+    {
+      "id": 91,
+      "countryId": 3,
+      "status": 2,
+      "name": "شاحن لاسلكي",
+      "start": "2026-05-25T12:41:00Z",
+      "end": "2026-08-25T12:42:00Z"
+    },
+    {
+      "id": 84,
+      "countryId": 3,
+      "status": 2,
+      "name": "قميص رجالي كلاسيكي",
+      "start": "2026-04-28T13:13:00Z",
+      "end": "2026-04-28T13:23:00Z"
+    },
+    {
+      "id": 83,
+      "countryId": 3,
+      "status": 2,
+      "name": "كتاب تطوير ذاتي",
+      "start": "2026-04-28T13:06:00Z",
+      "end": "2026-04-28T13:12:00Z"
+    },
+    {
+      "id": 82,
+      "countryId": 3,
+      "status": 2,
+      "name": "ساعة ذكية Pro",
+      "start": "2026-04-28T13:05:00Z",
+      "end": "2026-04-28T13:11:00Z"
+    },
+    {
+      "id": 81,
+      "countryId": 3,
+      "status": 2,
+      "name": "دراجة رياضية",
+      "start": "2026-04-23T13:09:00Z",
+      "end": "2026-04-23T20:10:00Z"
+    },
+    {
+      "id": 79,
+      "countryId": 3,
+      "status": 2,
+      "name": "ساعة ذكية Pro",
+      "start": "2026-04-23T13:08:00Z",
+      "end": "2026-04-23T20:00:00Z"
+    },
+    {
+      "id": 77,
+      "countryId": 3,
+      "status": 2,
+      "name": "شاومي نوت",
+      "start": "2026-04-11T13:55:00Z",
+      "end": "2026-04-16T13:55:00Z"
+    }
+  ]
+}

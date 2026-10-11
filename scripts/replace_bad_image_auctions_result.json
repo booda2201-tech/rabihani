@@ -1,0 +1,90 @@
+{
+  "stopped": [
+    {
+      "id": 123,
+      "name": "Apple AirPods 4 ANC",
+      "status": 200
+    },
+    {
+      "id": 125,
+      "name": "Anker Soundcore K20i",
+      "status": 200
+    },
+    {
+      "id": 127,
+      "name": "Moulinex Blender",
+      "status": 200
+    }
+  ],
+  "created": [
+    {
+      "id": 128,
+      "name": "Apple AirPods 4",
+      "productId": 40,
+      "categoryName": null,
+      "startPoints": 150,
+      "limited": 10399,
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    },
+    {
+      "id": 129,
+      "name": "Sony WH-CH520",
+      "productId": 36,
+      "categoryName": null,
+      "startPoints": 180,
+      "limited": 2599,
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    },
+    {
+      "id": 130,
+      "name": "Braun Hand Blender",
+      "productId": 50,
+      "categoryName": null,
+      "startPoints": 120,
+      "limited": 3250,
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    }
+  ],
+  "errors": [],
+  "egypt_active": [
+    {
+      "id": 128,
+      "name": "Apple AirPods 4",
+      "categoryName": "إلكترونيات",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 129,
+      "name": "Sony WH-CH520",
+      "categoryName": "إلكترونيات",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 130,
+      "name": "Braun Hand Blender",
+      "categoryName": "منزل ومطبخ",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 122,
+      "name": "realme C75 256GB",
+      "categoryName": "هواتف ذكية",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 124,
+      "name": "Philips Air Fryer 6.2L",
+      "categoryName": "منزل ومطبخ",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 126,
+      "name": "Honor X7c 256GB",
+      "categoryName": "هواتف ذكية",
+      "endTime": "2026-11-02T07:28:52Z"
+    }
+  ]
+}

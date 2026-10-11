@@ -1,0 +1,118 @@
+{
+  "now": "2026-09-20T07:29:06.227179+00:00",
+  "picked_products": [
+    {
+      "id": 66,
+      "name": "OPPO Reno 13F 256GB",
+      "categoryId": 2,
+      "categoryName": "هواتف ذكية",
+      "price": 18500.0
+    },
+    {
+      "id": 34,
+      "name": "Anker Soundcore R50i NC",
+      "categoryId": 1,
+      "categoryName": "إلكترونيات",
+      "price": 1599.0
+    },
+    {
+      "id": 59,
+      "name": "Black+Decker Air Fryer",
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ",
+      "price": 5000.0
+    },
+    {
+      "id": 52,
+      "name": "Tornado Microwave 20L",
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ",
+      "price": 5000.0
+    }
+  ],
+  "created_auctions": [
+    {
+      "id": 118,
+      "name": "OPPO Reno 13F 256GB",
+      "productId": 66,
+      "categoryId": 2,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 100,
+      "limited": 2000,
+      "startTime": "2026-09-20T07:28:35Z",
+      "endTime": "2026-09-23T07:29:05Z",
+      "status": 1
+    },
+    {
+      "id": 119,
+      "name": "Anker Soundcore R50i NC",
+      "productId": 34,
+      "categoryId": 1,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 200,
+      "limited": 5000,
+      "startTime": "2026-09-20T07:28:35Z",
+      "endTime": "2026-09-23T07:29:05Z",
+      "status": 1
+    },
+    {
+      "id": 120,
+      "name": "Black+Decker Air Fryer",
+      "productId": 59,
+      "categoryId": 4,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 150,
+      "limited": 3000,
+      "startTime": "2026-09-20T07:28:35Z",
+      "endTime": "2026-09-23T07:29:05Z",
+      "status": 1
+    },
+    {
+      "id": 121,
+      "name": "Tornado Microwave 20L",
+      "productId": 52,
+      "categoryId": 4,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 250,
+      "limited": 8000,
+      "startTime": "2026-09-20T07:28:35Z",
+      "endTime": "2026-09-23T07:29:05Z",
+      "status": 1
+    }
+  ],
+  "errors": [],
+  "egypt_active_now": [
+    {
+      "id": 118,
+      "name": "OPPO Reno 13F 256GB",
+      "status": 1,
+      "categoryId": 2,
+      "categoryName": "هواتف ذكية"
+    },
+    {
+      "id": 119,
+      "name": "Anker Soundcore R50i NC",
+      "status": 1,
+      "categoryId": 1,
+      "categoryName": "إلكترونيات"
+    },
+    {
+      "id": 120,
+      "name": "Black+Decker Air Fryer",
+      "status": 1,
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ"
+    },
+    {
+      "id": 121,
+      "name": "Tornado Microwave 20L",
+      "status": 1,
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ"
+    }
+  ]
+}

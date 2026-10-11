@@ -1,0 +1,155 @@
+{
+  "active_egypt": [
+    {
+      "id": 128,
+      "name": "Apple AirPods 4",
+      "startPoints": 150,
+      "limited": 10399,
+      "endTime": "2026-11-02T07:28:52Z",
+      "price": 7999.0,
+      "category": "إلكترونيات",
+      "imageUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922200/products/uegi9tylngiym2grphlt.png"
+    },
+    {
+      "id": 129,
+      "name": "Sony WH-CH520",
+      "startPoints": 180,
+      "limited": 2599,
+      "endTime": "2026-11-02T07:28:52Z",
+      "price": 1999.0,
+      "category": "إلكترونيات",
+      "imageUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922195/products/jyblfntrinxdm65mlzvp.png"
+    },
+    {
+      "id": 130,
+      "name": "Braun Hand Blender",
+      "startPoints": 120,
+      "limited": 3250,
+      "endTime": "2026-11-02T07:28:52Z",
+      "price": 2500.0,
+      "category": "منزل ومطبخ",
+      "imageUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922184/products/shngvajioxrxfqec2l33.png"
+    },
+    {
+      "id": 124,
+      "name": "Philips Air Fryer 6.2L",
+      "startPoints": 200,
+      "limited": 8450,
+      "endTime": "2026-11-02T07:28:52Z",
+      "price": 6500.0,
+      "category": "منزل ومطبخ",
+      "imageUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789916413/products/z103gmhlorelrnghspeg.png"
+    },
+    {
+      "id": 126,
+      "name": "Honor X7c 256GB",
+      "startPoints": 250,
+      "limited": 13000,
+      "endTime": "2026-11-02T07:28:52Z",
+      "price": 10000.0,
+      "category": "هواتف ذكية",
+      "imageUrl": "https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789916301/products/adtjwrbt9qxa2e5raldh.png"
+    }
+  ],
+  "companies": [
+    {
+      "id": 1,
+      "name": "Bubblehope",
+      "description": "مقهى عصري متخصص في البوبا تي والمشروبات المبتكرة بنكهات فريدة وتجربة استثنائية",
+      "howToEarn": "اشرب من بابل هوب، امسح QR، واكسب نقاطك فورًا",
+      "tier": 3,
+      "countryId": 3
+    },
+    {
+      "id": 13,
+      "name": "FORTO",
+      "description": "أول مغسلة رعب في مصر، حيث تتحول تجربة غسيل السيارة إلى مغامرة مليئة بالإثارة والتشويق",
+      "howToEarn": "اغسل عربيتك في FORTO، امسح QR، واكسب نقاطك فورًا",
+      "tier": 1,
+      "countryId": 3
+    },
+    {
+      "id": 14,
+      "name": "T4TEA",
+      "description": "وجهتك لعشاق الشاي والمشروبات المنعشة المحضرة بأعلى جودة وأفضل المكونات",
+      "howToEarn": "اشتري من T4TEA، امسح QR، واكسب نقاطك فورًا",
+      "tier": 1,
+      "countryId": 3
+    },
+    {
+      "id": 15,
+      "name": "شاي الصعيد",
+      "description": "نكهة الشاي الأصيل المستوحاة من التراث الصعيدي الأصيل والجودة المميزة",
+      "howToEarn": "اشتري من شاي الصعيد، امسح QR، واكسب نقاطك فورًا",
+      "tier": 2,
+      "countryId": 3
+    },
+    {
+      "id": 16,
+      "name": "الأمانة لمواد البناء",
+      "description": "حلول متكاملة لمواد البناء والتشطيب بجودة عالية تلبي احتياجات المشاريع المختلفة",
+      "howToEarn": "اشتري من الأمانة، امسح QR، واكسب نقاطك فورًا",
+      "tier": 3,
+      "countryId": 3
+    }
+  ],
+  "ads_count": 4,
+  "countries": [
+    {
+      "id": 1,
+      "name": "الكويت",
+      "currency": "KWD"
+    },
+    {
+      "id": 2,
+      "name": "السعودية",
+      "currency": "SAR"
+    },
+    {
+      "id": 3,
+      "name": "مصر",
+      "currency": "جنيه"
+    },
+    {
+      "id": 4,
+      "name": "الإمارات",
+      "currency": "AED"
+    },
+    {
+      "id": 5,
+      "name": "البحرين",
+      "currency": "BHD"
+    },
+    {
+      "id": 6,
+      "name": "عُمان",
+      "currency": "OMR"
+    },
+    {
+      "id": 7,
+      "name": "قطر",
+      "currency": "QAR"
+    },
+    {
+      "id": 8,
+      "name": "الأردن",
+      "currency": "JOD"
+    },
+    {
+      "id": 9,
+      "name": "لبنان",
+      "currency": "LBP"
+    },
+    {
+      "id": 10,
+      "name": "العراق",
+      "currency": "IQD"
+    },
+    {
+      "id": 12,
+      "name": "USA",
+      "currency": "$"
+    }
+  ],
+  "product_count": 49
+}

@@ -1,0 +1,180 @@
+{
+  "now": "2026-10-03T07:28:54.182362+00:00",
+  "startTime": "2026-10-03T07:28:22Z",
+  "endTime": "2026-11-02T07:28:52Z",
+  "picked_products": [
+    {
+      "id": 13,
+      "name": "realme C75 256GB",
+      "categoryId": 2,
+      "categoryName": "هواتف ذكية",
+      "price": 9500.0
+    },
+    {
+      "id": 41,
+      "name": "Apple AirPods 4 ANC",
+      "categoryId": 1,
+      "categoryName": "إلكترونيات",
+      "price": 11299.0
+    },
+    {
+      "id": 58,
+      "name": "Philips Air Fryer 6.2L",
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ",
+      "price": 6500.0
+    },
+    {
+      "id": 28,
+      "name": "Anker Soundcore K20i",
+      "categoryId": 1,
+      "categoryName": "إلكترونيات",
+      "price": 659.0
+    },
+    {
+      "id": 25,
+      "name": "Honor X7c 256GB",
+      "categoryId": 2,
+      "categoryName": "هواتف ذكية",
+      "price": 10000.0
+    },
+    {
+      "id": 49,
+      "name": "Moulinex Blender",
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ",
+      "price": 2500.0
+    }
+  ],
+  "created_auctions": [
+    {
+      "id": 122,
+      "name": "realme C75 256GB",
+      "productId": 13,
+      "categoryId": 2,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 100,
+      "limited": 12350,
+      "startTime": "2026-10-03T07:28:22Z",
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    },
+    {
+      "id": 123,
+      "name": "Apple AirPods 4 ANC",
+      "productId": 41,
+      "categoryId": 1,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 150,
+      "limited": 14689,
+      "startTime": "2026-10-03T07:28:22Z",
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    },
+    {
+      "id": 124,
+      "name": "Philips Air Fryer 6.2L",
+      "productId": 58,
+      "categoryId": 4,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 200,
+      "limited": 8450,
+      "startTime": "2026-10-03T07:28:22Z",
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    },
+    {
+      "id": 125,
+      "name": "Anker Soundcore K20i",
+      "productId": 28,
+      "categoryId": 1,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 180,
+      "limited": 857,
+      "startTime": "2026-10-03T07:28:22Z",
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    },
+    {
+      "id": 126,
+      "name": "Honor X7c 256GB",
+      "productId": 25,
+      "categoryId": 2,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 250,
+      "limited": 13000,
+      "startTime": "2026-10-03T07:28:22Z",
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    },
+    {
+      "id": 127,
+      "name": "Moulinex Blender",
+      "productId": 49,
+      "categoryId": 4,
+      "categoryName": null,
+      "countryId": 3,
+      "startPoints": 120,
+      "limited": 3250,
+      "startTime": "2026-10-03T07:28:22Z",
+      "endTime": "2026-11-02T07:28:52Z",
+      "status": 1
+    }
+  ],
+  "errors": [],
+  "egypt_active_now": [
+    {
+      "id": 122,
+      "name": "realme C75 256GB",
+      "status": 1,
+      "categoryId": 2,
+      "categoryName": "هواتف ذكية",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 123,
+      "name": "Apple AirPods 4 ANC",
+      "status": 1,
+      "categoryId": 1,
+      "categoryName": "إلكترونيات",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 124,
+      "name": "Philips Air Fryer 6.2L",
+      "status": 1,
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 125,
+      "name": "Anker Soundcore K20i",
+      "status": 1,
+      "categoryId": 1,
+      "categoryName": "إلكترونيات",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 126,
+      "name": "Honor X7c 256GB",
+      "status": 1,
+      "categoryId": 2,
+      "categoryName": "هواتف ذكية",
+      "endTime": "2026-11-02T07:28:52Z"
+    },
+    {
+      "id": 127,
+      "name": "Moulinex Blender",
+      "status": 1,
+      "categoryId": 4,
+      "categoryName": "منزل ومطبخ",
+      "endTime": "2026-11-02T07:28:52Z"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "sku": "APP-BRA-HBLEND",
+    "id": 50,
+    "name": "Braun Hand Blender",
+    "ok": true,
+    "png_url": false,
+    "transparent_pct": 76.64,
+    "bytes": 241384,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":50,\"name\":\"Braun Hand Blender\",\"description\":\"Braun Hand Blender - Blenders | Brand: Braun | SKU: APP-BRA-HBLEND\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922184/products/shngvajioxrxfqec2"
+  },
+  {
+    "sku": "AUD-ANK-LIB5",
+    "id": 39,
+    "name": "Soundcore Liberty 5",
+    "ok": true,
+    "png_url": false,
+    "transparent_pct": 68.51,
+    "bytes": 281738,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":39,\"name\":\"Soundcore Liberty 5\",\"description\":\"Soundcore Liberty 5 - Earbuds | Brand: Anker | SKU: AUD-ANK-LIB5\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922186/products/nkdlwwertfbyu6eg74"
+  },
+  {
+    "sku": "AUD-PHI-TAT3559",
+    "id": 32,
+    "name": "Philips TAT3559",
+    "ok": true,
+    "png_url": false,
+    "transparent_pct": 61.01,
+    "bytes": 350356,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":32,\"name\":\"Philips TAT3559\",\"description\":\"Philips TAT3559 - Earbuds | Brand: Philips | SKU: AUD-PHI-TAT3559\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922188/products/ullfz9bj7omdzmvycafx."
+  },
+  {
+    "sku": "AUD-ANK-R50NC",
+    "id": 34,
+    "name": "Anker Soundcore R50i NC",
+    "ok": true,
+    "png_url": false,
+    "transparent_pct": 76.48,
+    "bytes": 169850,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":34,\"name\":\"Anker Soundcore R50i NC\",\"description\":\"Anker Soundcore R50i NC - Earbuds | Brand: Anker | SKU: AUD-ANK-R50NC\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922191/products/b2v4ow1ou"
+  },
+  {
+    "sku": "APP-TOR-MW20",
+    "id": 52,
+    "name": "Tornado Microwave 20L",
+    "ok": true,
+    "png_url": false,
+    "transparent_pct": 77.05,
+    "bytes": 227352,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":52,\"name\":\"Tornado Microwave 20L\",\"description\":\"Tornado Microwave 20L - Microwaves | Brand: Tornado | SKU: APP-TOR-MW20\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922193/products/vcpkunuy1"
+  },
+  {
+    "sku": "AUD-SON-CH520",
+    "id": 36,
+    "name": "Sony WH-CH520",
+    "ok": true,
+    "png_url": true,
+    "transparent_pct": 81.92,
+    "bytes": 227720,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":36,\"name\":\"Sony WH-CH520\",\"description\":\"Sony WH-CH520 - Headphones | Brand: Sony | SKU: AUD-SON-CH520\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922195/products/jyblfntrinxdm65mlzvp.png\",\""
+  },
+  {
+    "sku": "AUD-XIA-B6P",
+    "id": 29,
+    "name": "Xiaomi Redmi Buds 6 Play",
+    "ok": true,
+    "png_url": false,
+    "transparent_pct": 66.79,
+    "bytes": 210747,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":29,\"name\":\"Xiaomi Redmi Buds 6 Play\",\"description\":\"Xiaomi Redmi Buds 6 Play - Earbuds | Brand: Xiaomi | SKU: AUD-XIA-B6P\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922198/products/a444vful"
+  },
+  {
+    "sku": "AUD-APP-AP4",
+    "id": 40,
+    "name": "Apple AirPods 4",
+    "ok": true,
+    "png_url": true,
+    "transparent_pct": 66.57,
+    "bytes": 215970,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":40,\"name\":\"Apple AirPods 4\",\"description\":\"Apple AirPods 4 - Earbuds | Brand: Apple | SKU: AUD-APP-AP4\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922200/products/uegi9tylngiym2grphlt.png\",\""
+  },
+  {
+    "sku": "APP-FRE-BFAN",
+    "id": 56,
+    "name": "Fresh Box Fan",
+    "ok": true,
+    "png_url": true,
+    "transparent_pct": 57.99,
+    "bytes": 608579,
+    "mode": "RGBA",
+    "msg": "200 {\"id\":56,\"name\":\"Fresh Box Fan\",\"description\":\"Fresh Box Fan - Fans | Brand: Fresh | SKU: APP-FRE-BFAN\",\"imageUrl\":\"https://res.cloudinary.com/dvo2qoi4s/image/upload/v1789922204/products/wbpe4eo7ymd3ausvrvwx.png\",\"price\""
+  }
+]
