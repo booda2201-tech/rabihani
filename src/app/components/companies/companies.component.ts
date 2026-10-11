@@ -37,6 +37,22 @@ export class CompaniesComponent implements OnInit {
   imagePreview: string | null = null;
   selectedFile: File | null = null;
 
+  readonly tierOptions = [
+    { value: 1, label: 'Bronze', hint: 'المستوى الأساسي', icon: 'bi-award' },
+    { value: 2, label: 'Silver', hint: 'مستوى فضي', icon: 'bi-award' },
+    { value: 3, label: 'Gold', hint: 'مستوى ذهبي', icon: 'bi-award-fill' },
+    { value: 4, label: 'Platinum', hint: 'المستوى الأعلى', icon: 'bi-gem' }
+  ];
+
+  get countryOptions() {
+    return (this.countries || []).map(country => ({
+      value: country.id,
+      label: country.name,
+      hint: country.currency,
+      icon: 'bi-geo-alt'
+    }));
+  }
+
   constructor(private apiService: ApiService) {}
 
   ngOnInit() {

@@ -21,7 +21,7 @@ export class LoginComponent {
     setTimeout(() => {
       if (formData.username === 'admin' && formData.password === '123') {
         localStorage.setItem('isLoggedIn', 'true');
-        this.router.navigate(['/dashboard/home']);
+        this.router.navigate(['/']);
       } else {
         this.loginError = true;
         this.isLoading = false;

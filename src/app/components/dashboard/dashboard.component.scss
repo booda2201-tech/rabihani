@@ -1001,17 +1001,21 @@ $figma-text-muted: #94a3b8;
   }
 }
 
-.country-selector {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding: 8px 14px !important;
-  gap: 10px !important;
+.header-country-select {
+  width: 220px;
+  max-width: 46vw;
 
-  .country-name {
-    max-width: 90px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  ::ng-deep .ms-trigger {
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-country-select {
+    width: 148px;
   }
 }
 

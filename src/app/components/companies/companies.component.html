@@ -67,18 +67,21 @@
         </div>
         <div class="col-md-6">
           <label class="modern-label">الدولة</label>
-          <select class="modern-input" [(ngModel)]="addModel.CountryId">
-            <option class="text-black" *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
-          </select>
+          <app-modern-select
+            [options]="countryOptions"
+            [(ngModel)]="addModel.CountryId"
+            placeholder="اختر الدولة"
+            searchPlaceholder="ابحث عن دولة..."
+            [searchable]="true">
+          </app-modern-select>
         </div>
         <div class="col-md-6">
           <label class="modern-label">المستوى (Tier)</label>
-          <select class="modern-input" [(ngModel)]="addModel.Tier">
-            <option class="text-black" [value]="1">Bronze</option>
-            <option class="text-black" [value]="2">Silver</option>
-            <option class="text-black" [value]="3">Gold</option>
-            <option class="text-black" [value]="4">Platinum</option>
-          </select>
+          <app-modern-select
+            [options]="tierOptions"
+            [(ngModel)]="addModel.Tier"
+            placeholder="اختر المستوى">
+          </app-modern-select>
         </div>
         <div class="col-12">
           <label class="modern-label">نظام النقاط</label>
@@ -141,12 +144,12 @@
 
         <div class="col-md-6">
           <label class="modern-label">تعديل المستوى</label>
-          <select class="modern-input focus-gold" [(ngModel)]="editModel.Tier">
-            <option [value]="1">Bronze</option>
-            <option [value]="2">Silver</option>
-            <option [value]="3">Gold</option>
-            <option [value]="4">Platinum</option>
-          </select>
+          <app-modern-select
+            [options]="tierOptions"
+            [(ngModel)]="editModel.Tier"
+            tone="gold"
+            placeholder="اختر المستوى">
+          </app-modern-select>
         </div>
       </div>
     </div>

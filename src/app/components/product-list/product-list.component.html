@@ -352,10 +352,13 @@
 
       <div class="input-group" style="margin-bottom: 15px;">
         <label>القسم (Category)</label>
-        <select [(ngModel)]="newProduct.category" class="custom-select form-control">
-          <option [ngValue]="{ id: 0, name: '' }" disabled>اختر القسم...</option>
-          <option *ngFor="let cat of categories" [ngValue]="cat">{{ cat.name }}</option>
-        </select>
+        <app-modern-select
+          [options]="categorySelectOptions"
+          [(ngModel)]="newProduct.category"
+          placeholder="اختر القسم..."
+          searchPlaceholder="ابحث عن قسم..."
+          [searchable]="true">
+        </app-modern-select>
       </div>
 
       <div class="input-group" style="margin-bottom: 15px;">
@@ -403,9 +406,13 @@
 
       <div class="input-group-custom">
         <label>القسم</label>
-        <select [(ngModel)]="currentProduct.categoryId" class="custom-select form-control">
-          <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-        </select>
+        <app-modern-select
+          [options]="editCategorySelectOptions"
+          [(ngModel)]="currentProduct.categoryId"
+          placeholder="اختر القسم..."
+          searchPlaceholder="ابحث عن قسم..."
+          [searchable]="true">
+        </app-modern-select>
       </div>
 
       <div class="upload-section-custom">

@@ -1,7 +1,7 @@
 
 
 
-import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../../Services/api.service';
 
 @Component({
@@ -12,7 +12,6 @@ import { ApiService } from '../../Services/api.service';
 export class HomeComponent implements OnInit, OnDestroy {
   private apiService = inject(ApiService);
   private cdr = inject(ChangeDetectorRef);
-  private el = inject(ElementRef);
 
   // مصفوفات البيانات
   allAuctionsRaw: any[] = [];
@@ -22,8 +21,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   // التحكم في العرض
   itemsToShow: number = 4;
   selectedCountry: any = { name: '...', id: null };
-  searchTerm: string = '';
-  showDropdown: boolean = false;
   showAddModal: boolean = false;
   isEditMode: boolean = false;
 
@@ -135,7 +132,6 @@ private mapToUI(item: any) {
       endTime: this.formatDateForInput(item.endTime),
       img: item.img
     };
-    this.searchTerm = item.name;
     this.showAddModal = true;
   }
 
@@ -206,16 +202,21 @@ private formatDateForInput(dateStr: string) {
     this.apiService.getProducts().subscribe(res => this.allProducts = res || []);
   }
 
-  filteredProducts() {
-    return this.allProducts.filter(p => p.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+  get productSelectOptions() {
+    return (this.allProducts || []).map(prod => ({
+      value: prod.id,
+      label: prod.name,
+      hint: prod.categoryName || prod.category?.name || '',
+      icon: 'bi-box-seam'
+    }));
   }
 
-  selectProduct(prod: any) {
-    this.newAuctionObj.productId = prod.id;
+  onProductSelected(id: any) {
+    this.newAuctionObj.productId = id;
+    const prod = this.allProducts.find(p => String(p.id) === String(id));
+    if (!prod) return;
     this.newAuctionObj.name = prod.name;
     this.newAuctionObj.img = prod.imageUrl;
-    this.searchTerm = prod.name;
-    this.showDropdown = false;
     this.applyProductPoints(prod);
   }
 
@@ -238,7 +239,6 @@ private formatDateForInput(dateStr: string) {
 
   resetForm() {
     this.newAuctionObj = { id: null, name: '', productId: null, startPoints: 0, targetPoints: 0, startTime: '', endTime: '', img: '' };
-    this.searchTerm = '';
     this.selectedFile = null;
   }
 
@@ -251,11 +251,6 @@ private formatDateForInput(dateStr: string) {
         this.loadData();
       }
     }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (!this.el.nativeElement.contains(event.target)) this.showDropdown = false;
   }
 
   ngOnDestroy() {

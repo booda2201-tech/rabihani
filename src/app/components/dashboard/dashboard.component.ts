@@ -24,12 +24,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isRadialOpen = signal(false);
   @ViewChild('radialStage') radialStage?: ElementRef<HTMLElement>;
   mobileNav: Array<{ label: string; icon: string; path: string; exact?: boolean; logout?: boolean }> = [
-    { label: 'الرئيسية', icon: 'bi-grid-1x2-fill', path: '/dashboard/home', exact: true },
-    { label: 'المنتجات', icon: 'bi-bag-heart-fill', path: '/dashboard/products' },
-    { label: 'المزادات', icon: 'bi-cash-coin', path: '/dashboard/auctions' },
-    { label: 'الاعلانات', icon: 'bi-bullseye', path: '/dashboard/ads' },
-    { label: 'الشركات', icon: 'bi-building-fill', path: '/dashboard/comp' },
-    { label: 'البلاد', icon: 'bi-globe', path: '/dashboard/count' },
+    { label: 'الرئيسية', icon: 'bi-grid-1x2-fill', path: '/', exact: true },
+    { label: 'المنتجات', icon: 'bi-bag-heart-fill', path: '/products' },
+    { label: 'المزادات', icon: 'bi-cash-coin', path: '/auctions' },
+    { label: 'الاعلانات', icon: 'bi-bullseye', path: '/ads' },
+    { label: 'الشركات', icon: 'bi-building-fill', path: '/comp' },
+    { label: 'البلاد', icon: 'bi-globe', path: '/count' },
     { label: 'خروج', icon: 'bi-box-arrow-left', path: '/login', logout: true },
   ];
   private radialTl: gsap.core.Timeline | null = null;
@@ -37,6 +37,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private routerSub?: Subscription;
   private radialBusy = false;
   selectedCountry = signal<any>(null)
+
+  get countrySelectOptions() {
+    return this.countries().map(country => ({
+      value: country,
+      label: country.name,
+      hint: country.currency,
+      icon: 'bi-globe-americas'
+    }));
+  }
   // تحديث قائمة الدول لتشمل العملات
   countries = signal<any[]>([]);
 
@@ -103,7 +112,6 @@ selectCountry(country: any) {
 
     // إبلاغ بقية الموقع بالتغيير
     window.dispatchEvent(new Event('countryChanged'));
-    this.closeCountryModal();
   }
 
 openCountryModal() {

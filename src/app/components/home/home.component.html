@@ -49,7 +49,7 @@
             <div class="spec-item"><small> إجمالي النقاط </small><strong style="color: #10b981;">{{ item.totalPoints || item.startPrice }}</strong></div>
           </div>
 
-          <div class="top-bidder-highlight" [routerLink]="['/dashboard/product-details', item.id]">
+          <div class="top-bidder-highlight" [routerLink]="['/product-details', item.id]">
             <div class="header-row">
               <small>أعلى مزايد حالي</small>
               <span class="bid-val">{{ (item.totalPoints || item.startPrice) | number }} <small>نقطة</small></span>
@@ -106,47 +106,33 @@
 
     <form class="modal-form" (ngSubmit)="submitNewAuction()">
 
-          <div class="form-row split">
-            <div class="form-group" *ngIf="!isEditMode">
-              <label>ابحث عن المنتج</label>
-              <div class="searchable-select-container">
-                <div class="search-wrapper">
-                  <input
-                    type="text"
-                    class="search-input"
-                    placeholder="اكتب اسم المنتج للبحث..."
-                    [(ngModel)]="searchTerm"
-                    name="searchTerm"
-                    (focus)="showDropdown = true"
-                    autocomplete="off"
-                  >
-                </div>
+          <div class="form-group product-picker" *ngIf="!isEditMode">
+            <label>ابحث عن المنتج</label>
+            <app-modern-select
+              [options]="productSelectOptions"
+              [ngModel]="newAuctionObj.productId"
+              (ngModelChange)="onProductSelected($event)"
+              [ngModelOptions]="{standalone: true}"
+              placeholder="ابحث عن المنتج..."
+              searchPlaceholder="اكتب اسم المنتج..."
+              [panelMinWidth]="360"
+              [searchable]="true">
+            </app-modern-select>
+            <input type="hidden"
+                    [(ngModel)]="newAuctionObj.productId"
+                    name="productId"
+                    required>
+          </div>
 
-                <div class="custom-dropdown-list" *ngIf="showDropdown">
-                  <div
-                    class="dropdown-item"
-                    *ngFor="let prod of filteredProducts()"
-                    (click)="selectProduct(prod)"
-                  >
-                    <span>{{ prod.name }}</span>
-                  </div>
-                </div>
-              </div>
-              <input type="hidden"
-                      [(ngModel)]="newAuctionObj.productId"
-                      name="productId"
-                      required>
-              </div>
-            <div class="form-group" [style.width]="isEditMode ? '100%' : ''">
-              <label>اسم غرفة المزاد (Room Name)</label>
-              <input
-                type="text"
-                [(ngModel)]="newAuctionObj.name"
-                name="name"
-                placeholder="مثلاً: مزاد دراجة هوائية"
-                required
-              >
-            </div>
+          <div class="form-group">
+            <label>اسم غرفة المزاد (Room Name)</label>
+            <input
+              type="text"
+              [(ngModel)]="newAuctionObj.name"
+              name="name"
+              placeholder="مثلاً: مزاد دراجة هوائية"
+              required
+            >
           </div>
 
       <div class="form-row split">

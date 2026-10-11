@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../Services/api.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { ModernSelectComponent } from '../modern-select/modern-select.component';
 
 register();
 
@@ -29,7 +30,7 @@ interface Product {
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ModernSelectComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -198,6 +199,22 @@ get totalPages(): number {
 get pagedProducts(): any[] {
   const start = (this.currentPage - 1) * this.pageSize;
   return this.filteredProducts.slice(start, start + this.pageSize);
+}
+
+get categorySelectOptions() {
+  return (this.categories || []).map((cat: any) => ({
+    value: cat,
+    label: cat.name,
+    icon: 'bi-grid'
+  }));
+}
+
+get editCategorySelectOptions() {
+  return (this.categories || []).map((cat: any) => ({
+    value: cat.id,
+    label: cat.name,
+    icon: 'bi-grid'
+  }));
 }
 
 get currentSortLabel(): string {

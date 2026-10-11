@@ -21,6 +21,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CountriesComponent } from './components/countries/countries.component';
 import { CompaniesComponent } from './components/companies/companies.component';
+import { ModernSelectComponent } from './components/modern-select/modern-select.component';
 
 
 
@@ -45,7 +46,8 @@ import { CompaniesComponent } from './components/companies/companies.component';
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ModernSelectComponent
   ],
   providers: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],

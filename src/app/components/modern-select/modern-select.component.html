@@ -1,0 +1,52 @@
+<div class="ms" [class.open]="open" [class.gold]="tone === 'gold'" [class.disabled]="disabled" dir="rtl">
+  <button
+    type="button"
+    class="ms-trigger"
+    #trigger
+    (click)="toggle($event)"
+    [disabled]="disabled"
+    [attr.aria-expanded]="open"
+    aria-haspopup="listbox">
+    <span class="ms-icon" *ngIf="selected?.icon">
+      <i class="bi" [ngClass]="selected?.icon"></i>
+    </span>
+    <span class="ms-label" dir="auto" [class.is-placeholder]="!selected">{{ selected?.label || placeholder }}</span>
+    <i class="bi bi-chevron-down ms-chevron"></i>
+  </button>
+</div>
+
+<ng-template #menuTpl>
+  <div class="ms-menu" [class.gold]="tone === 'gold'" dir="rtl" role="listbox" (click)="$event.stopPropagation()">
+    <div class="ms-search" *ngIf="searchable">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        [value]="query"
+        (input)="onQuery($event)"
+        [placeholder]="searchPlaceholder"
+        autocomplete="off">
+    </div>
+
+    <div class="ms-list">
+      <button
+        type="button"
+        class="ms-item"
+        *ngFor="let option of filtered"
+        [class.active]="same(option.value, value)"
+        (click)="pick(option, $event)">
+        <span class="ms-item-icon" *ngIf="option.icon">
+          <i class="bi" [ngClass]="option.icon"></i>
+        </span>
+        <span class="ms-item-copy">
+          <span class="ms-item-label" dir="auto">{{ option.label }}</span>
+          <span class="ms-item-hint" dir="rtl" *ngIf="option.hint">{{ option.hint }}</span>
+        </span>
+        <i class="bi bi-check-lg ms-check" *ngIf="same(option.value, value)"></i>
+      </button>
+
+      <div class="ms-empty" *ngIf="filtered.length === 0">
+        لا توجد نتائج
+      </div>
+    </div>
+  </div>
+</ng-template>
