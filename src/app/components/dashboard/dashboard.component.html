@@ -30,7 +30,7 @@
     </nav>
 
     <div class="sidebar-footer">
-      <button class="logout-link" routerLink="/login">
+      <button class="logout-link" type="button" (click)="logout()">
         <span>تسجيل الخروج</span> <i class="bi bi-box-arrow-left"></i>
       </button>
     </div>
@@ -81,7 +81,7 @@
       <i class="bi bi-globe"></i>
       <span>البلاد</span>
     </a>
-    <a class="is-logout" routerLink="/login" (click)="closeMore()">
+    <a class="is-logout" (click)="logout()">
       <i class="bi bi-box-arrow-left"></i>
       <span>تسجيل الخروج</span>
     </a>
@@ -122,7 +122,7 @@
        routerLinkActive="active"
        [routerLinkActiveOptions]="{ exact: !!item.exact }"
        [style.--i]="i"
-       (click)="closeRadial()">
+       (click)="item.logout ? logout() : closeRadial()">
       <i class="bi" [ngClass]="item.icon"></i>
       <span>{{ item.label }}</span>
     </a>

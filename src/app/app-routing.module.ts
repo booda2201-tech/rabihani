@@ -11,12 +11,16 @@ import { AdvertisementsComponent } from './components/advertisements/advertiseme
 import { CountriesComponent } from './components/countries/countries.component';
 import { CompaniesComponent } from './components/companies/companies.component';
 import { CompanyProfileComponent } from './components/company-profile/company-profile.component';
+import { authGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'dashboard', redirectTo: '', pathMatch: 'full' },
   {
     path: '',
     component: DashboardComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
     children: [
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'products', component: ProductListComponent },
@@ -27,7 +31,8 @@ const routes: Routes = [
       { path: 'comp', component: CompaniesComponent },
       { path: 'comp/:id', component: CompanyProfileComponent },
     ]
-  }
+  },
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({

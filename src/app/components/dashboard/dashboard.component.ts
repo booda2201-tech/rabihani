@@ -144,6 +144,13 @@ selectCountry(country: any) {
     else this.screenTitle = 'الرئيسية';
   }
 
+  logout() {
+    localStorage.removeItem('isLoggedIn');
+    this.moreOpen = false;
+    this.closeRadial();
+    this.router.navigate(['/login']);
+  }
+
 openCountryModal() {
   this.isCountryModalOpen.set(true);
 
