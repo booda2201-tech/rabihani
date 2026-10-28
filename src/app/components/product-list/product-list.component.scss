@@ -338,6 +338,13 @@ body {
 // الزر العائم في الموبايل
 .fixed-menu-btn {
   position: fixed; bottom: 20px; left: 20px; width: 60px; height: 60px; border-radius: 50%; background: $primary-grad; color: white; border: none; font-size: 1.5rem; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); z-index: 1000;
+
+  @media (max-width: 992px) {
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    left: 18px;
+    width: 56px;
+    height: 56px;
+  }
 }
 // --- 7. الأزرار والمودال (Buttons & Modals المحدث للموبايل) ---
 .btn-shiny-plus {

@@ -23,12 +23,15 @@ export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
   finishedAuctionsList: any[] = [];
 
   selectedAuction: any = null;
+  companies: any[] = [];
+  private companyLinks: Record<string, number> = this.readCompanyLinks();
   isModalOpen = false;
   isLoading = false;
   private timerInterval: any;
 
   ngOnInit() {
     this.loadData();
+    this.loadCompanies();
     this.startCountdown();
 
     this.timerInterval = setInterval(() => {
@@ -133,11 +136,13 @@ submitUpdate() {
     startTime: this.selectedAuction.startTime,
     endTime: this.selectedAuction.endTime,
     limited: Number(this.selectedAuction.targetPoints),
-    countryId: this.selectedAuction.countryId
+    countryId: this.selectedAuction.countryId,
+    companyId: this.selectedAuction.companyId ? Number(this.selectedAuction.companyId) : null
   };
 
   this.apiService.updateAuctionRoom(this.selectedAuction.id, payload).subscribe({
     next: (res) => {
+      this.rememberCompany(this.selectedAuction.id, this.selectedAuction.companyId);
       this.loadData();
       this.closeModal();
       alert('تم تحديث المزاد بنجاح');
@@ -179,10 +184,53 @@ submitUpdate() {
       startTime: formatDate(auction.startTime),
       endTime: formatDate(auction.endTime),
       targetPoints: auction.targetPrice,
-      startPoints: auction.startPrice
+      startPoints: auction.startPrice,
+      companyId: auction.companyId || auction.company?.id || this.companyLinks[String(auction.id)] || null
     };
     this.isModalOpen = true;
     document.body.style.overflow = 'hidden';
+  }
+
+  get companySelectOptions() {
+    const countryId = this.dashboard.selectedCountry()?.id;
+    const inCountry = this.companies.filter(company => !countryId || company.countryId == countryId);
+    const list = inCountry.length ? inCountry : this.companies;
+    return list.map(company => ({
+      value: company.id,
+      label: company.name,
+      hint: company.tierName || '',
+      image: company.imageUrl || '',
+      icon: 'bi-building'
+    }));
+  }
+
+  companyOf(item: any) {
+    const linkedId = item?.companyId || item?.company?.id || this.companyLinks[String(item?.id)];
+    if (!linkedId) return item?.company || null;
+    return this.companies.find(company => String(company.id) === String(linkedId)) || item?.company || null;
+  }
+
+  loadCompanies() {
+    this.apiService.getCompanies().subscribe(res => {
+      this.companies = Array.isArray(res) ? res : [];
+      this.cdr.detectChanges();
+    });
+  }
+
+  private readCompanyLinks(): Record<string, number> {
+    try {
+      return JSON.parse(localStorage.getItem('auction_company_links') || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  private rememberCompany(auctionId: any, companyId: any) {
+    if (!auctionId) return;
+    const key = String(auctionId);
+    if (companyId) this.companyLinks[key] = Number(companyId);
+    else delete this.companyLinks[key];
+    localStorage.setItem('auction_company_links', JSON.stringify(this.companyLinks));
   }
 
   closeModal() {

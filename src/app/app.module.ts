@@ -21,6 +21,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { CountriesComponent } from './components/countries/countries.component';
 import { CompaniesComponent } from './components/companies/companies.component';
+import { CompanyProfileComponent } from './components/company-profile/company-profile.component';
 import { ModernSelectComponent } from './components/modern-select/modern-select.component';
 
 
@@ -37,6 +38,7 @@ import { ModernSelectComponent } from './components/modern-select/modern-select.
     AdvertisementsComponent,
     // CountriesComponent,
     CompaniesComponent,
+    CompanyProfileComponent,
 
   ],
   imports: [

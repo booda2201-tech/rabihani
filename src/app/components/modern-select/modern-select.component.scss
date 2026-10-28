@@ -48,17 +48,54 @@
 }
 
 .ms-icon,
-.ms-item-icon {
+.ms-item-icon,
+.ms-thumb {
+  position: relative;
   width: 34px;
   height: 34px;
   border-radius: 11px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  overflow: hidden;
   background: linear-gradient(160deg, rgba(129, 140, 248, 0.28), rgba(59, 130, 246, 0.1));
   color: #e0e7ff;
   font-size: 0.92rem;
   box-shadow: inset 0 0 0 1px rgba(199, 210, 254, 0.16);
+
+  i {
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  img {
+    position: absolute;
+    inset: 3px;
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    object-fit: contain;
+    border-radius: 7px;
+  }
+
+  &.has-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06);
+
+    img {
+      inset: 5px;
+      width: calc(100% - 10px);
+      height: calc(100% - 10px);
+    }
+  }
+}
+
+.ms-trigger .ms-thumb.has-photo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
 }
 
 .ms.gold .ms-icon {
@@ -97,9 +134,56 @@
   color: #facc15;
 }
 
+.ms-pop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  pointer-events: none;
+}
+
+.ms-backdrop {
+  display: none;
+}
+
+.ms-pop.is-sheet {
+  pointer-events: auto;
+
+  .ms-backdrop {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 8, 14, 0.62);
+    backdrop-filter: blur(6px);
+  }
+}
+
+.ms-sheet-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 8px 6px;
+  flex-shrink: 0;
+}
+
+.ms-sheet-handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.ms-sheet-title {
+  color: #e2e8f0;
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
 .ms-menu {
   position: fixed;
-  z-index: 100000;
+  z-index: 100001;
+  box-sizing: border-box;
+  pointer-events: auto;
   direction: rtl;
   display: flex;
   flex-direction: column;
@@ -119,6 +203,14 @@
 
   &.is-up {
     animation-name: msInUp;
+  }
+
+  &.is-sheet {
+    border-radius: 24px 24px 0 0;
+    border-bottom: 0;
+    padding: 10px 14px calc(16px + env(safe-area-inset-bottom));
+    animation-name: msSheet;
+    pointer-events: auto;
   }
 
   &.gold {
@@ -183,14 +275,17 @@
 
 .ms-item {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   direction: rtl;
-  gap: 10px;
-  min-height: 58px;
-  padding: 8px 10px;
+  gap: 12px;
+  min-height: 68px;
+  padding: 8px 12px;
   border: 0;
-  border-radius: 14px;
+  border-radius: 16px;
   background: transparent;
   color: #e2e8f0;
   cursor: pointer;
@@ -240,9 +335,10 @@
 .ms-item-copy {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: flex-start;
   justify-content: center;
-  gap: 2px;
+  direction: rtl;
+  gap: 3px;
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -268,16 +364,17 @@
 
 .ms-item-hint {
   direction: rtl;
-  width: auto;
+  width: fit-content;
   max-width: 100%;
   align-self: flex-start;
   margin-top: 1px;
+  margin-left: auto;
   padding: 1px 8px 2px;
   border-radius: 999px;
   background: rgba(99, 102, 241, 0.14);
   border: 1px solid rgba(165, 180, 252, 0.22);
   color: #c7d2fe;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
   line-height: 1.6;
 }
@@ -289,13 +386,51 @@
 }
 
 .ms-check {
-  color: #a5b4fc;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #c7d2fe;
   font-size: 1rem;
-  flex-shrink: 0;
+}
+
+.ms-item.active .ms-check {
+  background: rgba(129, 140, 248, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(165, 180, 252, 0.28);
 }
 
 .ms-menu.gold .ms-check {
   color: #facc15;
+}
+
+.ms-menu.gold .ms-item.active .ms-check {
+  background: rgba(250, 204, 21, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(250, 204, 21, 0.28);
+}
+
+.ms-menu.is-sheet {
+  .ms-item {
+    min-height: 64px;
+    padding: 10px 12px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .ms-thumb {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+  }
+
+  .ms-item-label {
+    font-size: 1rem;
+  }
+
+  .ms-list {
+    padding-bottom: 8px;
+  }
 }
 
 .ms-empty {
@@ -321,6 +456,17 @@
   from {
     opacity: 0;
     transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes msSheet {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
   }
   to {
     opacity: 1;

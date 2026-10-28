@@ -547,7 +547,7 @@ openEditModal(product: any) {
   onWindowScroll() {
     const st = window.pageYOffset || document.documentElement.scrollTop;
     gsap.to('.fixed-menu-btn', {
-      y: st > this.lastScrollTop ? 100 : 0,
+      y: st > this.lastScrollTop ? 180 : 0,
       duration: 0.3,
     });
     this.lastScrollTop = st <= 0 ? 0 : st;

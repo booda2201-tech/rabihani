@@ -10,6 +10,7 @@ import { AuctionsComponent } from './components/auctions/auctions.component';
 import { AdvertisementsComponent } from './components/advertisements/advertisements.component';
 import { CountriesComponent } from './components/countries/countries.component';
 import { CompaniesComponent } from './components/companies/companies.component';
+import { CompanyProfileComponent } from './components/company-profile/company-profile.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,6 +25,7 @@ const routes: Routes = [
       { path: 'ads', component: AdvertisementsComponent },
       { path: 'count', component: CountriesComponent },
       { path: 'comp', component: CompaniesComponent },
+      { path: 'comp/:id', component: CompanyProfileComponent },
     ]
   }
 ];

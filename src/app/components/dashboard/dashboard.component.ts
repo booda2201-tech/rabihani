@@ -22,6 +22,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   products = signal<any[]>(this.loadFromStorage());
   isSidebarOpen = signal(false);
   isRadialOpen = signal(false);
+  moreOpen = false;
+  screenTitle = 'الرئيسية';
   @ViewChild('radialStage') radialStage?: ElementRef<HTMLElement>;
   mobileNav: Array<{ label: string; icon: string; path: string; exact?: boolean; logout?: boolean }> = [
     { label: 'الرئيسية', icon: 'bi-grid-1x2-fill', path: '/', exact: true },
@@ -65,10 +67,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   );
 
 ngOnInit() {
+    this.syncScreenTitle();
     this.loadCountries();
     this.routerSub = this.router.events.pipe(
       filter((event): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe(() => {
+      this.moreOpen = false;
+      this.syncScreenTitle();
       if (this.isRadialOpen()) this.closeRadial();
     });
   }
@@ -112,6 +117,31 @@ selectCountry(country: any) {
 
     // إبلاغ بقية الموقع بالتغيير
     window.dispatchEvent(new Event('countryChanged'));
+  }
+
+  get moreSectionActive(): boolean {
+    const url = this.router.url.split('?')[0];
+    return url.startsWith('/comp') || url.startsWith('/count');
+  }
+
+  toggleMore(event: Event) {
+    event.stopPropagation();
+    this.moreOpen = !this.moreOpen;
+  }
+
+  closeMore() {
+    this.moreOpen = false;
+  }
+
+  private syncScreenTitle() {
+    const url = this.router.url.split('?')[0].split('#')[0];
+    if (url.startsWith('/product-details')) this.screenTitle = 'تفاصيل المزاد';
+    else if (url.startsWith('/products')) this.screenTitle = 'المنتجات';
+    else if (url.startsWith('/auctions')) this.screenTitle = 'المزادات';
+    else if (url.startsWith('/ads')) this.screenTitle = 'الإعلانات';
+    else if (url.startsWith('/comp')) this.screenTitle = 'الشركات';
+    else if (url.startsWith('/count')) this.screenTitle = 'البلاد';
+    else this.screenTitle = 'الرئيسية';
   }
 
 openCountryModal() {

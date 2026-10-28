@@ -38,7 +38,11 @@
             <p class="company-desc text-muted px-2">{{ company.description }}</p>
           </div>
 
-          <div class="actions-area d-flex gap-2 mt-4">
+          <button class="btn-profile" [routerLink]="['/comp', company.id]">
+            <i class="bi bi-building"></i> البروفايل
+          </button>
+
+          <div class="actions-area d-flex gap-2 mt-3">
             <button class="btn-action edit w-100" (click)="openEditModal(company)">
               <i class="bi bi-pencil-square"></i> تعديل
             </button>

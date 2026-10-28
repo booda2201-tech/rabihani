@@ -65,6 +65,10 @@
           </div>
           <div class="card-main">
             <h5 class="product-name">{{ item.name }}</h5>
+            <div class="company-chip" *ngIf="companyOf(item) as company">
+              <img *ngIf="company.imageUrl" [src]="company.imageUrl" [alt]="company.name">
+              <span>{{ company.name }}</span>
+            </div>
             <div class="official-price-tag">
               <small> السعر الرسمي: </small>
               <span>{{ item.officialPrice | number }} {{ item.currency }}</span>
@@ -125,6 +129,10 @@
 
             <div class="card-main p-3">
               <h5 class="product-name text-white text-center mb-3">{{ item.name }}</h5>
+              <div class="company-chip mx-auto" *ngIf="companyOf(item) as company">
+                <img *ngIf="company.imageUrl" [src]="company.imageUrl" [alt]="company.name">
+                <span>{{ company.name }}</span>
+              </div>
                   <div class="official-price-tag">
                     <small> السعر الرسمي: </small>
                     <span>{{ item.officialPrice | number }} {{ item.currency }}</span>
@@ -186,6 +194,10 @@
           </div>
           <div class="card-main p-3 text-center">
             <h5 class="product-name text-white mb-3">مزاد: {{ item.name }}</h5>
+            <div class="company-chip" *ngIf="companyOf(item) as company">
+              <img *ngIf="company.imageUrl" [src]="company.imageUrl" [alt]="company.name">
+              <span>{{ company.name }}</span>
+            </div>
             <div class="official-price-tag">
               <small> السعر الرسمي: </small>
               <span>{{ item.officialPrice | number }} {{ item.currency }}</span>
@@ -227,6 +239,21 @@
     </div>
 
     <form class="modal-form" (ngSubmit)="submitUpdate()" *ngIf="selectedAuction">
+      <div class="form-row">
+        <div class="form-group">
+          <label>الشركة الشريكة</label>
+          <app-modern-select
+            [options]="companySelectOptions"
+            [(ngModel)]="selectedAuction.companyId"
+            name="companyId"
+            placeholder="اختر الشركة..."
+            searchPlaceholder="ابحث عن شركة..."
+            [panelMinWidth]="320"
+            [searchable]="true">
+          </app-modern-select>
+        </div>
+      </div>
+
       <div class="form-row">
         <div class="form-group">
           <label>اسم غرفة المزاد</label>

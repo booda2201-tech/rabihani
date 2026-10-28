@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   allAuctionsRaw: any[] = [];
   activeAuctions: any[] = [];
   allProducts: any[] = [];
+  companies: any[] = [];
+  private companyLinks: Record<string, number> = this.readCompanyLinks();
 
   // التحكم في العرض
   itemsToShow: number = 4;
@@ -29,6 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     id: null,
     name: '',
     productId: null,
+    companyId: null,
     startPoints: 0,
     targetPoints: 0,
     startTime: '',
@@ -43,6 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.refreshCountryAndData();
     this.loadAllProducts();
+    this.loadCompanies();
 
     // مراقبة تغيير الدولة وتحديث العدادات
     this.storageInterval = setInterval(() => this.refreshCountryAndData(), 2000);
@@ -130,7 +134,8 @@ private mapToUI(item: any) {
       targetPoints: item.targetPrice,
       startTime: this.formatDateForInput(item.startTime),
       endTime: this.formatDateForInput(item.endTime),
-      img: item.img
+      img: item.img,
+      companyId: item.companyId || item.company?.id || this.companyLinks[String(item.id)] || null
     };
     this.showAddModal = true;
   }
@@ -150,7 +155,8 @@ submitNewAuction() {
     startTime: toISODate(this.newAuctionObj.startTime),
     endTime: toISODate(this.newAuctionObj.endTime),
     limited: Number(this.newAuctionObj.targetPoints),
-    countryId: this.selectedCountry.id
+    countryId: this.selectedCountry.id,
+    companyId: this.newAuctionObj.companyId ? Number(this.newAuctionObj.companyId) : null
   };
 
   const request = this.isEditMode
@@ -158,7 +164,9 @@ submitNewAuction() {
     : this.apiService.postAuction(payload);
 
   request.subscribe({
-    next: () => {
+    next: (res: any) => {
+      const auctionId = res?.id || this.newAuctionObj.id;
+      this.rememberCompany(auctionId, this.newAuctionObj.companyId);
       this.loadData();
       this.closeModal();
       alert('تم حفظ المزاد بنجاح');
@@ -202,11 +210,54 @@ private formatDateForInput(dateStr: string) {
     this.apiService.getProducts().subscribe(res => this.allProducts = res || []);
   }
 
+  loadCompanies() {
+    this.apiService.getCompanies().subscribe(res => {
+      this.companies = Array.isArray(res) ? res : [];
+      this.cdr.detectChanges();
+    });
+  }
+
+  get companySelectOptions() {
+    const countryId = this.selectedCountry?.id;
+    const inCountry = this.companies.filter(company => !countryId || company.countryId == countryId);
+    const list = inCountry.length ? inCountry : this.companies;
+    return list.map(company => ({
+      value: company.id,
+      label: company.name,
+      hint: company.tierName || '',
+      image: company.imageUrl || '',
+      icon: 'bi-building'
+    }));
+  }
+
+  companyOf(item: any) {
+    const linkedId = item?.companyId || item?.company?.id || this.companyLinks[String(item?.id)];
+    if (!linkedId) return item?.company || null;
+    return this.companies.find(company => String(company.id) === String(linkedId)) || item?.company || null;
+  }
+
+  private readCompanyLinks(): Record<string, number> {
+    try {
+      return JSON.parse(localStorage.getItem('auction_company_links') || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  private rememberCompany(auctionId: any, companyId: any) {
+    if (!auctionId) return;
+    const key = String(auctionId);
+    if (companyId) this.companyLinks[key] = Number(companyId);
+    else delete this.companyLinks[key];
+    localStorage.setItem('auction_company_links', JSON.stringify(this.companyLinks));
+  }
+
   get productSelectOptions() {
     return (this.allProducts || []).map(prod => ({
       value: prod.id,
       label: prod.name,
       hint: prod.categoryName || prod.category?.name || '',
+      image: prod.imageUrl || prod.image || '',
       icon: 'bi-box-seam'
     }));
   }
@@ -238,7 +289,7 @@ private formatDateForInput(dateStr: string) {
   closeModal() { this.showAddModal = false; this.resetForm(); }
 
   resetForm() {
-    this.newAuctionObj = { id: null, name: '', productId: null, startPoints: 0, targetPoints: 0, startTime: '', endTime: '', img: '' };
+    this.newAuctionObj = { id: null, name: '', productId: null, companyId: null, startPoints: 0, targetPoints: 0, startTime: '', endTime: '', img: '' };
     this.selectedFile = null;
   }
 

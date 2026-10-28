@@ -1,0 +1,102 @@
+<div class="profile-page" dir="rtl" *ngIf="!isLoading && company">
+  <button type="button" class="back-btn" (click)="goBack()">
+    <i class="bi bi-arrow-right"></i>
+    الشركات
+  </button>
+
+  <section class="hero">
+    <div class="logo-frame">
+      <img [src]="company.imageUrl" [alt]="company.name">
+    </div>
+
+    <div class="hero-copy">
+      <div class="hero-top">
+        <h1>{{ company.name }}</h1>
+        <span class="tier-tag" [attr.data-tier]="company.tierName">{{ company.tierName }}</span>
+      </div>
+      <p class="country" *ngIf="countryName">
+        <i class="bi bi-geo-alt"></i>
+        {{ countryName }}
+      </p>
+      <p class="description">{{ company.description || 'لا يوجد وصف للشركة.' }}</p>
+      <div class="earn" *ngIf="company.howToEarnPoints">
+        <i class="bi bi-star-fill"></i>
+        <span>{{ company.howToEarnPoints }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <article *ngFor="let stat of stats">
+      <i [class]="'bi ' + stat.icon"></i>
+      <strong>{{ stat.value }}</strong>
+      <span>{{ stat.label }}</span>
+    </article>
+  </section>
+
+  <section class="auctions">
+    <div class="tabs">
+      <button type="button" [class.active]="activeTab === 'entered'" (click)="activeTab = 'entered'">
+        منتجات الشركة في المزادات
+        <small>{{ stats[0].value }}</small>
+      </button>
+      <button type="button" [class.active]="activeTab === 'won'" (click)="activeTab = 'won'">
+        المنتجات اللي اتكسبت
+        <small>{{ stats[1].value }}</small>
+      </button>
+    </div>
+
+    <div class="empty" *ngIf="visibleAuctions.length === 0">
+      <i class="bi bi-inboxes"></i>
+      <p *ngIf="activeTab === 'entered'">لسه مفيش منتجات للشركة دي في المزادات.</p>
+      <p *ngIf="activeTab === 'won'">لسه مفيش منتج من منتجات الشركة اتكسب.</p>
+      <small *ngIf="activeTab === 'entered'">اختار الشركة من حقل «الشركة الشريكة» وأنت بتضيف المزاد أو بتعدّله.</small>
+    </div>
+
+    <article class="auction-row" *ngFor="let auction of visibleAuctions">
+      <div class="thumb">
+        <img [src]="auction.product?.imageUrl" [alt]="auction.product?.name || auction.name">
+      </div>
+      <div class="auction-copy">
+        <div class="auction-title">
+          <h3>{{ auction.product?.name || auction.name }}</h3>
+          <span class="state" [attr.data-kind]="auctionState(auction).kind">{{ auctionState(auction).label }}</span>
+        </div>
+        <p class="meta">
+          <span *ngIf="auction.product?.price">السعر {{ auction.product.price | number }} {{ auction.product?.currency || 'جنيه' }}</span>
+          <span *ngIf="auction.product?.categoryName"> · {{ auction.product.categoryName }}</span>
+        </p>
+        <p class="meta">
+          المزاد: {{ formatDate(auction.startTime) }} — {{ formatDate(auction.endTime) }}
+        </p>
+
+        <div class="winner-box" *ngIf="auction.winner">
+          <span class="avatar">{{ auction.winner.userName?.charAt(0) }}</span>
+          <div>
+            <small>كسبه</small>
+            <strong>{{ auction.winner.userName }}</strong>
+          </div>
+          <div class="winner-points">
+            <small>بـ</small>
+            <strong>{{ auction.winner.winningPoints | number }} نقطة</strong>
+          </div>
+        </div>
+
+        <p class="points" *ngIf="!auction.winner">
+          <span>البداية {{ auction.startPoints || 0 }}</span>
+          <span>المستهدف {{ auction.limited || 0 }}</span>
+          <span>أعلى مزايدة {{ auction.currentHighestBid || 0 }}</span>
+        </p>
+      </div>
+    </article>
+  </section>
+</div>
+
+<div class="profile-state" *ngIf="isLoading">
+  <div class="spinner-border text-primary"></div>
+</div>
+
+<div class="profile-state" *ngIf="!isLoading && notFound">
+  <p>الشركة دي مش موجودة.</p>
+  <button type="button" class="back-btn" (click)="goBack()">رجوع للشركات</button>
+</div>

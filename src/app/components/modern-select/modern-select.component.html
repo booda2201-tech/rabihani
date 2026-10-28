@@ -7,8 +7,9 @@
     [disabled]="disabled"
     [attr.aria-expanded]="open"
     aria-haspopup="listbox">
-    <span class="ms-icon" *ngIf="selected?.icon">
-      <i class="bi" [ngClass]="selected?.icon"></i>
+    <span class="ms-thumb" *ngIf="selected?.image || selected?.icon" [class.has-photo]="!!selected?.image">
+      <i class="bi" [ngClass]="selected?.icon || 'bi-box'"></i>
+      <img *ngIf="selected?.image" [src]="selected?.image" alt="" (error)="onImageError($event)">
     </span>
     <span class="ms-label" dir="auto" [class.is-placeholder]="!selected">{{ selected?.label || placeholder }}</span>
     <i class="bi bi-chevron-down ms-chevron"></i>
@@ -16,7 +17,13 @@
 </div>
 
 <ng-template #menuTpl>
-  <div class="ms-menu" [class.gold]="tone === 'gold'" dir="rtl" role="listbox" (click)="$event.stopPropagation()">
+  <div class="ms-pop" [class.is-sheet]="sheet">
+  <div class="ms-backdrop" (click)="close()"></div>
+  <div class="ms-menu" [class.gold]="tone === 'gold'" [class.is-sheet]="sheet" dir="rtl" role="listbox" (click)="$event.stopPropagation()">
+    <div class="ms-sheet-head" *ngIf="sheet">
+      <span class="ms-sheet-handle"></span>
+      <span class="ms-sheet-title">{{ placeholder }}</span>
+    </div>
     <div class="ms-search" *ngIf="searchable">
       <i class="bi bi-search"></i>
       <input
@@ -34,19 +41,23 @@
         *ngFor="let option of filtered"
         [class.active]="same(option.value, value)"
         (click)="pick(option, $event)">
-        <span class="ms-item-icon" *ngIf="option.icon">
-          <i class="bi" [ngClass]="option.icon"></i>
+        <span class="ms-thumb" *ngIf="option.image || option.icon" [class.has-photo]="!!option.image">
+          <i class="bi" [ngClass]="option.icon || 'bi-box'"></i>
+          <img *ngIf="option.image" [src]="option.image" alt="" (error)="onImageError($event)">
         </span>
         <span class="ms-item-copy">
           <span class="ms-item-label" dir="auto">{{ option.label }}</span>
           <span class="ms-item-hint" dir="rtl" *ngIf="option.hint">{{ option.hint }}</span>
         </span>
-        <i class="bi bi-check-lg ms-check" *ngIf="same(option.value, value)"></i>
+        <span class="ms-check" aria-hidden="true">
+          <i class="bi bi-check-lg" *ngIf="same(option.value, value)"></i>
+        </span>
       </button>
 
       <div class="ms-empty" *ngIf="filtered.length === 0">
         لا توجد نتائج
       </div>
     </div>
+  </div>
   </div>
 </ng-template>

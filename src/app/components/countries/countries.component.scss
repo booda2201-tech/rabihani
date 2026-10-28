@@ -174,8 +174,8 @@ $border-color: rgba(255, 255, 255, 0.05);
   .btn-add-responsive {
     /* تحويل الزر ليكون عائماً (Floating Action Button) */
     position: fixed;
-    bottom: 30px;
-    left: 30px; // وضعه على اليسار لأن الموقع RTL
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    left: 18px; // وضعه على اليسار لأن الموقع RTL
     z-index: 999;
     width: 60px;
     height: 60px;

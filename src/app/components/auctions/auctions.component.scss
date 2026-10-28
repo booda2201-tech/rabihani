@@ -2004,6 +2004,35 @@ $border-glass: rgba(255, 255, 255, 0.1);
   }
 }
 
+.company-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  margin: -4px 0 12px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+
+  img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+  }
+
+  span {
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* ضبط الأبعاد للشاشات الصغيرة جداً (Mobile) */
 @media (max-width: 480px) {
   .modal-form .form-row.split {

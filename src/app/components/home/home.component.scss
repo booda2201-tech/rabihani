@@ -1768,6 +1768,21 @@ $text-gray: #94a3b8;
       .form-row.split {
         gap: 10px; // تقريب الحقول من بعضها بالعرض
         margin-bottom: 0;
+        min-width: 0;
+
+        .form-group {
+          min-width: 0;
+        }
+      }
+
+      .form-row.split.dates {
+        flex-direction: column;
+        gap: 0;
+
+        .form-group {
+          width: 100%;
+          flex: none;
+        }
       }
 
       .form-group {
@@ -1782,6 +1797,14 @@ $text-gray: #94a3b8;
           padding: 8px 12px; // تقليل حجم الحقل داخلياً (Compact)
           font-size: 0.9rem;
           height: 42px; // توحيد الارتفاع ليكون مريح للعين واللمس
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
+        }
+
+        input[type="datetime-local"] {
+          font-size: 0.85rem;
         }
       }
 
@@ -1890,6 +1913,91 @@ $text-gray: #94a3b8;
 
 
 
+.company-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  margin: -6px 0 12px;
+  padding: 4px 10px 4px 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+
+  img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+  }
+
+  i {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(99, 102, 241, 0.2);
+    color: #c7d2fe;
+    font-size: 0.75rem;
+  }
+
+  span {
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 768px) {
+  .points-summary-card {
+    padding: 16px 14px;
+    margin-bottom: 16px;
+    border-radius: 18px;
+
+    .card-content {
+      gap: 12px;
+      align-items: center;
+    }
+
+    .text-side {
+      min-width: 0;
+      flex: 1;
+
+      span {
+        display: block;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        opacity: 0.92;
+      }
+    }
+
+    h2 {
+      font-size: clamp(1.15rem, 4.6vw, 1.4rem);
+      line-height: 1.15;
+      margin-top: 3px;
+      white-space: nowrap;
+
+      small {
+        font-size: 0.72em;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .points-summary-card .btn-add-auction {
+    flex-shrink: 0;
+    padding: 9px 12px;
+    font-size: 0.82rem;
+    gap: 6px;
+    white-space: nowrap;
+  }
+}
+
 /* 1. إخفاء الشريط في متصفحات Chrome, Safari, and Edge */
 .custom-dropdown-list::-webkit-scrollbar {
     display: none;
@@ -1902,4 +2010,25 @@ $text-gray: #94a3b8;
 
     /* تأكد إن الـ overflow موجود عشان السكرول يفضل شغال */
     overflow-y: auto;
+}
+
+@media (max-width: 992px) {
+  .home-wrapper {
+    padding-bottom: 8px;
+  }
+
+  .auctions-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .points-summary-card {
+    border-radius: 24px;
+    margin-bottom: 14px;
+  }
+
+  .auction-mini-card {
+    border-radius: 24px;
+  }
 }

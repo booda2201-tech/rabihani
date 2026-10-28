@@ -39,7 +39,8 @@
   <main class="app-main-content">
       <header class="main-header">
         <div class="header-right">
-          <h1 class="m-0 fs-5 fs-md-3">لوحة التحكم</h1>
+          <span class="app-kicker">ربحني</span>
+          <h1 class="m-0 fs-5 fs-md-3">{{ screenTitle }}</h1>
         </div>
 
         <div class="header-left d-flex align-items-center gap-1 gap-md-4">
@@ -67,6 +68,48 @@
     </div>
   </main>
 </div>
+
+<div class="app-more" *ngIf="moreOpen">
+  <div class="app-more-backdrop" (click)="closeMore()"></div>
+  <div class="app-more-sheet" (click)="$event.stopPropagation()">
+    <span class="app-more-handle"></span>
+    <a routerLink="/comp" routerLinkActive="active" (click)="closeMore()">
+      <i class="bi bi-building-fill"></i>
+      <span>الشركات</span>
+    </a>
+    <a routerLink="/count" routerLinkActive="active" (click)="closeMore()">
+      <i class="bi bi-globe"></i>
+      <span>البلاد</span>
+    </a>
+    <a class="is-logout" routerLink="/login" (click)="closeMore()">
+      <i class="bi bi-box-arrow-left"></i>
+      <span>تسجيل الخروج</span>
+    </a>
+  </div>
+</div>
+
+<nav class="app-tabbar" aria-label="تنقل التطبيق">
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <i class="bi bi-grid-1x2-fill"></i>
+    <span>الرئيسية</span>
+  </a>
+  <a routerLink="/products" routerLinkActive="active">
+    <i class="bi bi-bag-heart-fill"></i>
+    <span>المنتجات</span>
+  </a>
+  <a routerLink="/auctions" routerLinkActive="active">
+    <i class="bi bi-cash-coin"></i>
+    <span>المزادات</span>
+  </a>
+  <a routerLink="/ads" routerLinkActive="active">
+    <i class="bi bi-bullseye"></i>
+    <span>الإعلانات</span>
+  </a>
+  <button type="button" [class.active]="moreOpen || moreSectionActive" (click)="toggleMore($event)">
+    <i class="bi bi-grid-fill"></i>
+    <span>المزيد</span>
+  </button>
+</nav>
 
 <div class="radial-nav" [class.is-open]="isRadialOpen()">
   <div class="radial-backdrop" (click)="closeRadial()"></div>
