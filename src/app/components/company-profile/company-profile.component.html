@@ -23,7 +23,30 @@
         <i class="bi bi-star-fill"></i>
         <span>{{ company.howToEarnPoints }}</span>
       </div>
+      <div class="contact-row">
+        <a *ngIf="company.phoneNumber" class="contact-chip" [href]="'tel:' + company.phoneNumber" dir="ltr">
+          <i class="bi bi-telephone"></i> {{ company.phoneNumber }}
+        </a>
+        <a *ngFor="let link of links" class="contact-chip" [href]="link.url" target="_blank" rel="noopener">
+          <i [class]="'bi ' + link.icon"></i> {{ link.label }}
+        </a>
+      </div>
     </div>
+  </section>
+
+  <section class="details" *ngIf="company.detailedDescription || company.branches?.length">
+    <article class="detail-card" *ngIf="company.detailedDescription">
+      <h2><i class="bi bi-card-text"></i> عن الشركة</h2>
+      <p>{{ company.detailedDescription }}</p>
+    </article>
+    <article class="detail-card" *ngIf="company.branches?.length">
+      <h2><i class="bi bi-shop"></i> الفروع <small>{{ company.branches.length }}</small></h2>
+      <div class="branch" *ngFor="let branch of company.branches">
+        <strong>{{ branch.name }}</strong>
+        <span *ngIf="branch.address"><i class="bi bi-geo-alt"></i> {{ branch.address }}</span>
+        <span *ngIf="branch.workingHours"><i class="bi bi-clock"></i> {{ branch.workingHours }}</span>
+      </div>
+    </article>
   </section>
 
   <section class="stats">

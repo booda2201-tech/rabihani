@@ -56,6 +56,18 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
     ];
   }
 
+  get links() {
+    const company = this.company || {};
+    return [
+      { url: company.websiteUrl, label: 'الموقع', icon: 'bi-globe2' },
+      { url: company.facebookUrl, label: 'فيسبوك', icon: 'bi-facebook' },
+      { url: company.instagramUrl, label: 'إنستجرام', icon: 'bi-instagram' },
+      { url: company.tikTokUrl, label: 'تيك توك', icon: 'bi-tiktok' },
+      { url: company.googlePlayUrl, label: 'Google Play', icon: 'bi-google-play' },
+      { url: company.appStoreUrl, label: 'App Store', icon: 'bi-apple' }
+    ].filter(link => !!link.url);
+  }
+
   goBack() {
     this.router.navigate(['/comp']);
   }
@@ -98,7 +110,7 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
         this.company = record;
         const country = (countries || []).find((item: any) => String(item.id) === String(record.countryId));
         this.countryName = country?.name || record.countryName || '';
-        this.splitAuctions(Array.isArray(auctions) ? auctions : (auctions?.data || []), record.id);
+        this.splitAuctions(Array.isArray(auctions) ? auctions : (auctions?.data || []), record);
         this.isLoading = false;
       },
       error: () => {
@@ -108,24 +120,15 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
     });
   }
 
-  private splitAuctions(auctions: any[], companyId: number) {
-    const links = this.readCompanyLinks();
-    const entered = auctions.filter(auction => {
-      const linked = auction.companyId || auction.company?.id || links[String(auction.id)];
-      return linked != null && String(linked) === String(companyId);
-    });
+  private splitAuctions(auctions: any[], company: any) {
+    const ownIds = new Set((company.auctions || []).map((auction: any) => String(auction.id)));
+    const entered = auctions.filter(auction =>
+      String(auction.companyId) === String(company.id) || ownIds.has(String(auction.id))
+    );
     const rank: Record<AuctionKind, number> = { live: 0, soon: 1, won: 2, ended: 3, muted: 4 };
     entered.sort((a, b) => rank[this.auctionState(a).kind] - rank[this.auctionState(b).kind]);
     this.enteredAuctions = entered;
     this.wonAuctions = entered.filter(auction => !!auction.winner);
     this.liveCount = entered.filter(auction => this.auctionState(auction).kind === 'live').length;
-  }
-
-  private readCompanyLinks(): Record<string, number> {
-    try {
-      return JSON.parse(localStorage.getItem('auction_company_links') || '{}');
-    } catch {
-      return {};
-    }
   }
 }

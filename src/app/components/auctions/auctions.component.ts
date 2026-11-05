@@ -24,7 +24,6 @@ export class AuctionsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectedAuction: any = null;
   companies: any[] = [];
-  private companyLinks: Record<string, number> = this.readCompanyLinks();
   isModalOpen = false;
   isLoading = false;
   private timerInterval: any;
@@ -142,7 +141,6 @@ submitUpdate() {
 
   this.apiService.updateAuctionRoom(this.selectedAuction.id, payload).subscribe({
     next: (res) => {
-      this.rememberCompany(this.selectedAuction.id, this.selectedAuction.companyId);
       this.loadData();
       this.closeModal();
       alert('تم تحديث المزاد بنجاح');
@@ -185,7 +183,7 @@ submitUpdate() {
       endTime: formatDate(auction.endTime),
       targetPoints: auction.targetPrice,
       startPoints: auction.startPrice,
-      companyId: auction.companyId || auction.company?.id || this.companyLinks[String(auction.id)] || null
+      companyId: auction.companyId || null
     };
     this.isModalOpen = true;
     document.body.style.overflow = 'hidden';
@@ -205,9 +203,9 @@ submitUpdate() {
   }
 
   companyOf(item: any) {
-    const linkedId = item?.companyId || item?.company?.id || this.companyLinks[String(item?.id)];
-    if (!linkedId) return item?.company || null;
-    return this.companies.find(company => String(company.id) === String(linkedId)) || item?.company || null;
+    if (!item?.companyId) return null;
+    return this.companies.find(company => String(company.id) === String(item.companyId))
+      || { name: item.companyName, imageUrl: '' };
   }
 
   loadCompanies() {
@@ -215,22 +213,6 @@ submitUpdate() {
       this.companies = Array.isArray(res) ? res : [];
       this.cdr.detectChanges();
     });
-  }
-
-  private readCompanyLinks(): Record<string, number> {
-    try {
-      return JSON.parse(localStorage.getItem('auction_company_links') || '{}');
-    } catch {
-      return {};
-    }
-  }
-
-  private rememberCompany(auctionId: any, companyId: any) {
-    if (!auctionId) return;
-    const key = String(auctionId);
-    if (companyId) this.companyLinks[key] = Number(companyId);
-    else delete this.companyLinks[key];
-    localStorage.setItem('auction_company_links', JSON.stringify(this.companyLinks));
   }
 
   closeModal() {

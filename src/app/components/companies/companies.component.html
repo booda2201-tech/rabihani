@@ -36,6 +36,11 @@
               {{ company.howToEarnPoints }}
             </div>
             <p class="company-desc text-muted px-2">{{ company.description }}</p>
+            <div class="company-facts">
+              <span *ngIf="company.phoneNumber"><i class="bi bi-telephone"></i> {{ company.phoneNumber }}</span>
+              <span><i class="bi bi-shop"></i> {{ company.branches?.length || 0 }} فرع</span>
+              <span><i class="bi bi-hammer"></i> {{ company.auctions?.length || 0 }} مزاد</span>
+            </div>
           </div>
 
           <button class="btn-profile" [routerLink]="['/comp', company.id]">
@@ -57,23 +62,38 @@
 </div>
 
 
-
-<div class="custom-modal-overlay" *ngIf="isAddModalOpen" (click)="closeAddModal()">
-  <div class="modern-modal-content" (click)="$event.stopPropagation()">
-    <button class="close-circle-btn" (click)="closeAddModal()"><i class="bi bi-x"></i></button>
-    <div class="modal-header-center"><h3 class="modal-title">إضافة شركة جديدة</h3></div>
+<div class="custom-modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="modern-modal-content company-form-modal" [class.edit-mode-gold]="isEdit" (click)="$event.stopPropagation()">
+    <button class="close-circle-btn" (click)="closeModal()"><i class="bi bi-x"></i></button>
+    <div class="modal-header-center">
+      <h3 class="modal-title" [class.gold-text]="isEdit">{{ isEdit ? 'تعديل بيانات الشركة' : 'إضافة شركة جديدة' }}</h3>
+    </div>
 
     <div class="modal-body-custom">
+      <div class="image-upload-section mb-3">
+        <div class="upload-box-modern w-100" [class.edit-gold-box]="isEdit" (click)="fileInput.click()">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-img-full">
+          <div *ngIf="!imagePreview" class="upload-placeholder">
+            <i class="bi bi-camera-fill"></i>
+            <span>اضغط لرفع الشعار</span>
+          </div>
+          <div class="edit-overlay-icon" *ngIf="isEdit"><i class="bi bi-pencil-fill"></i></div>
+          <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*">
+        </div>
+      </div>
+
+      <h4 class="form-section-title"><i class="bi bi-info-circle"></i> البيانات الأساسية</h4>
       <div class="row g-3">
         <div class="col-12">
           <label class="modern-label">اسم الشركة</label>
-          <input type="text" class="modern-input" [(ngModel)]="addModel.Name" placeholder="أدخل الاسم">
+          <input type="text" class="modern-input" [(ngModel)]="form.name" placeholder="أدخل الاسم">
         </div>
         <div class="col-md-6">
           <label class="modern-label">الدولة</label>
           <app-modern-select
             [options]="countryOptions"
-            [(ngModel)]="addModel.CountryId"
+            [(ngModel)]="form.countryId"
+            [tone]="isEdit ? 'gold' : 'blue'"
             placeholder="اختر الدولة"
             searchPlaceholder="ابحث عن دولة..."
             [searchable]="true">
@@ -83,84 +103,73 @@
           <label class="modern-label">المستوى (Tier)</label>
           <app-modern-select
             [options]="tierOptions"
-            [(ngModel)]="addModel.Tier"
+            [(ngModel)]="form.tier"
+            [tone]="isEdit ? 'gold' : 'blue'"
             placeholder="اختر المستوى">
           </app-modern-select>
         </div>
         <div class="col-12">
           <label class="modern-label">نظام النقاط</label>
-          <input type="text" class="modern-input" [(ngModel)]="addModel.HowToEarnPoints" placeholder="مثال: 10 ريال = نقطة">
+          <input type="text" class="modern-input" [(ngModel)]="form.howToEarnPoints" placeholder="مثال: اشتري، امسح QR، واكسب نقاطك">
         </div>
         <div class="col-12">
           <label class="modern-label">وصف مختصر</label>
-          <textarea class="modern-input" rows="2" [(ngModel)]="addModel.Description"></textarea>
+          <textarea class="modern-input" rows="2" [(ngModel)]="form.description" placeholder="يظهر على كارت الشركة"></textarea>
         </div>
-      </div>
-
-      <div class="image-upload-section mt-2">
-        <div class="upload-box-modern w-100" (click)="addFileInput.click()">
-          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-img-full">
-          <div *ngIf="!imagePreview" class="upload-placeholder">
-            <i class="bi bi-camera-fill"></i>
-            <span>اضغط لرفع الشعار</span>
-          </div>
-          <input type="file" #addFileInput hidden (change)="onFileSelected($event)" accept="image/*">
-        </div>
-      </div>
-
-
-    </div>
-
-    <div class="modal-footer-modern">
-      <button class="btn-main-action" (click)="saveNewCompany()">إضافة للشركات</button>
-      <button class="btn-cancel-action" (click)="closeAddModal()">إلغاء</button>
-    </div>
-  </div>
-</div>
-
-<div class="custom-modal-overlay" *ngIf="isEditModalOpen" (click)="closeEditModal()">
-  <div class="modern-modal-content edit-mode-gold" (click)="$event.stopPropagation()">
-    <button class="close-circle-btn" (click)="closeEditModal()"><i class="bi bi-x"></i></button>
-
-    <div class="modal-header-center">
-      <h3 class="modal-title gold-text">تعديل بيانات الشركة</h3>
-    </div>
-
-    <div class="modal-body-custom">
-      <div class="image-upload-section mb-4">
-        <div class="upload-box-modern edit-gold-box w-100 p-1" (click)="editFileInput.click()">
-          <img [src]="imagePreview || editModel.imageUrl" class="preview-img-full">
-          <div class="edit-overlay-icon"><i class="bi bi-pencil-fill"></i></div>
-          <input type="file" #editFileInput hidden (change)="onFileSelected($event)">
-        </div>
-      </div>
-
-      <div class="row g-3">
         <div class="col-12">
-          <label class="modern-label">تعديل الاسم</label>
-          <input type="text" class="modern-input focus-gold" [(ngModel)]="editModel.Name">
+          <label class="modern-label">وصف تفصيلي</label>
+          <textarea class="modern-input" rows="3" [(ngModel)]="form.detailedDescription" placeholder="يظهر في بروفايل الشركة"></textarea>
         </div>
-
-        <div class="col-md-6">
-          <label class="modern-label">تعديل نظام النقاط</label>
-          <input type="text" class="modern-input focus-gold" [(ngModel)]="editModel.HowToEarnPoints">
+        <div class="col-12">
+          <label class="modern-label">رقم التليفون</label>
+          <input type="tel" class="modern-input" dir="ltr" [(ngModel)]="form.phoneNumber" placeholder="01xxxxxxxxx">
         </div>
+      </div>
 
-        <div class="col-md-6">
-          <label class="modern-label">تعديل المستوى</label>
-          <app-modern-select
-            [options]="tierOptions"
-            [(ngModel)]="editModel.Tier"
-            tone="gold"
-            placeholder="اختر المستوى">
-          </app-modern-select>
+      <div class="form-section-head">
+        <h4 class="form-section-title"><i class="bi bi-shop"></i> الفروع</h4>
+        <button type="button" class="btn-add-branch" (click)="addBranch()">
+          <i class="bi bi-plus-lg"></i> إضافة فرع
+        </button>
+      </div>
+      <p class="empty-branches" *ngIf="form.branches.length === 0">مفيش فروع لسه.</p>
+      <div class="branch-card" *ngFor="let branch of form.branches; let i = index">
+        <div class="branch-head">
+          <span>فرع {{ i + 1 }}</span>
+          <button type="button" class="btn-remove-branch" (click)="removeBranch(i)" aria-label="حذف الفرع">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="modern-label">اسم الفرع</label>
+            <input type="text" class="modern-input" [(ngModel)]="branch.name" placeholder="مثال: زويل">
+          </div>
+          <div class="col-md-6">
+            <label class="modern-label">مواعيد العمل</label>
+            <input type="text" class="modern-input" [(ngModel)]="branch.workingHours" placeholder="11 ص - 2 ص">
+          </div>
+          <div class="col-12">
+            <label class="modern-label">العنوان</label>
+            <input type="text" class="modern-input" [(ngModel)]="branch.address" placeholder="الحي - المدينة - المحافظة">
+          </div>
+        </div>
+      </div>
+
+      <h4 class="form-section-title"><i class="bi bi-link-45deg"></i> الروابط</h4>
+      <div class="row g-3">
+        <div class="col-md-6" *ngFor="let link of linkFields">
+          <label class="modern-label"><i [class]="'bi ' + link.icon"></i> {{ link.label }}</label>
+          <input type="url" class="modern-input" dir="ltr" [(ngModel)]="form[link.key]" [placeholder]="link.placeholder">
         </div>
       </div>
     </div>
 
     <div class="modal-footer-modern">
-      <button class="btn-main-action btn-gold-save" (click)="updateCompany()">حفظ التعديلات</button>
-      <button class="btn-cancel-action" (click)="closeEditModal()">إلغاء</button>
+      <button class="btn-main-action" [class.btn-gold-save]="isEdit" [disabled]="isSaving" (click)="saveCompany()">
+        {{ isSaving ? 'جاري الحفظ...' : (isEdit ? 'حفظ التعديلات' : 'إضافة للشركات') }}
+      </button>
+      <button class="btn-cancel-action" (click)="closeModal()">إلغاء</button>
     </div>
   </div>
 </div>

@@ -18,8 +18,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   activeAuctions: any[] = [];
   allProducts: any[] = [];
   companies: any[] = [];
-  private companyLinks: Record<string, number> = this.readCompanyLinks();
-
   // التحكم في العرض
   itemsToShow: number = 4;
   selectedCountry: any = { name: '...', id: null };
@@ -135,7 +133,7 @@ private mapToUI(item: any) {
       startTime: this.formatDateForInput(item.startTime),
       endTime: this.formatDateForInput(item.endTime),
       img: item.img,
-      companyId: item.companyId || item.company?.id || this.companyLinks[String(item.id)] || null
+      companyId: item.companyId || null
     };
     this.showAddModal = true;
   }
@@ -164,9 +162,7 @@ submitNewAuction() {
     : this.apiService.postAuction(payload);
 
   request.subscribe({
-    next: (res: any) => {
-      const auctionId = res?.id || this.newAuctionObj.id;
-      this.rememberCompany(auctionId, this.newAuctionObj.companyId);
+    next: () => {
       this.loadData();
       this.closeModal();
       alert('تم حفظ المزاد بنجاح');
@@ -231,25 +227,9 @@ private formatDateForInput(dateStr: string) {
   }
 
   companyOf(item: any) {
-    const linkedId = item?.companyId || item?.company?.id || this.companyLinks[String(item?.id)];
-    if (!linkedId) return item?.company || null;
-    return this.companies.find(company => String(company.id) === String(linkedId)) || item?.company || null;
-  }
-
-  private readCompanyLinks(): Record<string, number> {
-    try {
-      return JSON.parse(localStorage.getItem('auction_company_links') || '{}');
-    } catch {
-      return {};
-    }
-  }
-
-  private rememberCompany(auctionId: any, companyId: any) {
-    if (!auctionId) return;
-    const key = String(auctionId);
-    if (companyId) this.companyLinks[key] = Number(companyId);
-    else delete this.companyLinks[key];
-    localStorage.setItem('auction_company_links', JSON.stringify(this.companyLinks));
+    if (!item?.companyId) return null;
+    return this.companies.find(company => String(company.id) === String(item.companyId))
+      || { name: item.companyName, imageUrl: '' };
   }
 
   get productSelectOptions() {
